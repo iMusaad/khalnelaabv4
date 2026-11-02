@@ -2,6 +2,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import { COUNTRIES } from "@/data/countries";
+import { COUNTRY_FACTS } from "@/data/countryFacts";
 
 export default async function CountryFlagPage({
   params,
@@ -17,6 +18,20 @@ export default async function CountryFlagPage({
   if (!country) {
     notFound();
   }
+
+  const facts = COUNTRY_FACTS[country.id];
+
+  const factRows = facts
+    ? [
+        { label: "العاصمة", value: facts.capital },
+        { label: "القارة", value: facts.continent },
+        { label: "اللغة", value: facts.language },
+        { label: "عدد السكان", value: facts.population },
+        ...(facts.religion
+          ? [{ label: "الديانة", value: facts.religion }]
+          : []),
+      ]
+    : [];
 
   return (
     <main
@@ -76,6 +91,34 @@ export default async function CountryFlagPage({
             "
           />
         </div>
+
+        {facts && (
+          <div className="mt-5 text-right">
+            <h2 className="text-center text-2xl font-black text-white">
+              {country.nameAr}
+            </h2>
+
+            <p className="mt-1 text-center text-xs font-bold text-white/45">
+              معلومات تساعدك تجاوب على أسئلتهم
+            </p>
+
+            <dl className="mt-3 divide-y divide-white/10 rounded-2xl border border-white/10 bg-black/20">
+              {factRows.map((row) => (
+                <div
+                  key={row.label}
+                  className="flex items-start justify-between gap-4 px-4 py-2.5"
+                >
+                  <dt className="shrink-0 text-sm font-bold text-cyan-200/80">
+                    {row.label}
+                  </dt>
+                  <dd className="text-left text-sm font-black text-white">
+                    {row.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        )}
 
         <div
           className="
