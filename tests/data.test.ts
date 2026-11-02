@@ -104,7 +104,10 @@ describe("country facts", () => {
         expect(facts, country.id).toBeUndefined();
       } else {
         expect(facts, country.id).toBeDefined();
-        expect(Object.values(facts).every((value) => value.trim())).toBe(true);
+        expect(
+          Object.values(facts).every((value) => value && value.trim()),
+        ).toBe(true);
+        expect(facts.population).toMatch(/مليون|مليار/);
       }
     }
 

@@ -26,8 +26,10 @@ export default async function CountryFlagPage({
         { label: "العاصمة", value: facts.capital },
         { label: "القارة", value: facts.continent },
         { label: "اللغة", value: facts.language },
-        { label: "العملة", value: facts.currency },
-        { label: "مشهورة بـ", value: facts.knownFor },
+        { label: "عدد السكان", value: facts.population },
+        ...(facts.religion
+          ? [{ label: "الديانة", value: facts.religion }]
+          : []),
       ]
     : [];
 
