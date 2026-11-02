@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { COUNTRIES } from "@/data/countries";
+import { COUNTRY_FACTS, GULF_COUNTRY_IDS } from "@/data/countryFacts";
 import { CATEGORY_LETTERS } from "@/data/categories";
 import { LOGOS } from "@/data/logos";
 import { PROVERB_PUZZLES } from "@/data/proverbs";
@@ -89,6 +90,28 @@ describe("wheel of fortune", () => {
         typeof segment.value === "number"
           ? segment.value > 0
           : ["bankrupt", "lose"].includes(segment.value),
+      ).toBe(true);
+    }
+  });
+});
+
+describe("country facts", () => {
+  it("covers every country outside the Gulf and none inside it", () => {
+    for (const country of COUNTRIES) {
+      const facts = COUNTRY_FACTS[country.id];
+
+      if (GULF_COUNTRY_IDS.includes(country.id)) {
+        expect(facts, country.id).toBeUndefined();
+      } else {
+        expect(facts, country.id).toBeDefined();
+        expect(Object.values(facts).every((value) => value.trim())).toBe(true);
+      }
+    }
+
+    for (const id of Object.keys(COUNTRY_FACTS)) {
+      expect(
+        COUNTRIES.some((country) => country.id === id),
+        id,
       ).toBe(true);
     }
   });
