@@ -30,6 +30,9 @@ type WordRoundState = {
   activeSide: TeamSide;
   side1HintUsed: boolean;
   side2HintUsed: boolean;
+  revealedLetters?: string[];
+  side1RevealUsed?: boolean;
+  side2RevealUsed?: boolean;
 };
 
 const wordDeck = createDeck(
@@ -83,6 +86,12 @@ export default function WordGame({
 
   const [side2HintUsed, setSide2HintUsed] = useState(false);
 
+  const [revealedLetters, setRevealedLetters] = useState<string[]>([]);
+
+  const [side1RevealUsed, setSide1RevealUsed] = useState(false);
+
+  const [side2RevealUsed, setSide2RevealUsed] = useState(false);
+
   const resetRoundRef = useRef(resetRound);
   resetRoundRef.current = resetRound;
 
@@ -128,6 +137,9 @@ export default function WordGame({
       setTimeLeft(timerSeconds);
       setSide1HintUsed(saved.side1HintUsed);
       setSide2HintUsed(saved.side2HintUsed);
+      setRevealedLetters(saved.revealedLetters ?? []);
+      setSide1RevealUsed(saved.side1RevealUsed ?? false);
+      setSide2RevealUsed(saved.side2RevealUsed ?? false);
       setFeedback(
         saved.status === "lost"
           ? "انتهت المحاولات"
@@ -164,6 +176,9 @@ export default function WordGame({
 
     setSide1HintUsed(false);
     setSide2HintUsed(false);
+    setRevealedLetters([]);
+    setSide1RevealUsed(false);
+    setSide2RevealUsed(false);
 
     setFeedback(
       `الدور على ${startingSide === "side1" ? side1Name : side2Name}`,
@@ -340,6 +355,52 @@ export default function WordGame({
     setFeedback(`💡 تم حذف حرف خاطئ لـ ${getCurrentTurnName()}`);
   }
 
+  function revealLetter() {
+    if (status !== "playing" || !answer) {
+      return;
+    }
+
+    const revealAlreadyUsed =
+      activeSide === "side1" ? side1RevealUsed : side2RevealUsed;
+
+    if (revealAlreadyUsed) {
+      setFeedback(`${getCurrentTurnName()} كشف حرف من قبل`);
+
+      return;
+    }
+
+    const answerLetters = Array.from(
+      new Set(Array.from(answer).map((letter) => normalizeArabic(letter))),
+    );
+
+    const hiddenLetters = answerLetters.filter(
+      (letter) => !keyStatus[letter] && !revealedLetters.includes(letter),
+    );
+
+    if (hiddenLetters.length === 0) {
+      setFeedback("كل حروف الكلمة ظاهرة عندكم");
+
+      return;
+    }
+
+    const letter =
+      hiddenLetters[Math.floor(Math.random() * hiddenLetters.length)];
+
+    setRevealedLetters((previous) => [...previous, letter]);
+
+    setKeyStatus((previous) =>
+      previous[letter] ? previous : { ...previous, [letter]: "present" },
+    );
+
+    if (activeSide === "side1") {
+      setSide1RevealUsed(true);
+    } else {
+      setSide2RevealUsed(true);
+    }
+
+    setFeedback(`الدور على ${getCurrentTurnName()}`);
+  }
+
   function handleKeyboardClick(key: string) {
     if (status !== "playing") {
       return;
@@ -377,6 +438,9 @@ export default function WordGame({
       activeSide,
       side1HintUsed,
       side2HintUsed,
+      revealedLetters,
+      side1RevealUsed,
+      side2RevealUsed,
     });
   }, [
     loaded,
@@ -390,6 +454,9 @@ export default function WordGame({
     activeSide,
     side1HintUsed,
     side2HintUsed,
+    revealedLetters,
+    side1RevealUsed,
+    side2RevealUsed,
   ]);
 
   const physicalKeyRef = useRef<(event: KeyboardEvent) => void>(() => {});
@@ -500,6 +567,9 @@ export default function WordGame({
   const activeTeamHintUsed =
     activeSide === "side1" ? side1HintUsed : side2HintUsed;
 
+  const activeTeamRevealUsed =
+    activeSide === "side1" ? side1RevealUsed : side2RevealUsed;
+
   const remainingRows = MAX_TRIES - guesses.length;
 
   const timerColor =
@@ -565,6 +635,14 @@ export default function WordGame({
               </span>
             </div>
           </div>
+
+          {revealedLetters.length > 0 && (
+            <div className="flex justify-center">
+              <span className="rounded-full border border-yellow-300/25 bg-yellow-300/10 px-4 py-1.5 text-sm font-black text-yellow-100">
+                🔑 فيها: {revealedLetters.join(" ، ")}
+              </span>
+            </div>
+          )}
 
           {showFeedback && (
             <div className="mt-1 text-center text-sm font-bold text-white/75">
@@ -689,6 +767,15 @@ export default function WordGame({
                   {activeTeamHintUsed
                     ? "استخدمتوا المساعدة"
                     : "💡 احذف حرف غلط"}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={revealLetter}
+                  disabled={activeTeamRevealUsed}
+                  className="btn-secondary min-w-[125px] border-cyan-300/30 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-100"
+                >
+                  {activeTeamRevealUsed ? "كشفتوا حرف" : "🔑 اكشف حرف"}
                 </button>
 
                 <button
