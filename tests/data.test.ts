@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { CARS } from "@/data/cars";
 import { COUNTRIES } from "@/data/countries";
 import { COUNTRY_FACTS, GULF_COUNTRY_IDS } from "@/data/countryFacts";
 import { CATEGORY_LETTERS } from "@/data/categories";
@@ -121,6 +122,19 @@ describe("country facts", () => {
 });
 
 describe("image-based games", () => {
+  it("has unique ids, existing photos and valid zoom focus for cars", () => {
+    expect(duplicates(CARS.map((car) => car.id))).toEqual([]);
+
+    for (const car of CARS) {
+      expect(publicFileExists(car.image), car.image).toBe(true);
+      expect(car.brand.trim().length).toBeGreaterThan(0);
+      expect(car.focusX).toBeGreaterThanOrEqual(0);
+      expect(car.focusX).toBeLessThanOrEqual(100);
+      expect(car.focusY).toBeGreaterThanOrEqual(0);
+      expect(car.focusY).toBeLessThanOrEqual(100);
+    }
+  });
+
   it("has unique ids and existing files for logos", () => {
     expect(duplicates(LOGOS.map((logo) => logo.id))).toEqual([]);
 
