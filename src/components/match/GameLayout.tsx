@@ -33,16 +33,6 @@ type GameLayoutProps = {
   children: ReactNode;
 };
 
-const EMOJI_PATTERN =
-  /(\p{Extended_Pictographic}(?:\uFE0F|\u200D\p{Extended_Pictographic})*)/u;
-
-function splitEmoji(value: string) {
-  return value
-    .split(EMOJI_PATTERN)
-    .filter(Boolean)
-    .map((text) => ({ text, emoji: EMOJI_PATTERN.test(text) }));
-}
-
 function normalizeTeamName(value: string) {
   return value
     .trim()
@@ -70,27 +60,7 @@ export function GameTitle({ title }: { title: string }) {
       {titleWords.map((word, index) => (
         <span
           key={`${word}-${index}`}
-          className={
-            index % 2 === 0
-              ? `
-                  bg-gradient-to-b
-                  from-[#FFD326]
-                  via-[#FFB000]
-                  to-[#FF8A00]
-                  bg-clip-text
-                  text-transparent
-                  drop-shadow-[0_2px_6px_rgba(255,176,0,0.28)]
-                `
-              : `
-                  bg-gradient-to-b
-                  from-[#13C2FF]
-                  via-[#008EFF]
-                  to-[#006BFF]
-                  bg-clip-text
-                  text-transparent
-                  drop-shadow-[0_2px_6px_rgba(0,142,255,0.28)]
-                `
-          }
+          className={index % 2 === 0 ? "text-[#ffb21e]" : "text-[#2f9bff]"}
         >
           {word}
           {index < titleWords.length - 1 ? " " : ""}
@@ -145,344 +115,106 @@ export default function GameLayout({
 
   const displayedTurn = isSide1Turn ? side1 : isSide2Turn ? side2 : cleanTurn;
 
+  const turnColor = isSide1Turn
+    ? "text-[#ffb21e]"
+    : isSide2Turn
+      ? "text-[#4aa8ff]"
+      : "text-white";
+
   return (
-    <div className="mx-auto w-full max-w-5xl">
-      <div
-        className="
-          glass
-          rounded-[24px]
-          border border-white/10
-          bg-[#121028]/80
-          p-3
-          text-center
-          shadow-[0_0_30px_rgba(0,0,0,0.35)]
-          sm:rounded-[28px]
-          sm:p-3
-          lg:p-4
-        "
-      >
-        <div className="mb-2 flex items-center justify-between gap-3">
-          <div
-            className="
-              flex
-              h-9
-              w-9
-              shrink-0
-              items-center
-              justify-center
-              rounded-xl
-              bg-gradient-to-b
-              from-[#8b5cf6]
-              to-[#6d28d9]
-              text-lg
-              font-black
-              text-white
-              shadow-[0_0_14px_rgba(139,92,246,0.28)]
-            "
-          >
-            {currentRound}
-          </div>
+    <div className="mx-auto w-full max-w-3xl">
+      <div className="flex items-center justify-between gap-3">
+        <p className="w-16 shrink-0 text-right text-sm font-bold text-white/45">
+          الجولة {currentRound}
+        </p>
 
-          <div className="min-w-0 flex-1 text-center">
-            <GameTitle title={title} />
-          </div>
-
-          {game ? (
-            <HowToPlayButton game={game} />
-          ) : (
-            <div className="w-9 shrink-0" />
-          )}
+        <div className="min-w-0 flex-1 text-center">
+          <GameTitle title={title} />
         </div>
 
-        <div className="mb-2 grid grid-cols-3 gap-1.5 sm:gap-2">
-          <div
-            className={`
-              flex
-              min-h-[64px]
-              min-w-0
-              flex-col
-              items-center
-              justify-center
-              rounded-[16px]
-              border
-              px-2
-              py-1.5
-              transition-[opacity,border-color,box-shadow,background-color]
-              duration-200
-              ease-[var(--ease-out)]
-              sm:min-h-[76px]
-              sm:px-3
-
-              ${
-                isSide1Turn
-                  ? `
-                    border-fuchsia-300/70
-                    bg-gradient-to-br
-                    from-fuchsia-500/30
-                    via-pink-500/20
-                    to-purple-500/15
-                    shadow-[0_0_24px_rgba(217,70,239,0.25)]
-                  `
-                  : `
-                    border-fuchsia-300/15
-                    bg-fuchsia-500/[0.06]
-                    opacity-75
-                  `
-              }
-            `}
-          >
-            <p
-              dir="auto"
-              className={`
-                line-clamp-2
-                max-w-full
-                text-center
-                text-xs
-                [overflow-wrap:anywhere]
-                font-bold
-                leading-tight
-                transition-colors
-                duration-200
-                ease-[var(--ease-out)]
-
-                ${isSide1Turn ? "text-fuchsia-100" : "text-white/75"}
-              `}
-            >
-              {side1}
-            </p>
-
-            <p
-              className={`
-                mt-1
-                flex
-                items-center
-                justify-center
-                text-[34px]
-                font-black
-                leading-[0.9]
-                transition-colors
-                duration-200
-                ease-[var(--ease-out)]
-                sm:text-[52px]
-
-                ${isSide1Turn ? "text-fuchsia-100" : "text-fuchsia-200/75"}
-              `}
-            >
-              {sideStatus ? (
-                <span className="py-1 text-base leading-tight sm:text-xl">
-                  {sideStatus.side1}
-                </span>
-              ) : (
-                side1Score
-              )}
-            </p>
-          </div>
-
-          <div
-            className={`
-              flex
-              min-h-[64px]
-              min-w-0
-              flex-col
-              items-center
-              justify-center
-              rounded-[16px]
-              border
-              px-2
-              py-1.5
-              transition-[opacity,border-color,box-shadow,background-color]
-              duration-200
-              ease-[var(--ease-out)]
-              sm:min-h-[76px]
-              sm:px-3
-
-              ${
-                isSide1Turn
-                  ? `
-                    border-fuchsia-300/80
-                    bg-gradient-to-br
-                    from-fuchsia-500/35
-                    via-pink-500/25
-                    to-purple-500/20
-                    shadow-[0_0_26px_rgba(217,70,239,0.28)]
-                  `
-                  : isSide2Turn
-                    ? `
-                      border-cyan-300/80
-                      bg-gradient-to-br
-                      from-cyan-400/35
-                      via-sky-500/25
-                      to-blue-500/20
-                      shadow-[0_0_26px_rgba(34,211,238,0.28)]
-                    `
-                    : useDuoNeutral
-                      ? `
-                        border-violet-300/45
-                        bg-gradient-to-r
-                        from-fuchsia-500/24
-                        via-violet-500/24
-                        to-cyan-400/24
-                        shadow-[0_0_28px_rgba(139,92,246,0.18)]
-                      `
-                      : `
-                        border-white/20
-                        bg-white/10
-                      `
-              }
-            `}
-          >
-            <p
-              className={`
-                text-[11px]
-                font-bold
-                leading-none
-                sm:text-xs
-
-                ${useDuoNeutral ? "text-white/65" : "text-white/55"}
-              `}
-            >
-              الدور الحالي
-            </p>
-
-            <p
-              dir="auto"
-              className={`
-                mt-1
-                line-clamp-2
-                max-w-full
-                text-center
-                text-base
-                [overflow-wrap:anywhere]
-                font-black
-                leading-tight
-                transition-colors
-                duration-200
-                ease-[var(--ease-out)]
-                sm:text-2xl
-
-                ${
-                  isSide1Turn
-                    ? "text-fuchsia-50"
-                    : isSide2Turn
-                      ? "text-cyan-50"
-                      : "text-white"
-                }
-              `}
-            >
-              {useDuoNeutral
-                ? splitEmoji(displayedTurn).map((part, index) =>
-                    part.emoji ? (
-                      <span key={index}>{part.text}</span>
-                    ) : (
-                      <span
-                        key={index}
-                        className="bg-gradient-to-r from-fuchsia-200 via-white to-cyan-200 bg-clip-text text-transparent"
-                      >
-                        {part.text}
-                      </span>
-                    ),
-                  )
-                : displayedTurn}
-            </p>
-          </div>
-
-          <div
-            className={`
-              flex
-              min-h-[64px]
-              min-w-0
-              flex-col
-              items-center
-              justify-center
-              rounded-[16px]
-              border
-              px-2
-              py-1.5
-              transition-[opacity,border-color,box-shadow,background-color]
-              duration-200
-              ease-[var(--ease-out)]
-              sm:min-h-[76px]
-              sm:px-3
-
-              ${
-                isSide2Turn
-                  ? `
-                    border-cyan-300/70
-                    bg-gradient-to-br
-                    from-cyan-400/30
-                    via-sky-500/20
-                    to-blue-500/15
-                    shadow-[0_0_24px_rgba(34,211,238,0.25)]
-                  `
-                  : `
-                    border-cyan-300/15
-                    bg-cyan-400/[0.06]
-                    opacity-75
-                  `
-              }
-            `}
-          >
-            <p
-              dir="auto"
-              className={`
-                line-clamp-2
-                max-w-full
-                text-center
-                text-xs
-                [overflow-wrap:anywhere]
-                font-bold
-                leading-tight
-                transition-colors
-                duration-200
-                ease-[var(--ease-out)]
-
-                ${isSide2Turn ? "text-cyan-100" : "text-white/75"}
-              `}
-            >
-              {side2}
-            </p>
-
-            <p
-              className={`
-                mt-1
-                flex
-                items-center
-                justify-center
-                text-[34px]
-                font-black
-                leading-[0.9]
-                transition-colors
-                duration-200
-                ease-[var(--ease-out)]
-                sm:text-[52px]
-
-                ${isSide2Turn ? "text-cyan-100" : "text-cyan-200/75"}
-              `}
-            >
-              {sideStatus ? (
-                <span className="py-1 text-base leading-tight sm:text-xl">
-                  {sideStatus.side2}
-                </span>
-              ) : (
-                side2Score
-              )}
-            </p>
-          </div>
-        </div>
-
-        <div
-          className="
-            rounded-[20px]
-            border border-white/10
-            bg-[#0d1236]/70
-            p-2
-            sm:p-3
-            lg:p-4
-          "
-        >
-          {children}
+        <div className="flex w-16 shrink-0 justify-end">
+          {game ? <HowToPlayButton game={game} /> : null}
         </div>
       </div>
+
+      <div className="mt-3 grid grid-cols-2 gap-3">
+        <TeamPanel
+          name={side1}
+          value={sideStatus ? sideStatus.side1 : side1Score}
+          isStatus={Boolean(sideStatus)}
+          active={isSide1Turn || useDuoNeutral}
+          tone="orange"
+        />
+
+        <TeamPanel
+          name={side2}
+          value={sideStatus ? sideStatus.side2 : side2Score}
+          isStatus={Boolean(sideStatus)}
+          active={isSide2Turn || useDuoNeutral}
+          tone="blue"
+        />
+      </div>
+
+      <p className="mt-4 text-center text-base font-bold text-white/55 sm:text-lg">
+        {isNeutralTurn ? (
+          <span dir="auto" className="font-black text-white">
+            {displayedTurn}
+          </span>
+        ) : (
+          <>
+            الدور على{" "}
+            <span dir="auto" className={`font-black ${turnColor}`}>
+              {displayedTurn}
+            </span>
+          </>
+        )}
+      </p>
+
+      <div className="mt-4">{children}</div>
+    </div>
+  );
+}
+
+function TeamPanel({
+  name,
+  value,
+  isStatus,
+  active,
+  tone,
+}: {
+  name: string;
+  value: ReactNode;
+  isStatus: boolean;
+  active: boolean;
+  tone: "orange" | "blue";
+}) {
+  const activeClass =
+    tone === "orange"
+      ? "bg-[#ffb21e] text-[#241339] shadow-[0_5px_0_#c27700]"
+      : "bg-[#2f9bff] text-white shadow-[0_5px_0_#1662b8]";
+
+  return (
+    <div
+      className={`flex min-h-[78px] min-w-0 flex-col items-center justify-center rounded-2xl px-3 py-2 transition-[background-color,color,box-shadow] duration-200 ease-[var(--ease-out)] sm:min-h-[92px] ${
+        active
+          ? activeClass
+          : "bg-[#221a3f] text-white/70 shadow-[0_5px_0_#140f29]"
+      }`}
+    >
+      <p
+        dir="auto"
+        className="line-clamp-1 max-w-full text-sm font-black leading-tight [overflow-wrap:anywhere]"
+      >
+        {name}
+      </p>
+
+      <p
+        className={`mt-1 font-black leading-none ${
+          isStatus ? "text-base sm:text-lg" : "text-4xl sm:text-5xl"
+        }`}
+      >
+        {value}
+      </p>
     </div>
   );
 }

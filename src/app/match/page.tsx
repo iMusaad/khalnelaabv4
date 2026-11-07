@@ -34,6 +34,7 @@ import {
 import { createResultShareImage } from "@/lib/shareImage";
 import type { WinnerType } from "@/types/game";
 import type { ModeType, RoundStat } from "@/types/match";
+import HomeIcon from "@/components/HomeIcon";
 
 type PhaseType = "setup" | "countdown" | "playing" | "transition" | "finished";
 
@@ -705,7 +706,7 @@ export default function MatchPage() {
         aria-label="الرئيسية"
         className="nav-pill fixed left-3 top-3 z-[60] px-0 sm:left-5 sm:top-5 sm:px-4"
       >
-        <span aria-hidden="true">🏠</span>
+        <HomeIcon />
         <span className="hidden lg:inline">الرئيسية</span>
       </Link>
 

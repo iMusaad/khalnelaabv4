@@ -379,30 +379,17 @@ export default function LogoGame({
         game="logo"
       >
         <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white/70">
-              الشعار <span className="text-white">{index + 1}</span>
-              {" / "}
-              {rounds.length}
-            </div>
-
+          <p className="text-center text-sm font-bold text-white/50">
+            الشعار {index + 1} من {rounds.length}
             {!revealed && timerEnabled && (
-              <div
-                className={`rounded-full border border-white/10 bg-white/5 px-4 py-2 text-lg font-black ${timerClass}`}
-              >
-                ⏱️ {timeLeft}
-              </div>
+              <span className={`ms-3 font-black ${timerClass}`}>
+                {timeLeft} ثانية
+              </span>
             )}
+          </p>
 
-            {!revealed && (
-              <div className="rounded-full border border-cyan-300/20 bg-cyan-400/10 px-4 py-2 text-sm font-bold text-cyan-100">
-                تعرفونه وهو مبكسل؟
-              </div>
-            )}
-          </div>
-
-          <div className="rounded-3xl border border-white/10 bg-white/[0.05] p-4 sm:p-5">
-            <div className="mx-auto max-w-[480px] rounded-[26px] bg-white p-4 shadow-[0_12px_40px_rgba(0,0,0,0.18)] sm:p-7">
+          <div className="text-center">
+            <div className="mx-auto max-w-[440px] rounded-3xl bg-white p-4 shadow-[0_6px_0_#cfc8e6] sm:p-7">
               <PixelatedLogo
                 key={current.id}
                 logo={current}

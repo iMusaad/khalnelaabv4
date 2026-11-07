@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { HOW_TO_PLAY as games } from "@/data/howToPlay";
+import HomeIcon from "@/components/HomeIcon";
 
 export default function GuidePage() {
   const [flippedCard, setFlippedCard] = useState<number | null>(null);
@@ -25,7 +26,7 @@ export default function GuidePage() {
           </div>
 
           <Link href="/" className="nav-pill shrink-0">
-            <span aria-hidden="true">🏠</span>
+            <HomeIcon />
             الرئيسية
           </Link>
         </header>
