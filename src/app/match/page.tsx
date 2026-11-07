@@ -138,6 +138,8 @@ export default function MatchPage() {
 
   const [selectedGames, setSelectedGames] = useState<GameType[]>([]);
 
+  const [pinnedGame, setPinnedGame] = useState<GameType | null>(null);
+
   const [gameRounds, setGameRounds] = useState<Record<string, number>>({});
 
   const [quizCategories, setQuizCategories] = useState<QuizCategoryKey[]>([]);
@@ -500,6 +502,18 @@ export default function MatchPage() {
 
     if (urlMode === "session" || !isGameType(gameParam)) {
       setMode("session");
+
+      const pickParam = params.get("pick");
+
+      if (isGameType(pickParam)) {
+        setPinnedGame(pickParam);
+        setSelectedGames([pickParam]);
+
+        setGameRounds({
+          [pickParam]: getDefaultRounds(pickParam),
+        });
+      }
+
       return;
     }
 
@@ -742,6 +756,7 @@ export default function MatchPage() {
           setSide1={setSide1}
           setSide2={setSide2}
           selectedGames={selectedGames}
+          pinnedGame={pinnedGame}
           setSelectedGames={setSelectedGames}
           gameRounds={gameRounds}
           setGameRounds={setGameRounds}

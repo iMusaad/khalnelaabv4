@@ -23,6 +23,7 @@ type SetupGameProps = {
   setSide1: (value: string) => void;
   setSide2: (value: string) => void;
   selectedGames: SetupGameId[];
+  pinnedGame?: SetupGameId | null;
   setSelectedGames: Dispatch<SetStateAction<SetupGameId[]>>;
   gameRounds: Record<string, number>;
   setGameRounds: Dispatch<SetStateAction<Record<string, number>>>;
@@ -134,6 +135,7 @@ export default function SetupGame({
   setSide1,
   setSide2,
   selectedGames,
+  pinnedGame = null,
   setSelectedGames,
   gameRounds,
   setGameRounds,
@@ -199,9 +201,16 @@ export default function SetupGame({
     }));
   }
 
+  const orderedGames = pinnedGame
+    ? [
+        ...GAMES.filter((game) => game.id === pinnedGame),
+        ...GAMES.filter((game) => game.id !== pinnedGame),
+      ]
+    : GAMES;
+
   const visibleGames = isQuickMode
     ? GAMES.filter((game) => selectedGames.includes(game.id))
-    : GAMES;
+    : orderedGames;
 
   return (
     <div className="intro mx-auto w-full max-w-[1100px] pb-6 text-white sm:px-2">

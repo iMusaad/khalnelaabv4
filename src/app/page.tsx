@@ -19,7 +19,7 @@ type GameCard = {
 
 const GAME_CARDS: GameCard[] = [
   {
-    href: "/match?game=scramble",
+    href: "/match?mode=session&pick=scramble",
     image: "/images/posters/Whogame.png",
     title: "منهو ذا؟",
     x: -405,
@@ -29,7 +29,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -1.2,
   },
   {
-    href: "/match?game=quiz",
+    href: "/match?mode=session&pick=quiz",
     image: "/images/posters/Quizgame.png",
     title: "أسئلة وأجوبة",
     x: -315,
@@ -39,7 +39,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -3.6,
   },
   {
-    href: "/match?game=word",
+    href: "/match?mode=session&pick=word",
     image: "/images/posters/wordgame.png",
     title: "خمن الكلمة",
     x: -225,
@@ -49,7 +49,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -2.1,
   },
   {
-    href: "/match?game=logo",
+    href: "/match?mode=session&pick=logo",
     image: "/images/posters/Logogame.png",
     title: "خمن الشعار",
     x: -135,
@@ -59,7 +59,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -5.1,
   },
   {
-    href: "/match?game=car",
+    href: "/match?mode=session&pick=car",
     image: "/images/posters/Cargame.png",
     title: "عينك عالموتر",
     x: -45,
@@ -69,7 +69,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -3.3,
   },
   {
-    href: "/match?game=club",
+    href: "/match?mode=session&pick=club",
     image: "/images/posters/Clubgame.png",
     title: "وش ناديك؟",
     x: 45,
@@ -79,7 +79,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -4.1,
   },
   {
-    href: "/match?game=country",
+    href: "/match?mode=session&pick=country",
     image: "/images/posters/Countries.png",
     title: "خمن العلم",
     x: 135,
@@ -89,7 +89,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -1.8,
   },
   {
-    href: "/match?game=wheel",
+    href: "/match?mode=session&pick=wheel",
     image: "/images/posters/Wheelgame.png",
     title: "لف وخمن",
     x: 225,
@@ -99,7 +99,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -4.4,
   },
   {
-    href: "/match?game=draw",
+    href: "/match?mode=session&pick=draw",
     image: "/images/posters/Proverbgame.png",
     title: "خمن المثل",
     x: 315,
@@ -109,7 +109,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -0.7,
   },
   {
-    href: "/match?game=categories",
+    href: "/match?mode=session&pick=categories",
     image: "/images/posters/Categoriesgame.png",
     title: "إنسان حيوان نبات جماد بلاد",
     x: 405,
@@ -234,11 +234,11 @@ export default function Home() {
           <div className="relative mx-auto mt-3 max-w-[1120px] pb-1 pt-3">
             <div className="relative z-10 text-center">
               <h2 className="text-xl font-black sm:text-2xl">
-                جرّبوا لعبة وحدة
+                ابدأوا من لعبة تحبونها
               </h2>
 
               <p className="mt-1 text-sm font-bold text-white/45">
-                ما عندكم وقت لجلسة كاملة؟ اضغطوا على أي لعبة
+                اضغطوا على لعبة وتنضاف لتحدي الجلسة، وضيفوا معها اللي تبون
               </p>
             </div>
 
