@@ -60,9 +60,7 @@ export function OverlayHeading({
 }) {
   return (
     <>
-      {kicker && (
-        <p className="text-sm font-black text-cyan-300/80">{kicker}</p>
-      )}
+      {kicker && <p className="text-sm font-black text-white/50">{kicker}</p>}
 
       <h1 className="arcade-title mt-3">{title}</h1>
 

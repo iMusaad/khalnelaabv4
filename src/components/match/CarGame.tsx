@@ -229,7 +229,7 @@ export default function CarGame({
       ? "animate-pulse text-red-300"
       : timeLeft <= 6
         ? "text-yellow-300"
-        : "text-cyan-300";
+        : "text-white/70";
 
   const zoom = revealed ? 1 : ZOOM_LEVELS[stage];
 
@@ -246,30 +246,25 @@ export default function CarGame({
       game="car"
     >
       <div className="flex flex-col gap-4">
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white/70">
-            الموتر <span className="text-white">{index + 1}</span>
-            {" / "}
-            {rounds.length}
-          </div>
-
+        <p className="text-center text-sm font-bold text-white/50">
+          الموتر {index + 1} من {rounds.length}
           {!revealed && (
-            <div className="rounded-full border border-yellow-300/25 bg-yellow-300/10 px-4 py-2 text-sm font-black text-yellow-100">
-              لو عرفتوه الحين: {pointsLabel(stagePoints)}
-            </div>
+            <>
+              {" · "}
+              <span className="font-black text-[#ffb21e]">
+                لو عرفتوه الحين: {pointsLabel(stagePoints)}
+              </span>
+            </>
           )}
-
           {!revealed && timerEnabled && (
-            <div
-              className={`rounded-full border border-white/10 bg-white/5 px-4 py-2 text-lg font-black ${timerClass}`}
-            >
-              ⏱️ {timeLeft}
-            </div>
+            <span className={`ms-3 font-black ${timerClass}`}>
+              {timeLeft} ثانية
+            </span>
           )}
-        </div>
+        </p>
 
-        <div className="rounded-3xl border border-white/10 bg-white/[0.05] p-3 sm:p-5">
-          <div className="relative mx-auto aspect-[4/3] w-full max-w-[560px] overflow-hidden rounded-[22px] bg-black">
+        <div className="text-center">
+          <div className="relative mx-auto aspect-[4/3] w-full max-w-[560px] overflow-hidden rounded-3xl bg-black shadow-[0_6px_0_#0b0818]">
             <img
               src={current.image}
               alt={revealed ? `${current.brand} ${current.model}` : ""}
@@ -291,7 +286,7 @@ export default function CarGame({
                 <span
                   key={level}
                   className={`h-1.5 w-8 rounded-full ${
-                    level <= stage ? "bg-cyan-300" : "bg-white/15"
+                    level <= stage ? "bg-[#ffb21e]" : "bg-white/15"
                   }`}
                 />
               ))}
@@ -314,7 +309,7 @@ export default function CarGame({
         <div className="flex flex-wrap justify-center gap-3">
           {!revealed && !isLastStage && (
             <button type="button" onClick={zoomOut} className="btn-secondary">
-              🔍 بعّد الصورة
+              بعّد الصورة
             </button>
           )}
 

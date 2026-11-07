@@ -42,8 +42,8 @@ function normalizeArabic(text: string) {
 
 function formatValue(value: Value | null) {
   if (value === null) return "لف العجلة";
-  if (value === "bankrupt") return "💸 إفلاس";
-  if (value === "lose") return "❌ خسارة الدور";
+  if (value === "bankrupt") return "إفلاس";
+  if (value === "lose") return "خسارة الدور";
   return `${value}`;
 }
 
@@ -617,7 +617,7 @@ export default function WheelGame({
       ? "animate-pulse text-red-300"
       : timeLeft <= 10
         ? "text-yellow-200"
-        : "text-cyan-200";
+        : "text-white/70";
 
   return (
     <>
@@ -635,25 +635,25 @@ export default function WheelGame({
       >
         <div className="flex flex-col gap-4">
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-400/10 px-4 py-2 text-sm font-bold text-cyan-100">
+            <div className="inline-flex items-center gap-2 text-sm font-black text-white/80">
               <span className="text-white/70">التصنيف:</span>
 
               <span>{category}</span>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-base font-bold md:text-lg">
+          <div className="py-1 text-center text-base font-black md:text-lg">
             {phase === "result"
               ? `طلعت لك: ${formatValue(currentValue)}`
               : phase === "guess"
                 ? `اختاروا حرف — الحرف بـ ${formatValue(currentValue)}`
                 : phase === "celebrate"
-                  ? "🏆 انتهت الجولة!"
+                  ? "انتهت الجولة"
                   : "لف العجلة"}
 
             {phase === "guess" && timerEnabled && (
               <span className={`mr-3 font-black ${timerTextClass}`}>
-                ⏱️ {timeLeft}
+                {timeLeft} ثانية
               </span>
             )}
           </div>
@@ -668,7 +668,7 @@ export default function WheelGame({
                   {word.map((letter, i) => (
                     <div
                       key={`${wordIndex}-${i}`}
-                      className="flex h-10 w-9 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-xl font-black sm:h-14 sm:w-14 sm:rounded-2xl sm:text-2xl"
+                      className="flex h-10 w-9 items-center justify-center rounded-xl bg-[#221a3f] text-xl font-black shadow-[0_3px_0_#140f29] sm:h-14 sm:w-14 sm:rounded-2xl sm:text-2xl"
                     >
                       {letter || ""}
                     </div>
@@ -677,7 +677,7 @@ export default function WheelGame({
 
                 {wordIndex < revealedWordGroups.length - 1 && (
                   <div className="hidden h-10 w-6 items-center justify-center md:flex">
-                    <div className="h-1 w-6 rounded-full bg-cyan-300/50" />
+                    <div className="h-1 w-6 rounded-full bg-white/30" />
                   </div>
                 )}
               </div>
@@ -804,8 +804,8 @@ export default function WheelGame({
                             disabled={isUsed}
                             className={`h-11 min-w-[40px] rounded-xl border px-2 text-base font-bold transition sm:min-w-[44px] sm:px-3 ${
                               isUsed
-                                ? "border-white/5 bg-white/5 text-white/25"
-                                : "border-white/10 bg-white/10 text-white hover:bg-white/20 active:scale-95"
+                                ? "border-transparent bg-white/[0.04] text-white/25"
+                                : "border-transparent bg-[#2a2150] text-white shadow-[0_3px_0_#160f2e] hover:bg-[#342a60] active:translate-y-[2px] active:shadow-none"
                             }`}
                           >
                             {letter}
@@ -831,7 +831,7 @@ export default function WheelGame({
                       autoCorrect="off"
                       spellCheck={false}
                       enterKeyHint="done"
-                      className="h-12 min-w-0 flex-1 rounded-2xl border border-white/15 bg-black/25 px-4 text-center text-lg font-black text-white outline-none placeholder:text-white/35 focus:border-cyan-300/60"
+                      className="h-12 min-w-0 flex-1 rounded-2xl border border-white/20 bg-transparent px-4 text-center text-lg font-black text-white outline-none placeholder:text-white/35 focus:border-white/60"
                     />
 
                     <div className="grid grid-cols-2 gap-2 sm:flex">

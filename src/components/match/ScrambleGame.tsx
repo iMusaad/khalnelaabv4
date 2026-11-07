@@ -222,7 +222,7 @@ export default function ScrambleGame({
       ? "animate-pulse text-red-300"
       : timeLeft <= 10
         ? "text-yellow-300"
-        : "text-cyan-300";
+        : "text-white/70";
 
   return (
     <>
@@ -238,9 +238,9 @@ export default function ScrambleGame({
         game="scramble"
       >
         <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-center justify-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
             {rounds.length > 1 && (
-              <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white/70">
+              <div className="text-sm font-bold text-white/50">
                 الشخصية <span className="text-white">{index + 1}</span>
                 {" / "}
                 {rounds.length}
@@ -248,21 +248,19 @@ export default function ScrambleGame({
             )}
 
             {started && !revealed && timerEnabled && (
-              <div
-                className={`rounded-full border border-white/10 bg-white/5 px-4 py-2 text-lg font-black ${timerClass}`}
-              >
-                ⏱️ {timeLeft}
+              <div className={`text-sm font-black ${timerClass}`}>
+                {timeLeft} ثانية
               </div>
             )}
 
             {!started && !revealed && (
-              <div className="rounded-full border border-cyan-300/20 bg-cyan-400/10 px-4 py-2 text-sm font-bold text-cyan-100">
+              <div className="text-sm font-black text-white/80">
                 واحد من {activeTeamName} يمسح الكود
               </div>
             )}
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.05] p-5 sm:p-6">
+          <div className="rounded-3xl bg-[#221a3f] p-5 sm:p-6 shadow-[0_6px_0_#140f29]">
             {!revealed ? (
               <div className="flex flex-col items-center gap-4">
                 <div className="rounded-2xl bg-white p-2.5">

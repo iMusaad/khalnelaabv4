@@ -129,12 +129,12 @@ export default function CountryGame({
       side2Score={0}
       sideStatus={
         revealed
-          ? { side1: "🚩 انكشف", side2: "🚩 انكشف" }
+          ? { side1: "انكشف", side2: "انكشف" }
           : started
-            ? { side1: "يخمنون 🤔", side2: "يخمنون 🤔" }
-            : { side1: "يمسحون 📱", side2: "يمسحون 📱" }
+            ? { side1: "يخمنون", side2: "يخمنون" }
+            : { side1: "يمسحون الكود", side2: "يمسحون الكود" }
       }
-      turn={started ? "خمنوا الأعلام" : "جاهزين؟ 👀"}
+      turn={started ? "خمنوا الأعلام" : "جاهزين؟"}
       neutralTurnStyle="duo"
       currentRound={currentRound}
       game="country"
@@ -168,15 +168,13 @@ export default function CountryGame({
                   w-full
                   max-w-[310px]
                   rounded-[20px]
-                  border
-                  border-fuchsia-300/20
-                  bg-fuchsia-500/[0.045]
+                  bg-[#221a3f]
                   p-3
                   text-center
-                  shadow-[0_0_24px_rgba(217,70,239,.05)]
+                  shadow-[0_5px_0_#140f29]
                 "
               >
-                <p className="text-base font-black text-fuchsia-100">{side1}</p>
+                <p className="text-base font-black text-[#ffb21e]">{side1}</p>
 
                 <div className="mx-auto mt-3 w-fit rounded-[16px] bg-white p-2">
                   {side2FlagUrl ? (
@@ -197,15 +195,13 @@ export default function CountryGame({
                   w-full
                   max-w-[310px]
                   rounded-[20px]
-                  border
-                  border-cyan-300/20
-                  bg-cyan-400/[0.045]
+                  bg-[#221a3f]
                   p-3
                   text-center
-                  shadow-[0_0_24px_rgba(34,211,238,.05)]
+                  shadow-[0_5px_0_#140f29]
                 "
               >
-                <p className="text-base font-black text-cyan-100">{side2}</p>
+                <p className="text-base font-black text-[#4aa8ff]">{side2}</p>
 
                 <div className="mx-auto mt-3 w-fit rounded-[16px] bg-white p-2">
                   {side1FlagUrl ? (
@@ -221,25 +217,9 @@ export default function CountryGame({
               </div>
             </div>
 
-            <div
-              className="
-                mx-auto
-                mt-5
-                w-fit
-                rounded-full
-                border
-                border-yellow-300/20
-                bg-yellow-300/[0.07]
-                px-5
-                py-2
-                text-center
-                text-sm
-                font-black
-                text-yellow-100/85
-              "
-            >
-              اللي يسكن كود الفريق اللي ضده يا ويله 👀
-            </div>
+            <p className="mt-5 text-center text-sm font-bold text-white/50">
+              اللي يسكن كود الفريق اللي ضده يا ويله
+            </p>
 
             <button
               type="button"
@@ -255,19 +235,9 @@ export default function CountryGame({
           </>
         ) : (
           <>
-            <div
-              className="
-                rounded-[24px]
-                border
-                border-white/10
-                bg-white/[0.035]
-                px-5
-                py-6
-                text-center
-              "
-            >
+            <div className="py-2 text-center">
               <h2 className="text-2xl font-black text-white sm:text-3xl">
-                وش علمكم؟ 🤔
+                وش علمكم؟
               </h2>
 
               <p className="mx-auto mt-3 max-w-xl text-sm font-bold leading-6 text-white/55">
@@ -276,25 +246,11 @@ export default function CountryGame({
 
               {timerEnabled && (
                 <div
-                  className={`
-                    mx-auto
-                    mt-5
-                    w-fit
-                    rounded-full
-                    border
-                    px-5
-                    py-2
-                    text-lg
-                    font-black
-
-                    ${
-                      timeLeft <= 10
-                        ? "border-red-300/30 bg-red-400/10 text-red-200"
-                        : "border-cyan-300/20 bg-cyan-400/[0.07] text-cyan-100"
-                    }
-                  `}
+                  className={`mt-4 text-center text-lg font-black ${
+                    timeLeft <= 10 ? "text-red-300" : "text-white/70"
+                  }`}
                 >
-                  ⏱️ {timeLeft} ثانية
+                  {timeLeft} ثانية
                 </div>
               )}
             </div>
@@ -313,15 +269,13 @@ export default function CountryGame({
                   <div
                     className="
                       rounded-[22px]
-                      border
-                      border-fuchsia-300/20
-                      bg-fuchsia-500/[0.055]
+                      bg-[#221a3f]
                       p-3
                       text-center
                       sm:p-4
                     "
                   >
-                    <p className="text-sm font-black text-fuchsia-100">
+                    <p className="text-sm font-black text-[#ffb21e]">
                       علم {side1}
                     </p>
 
@@ -341,15 +295,13 @@ export default function CountryGame({
                   <div
                     className="
                       rounded-[22px]
-                      border
-                      border-cyan-300/20
-                      bg-cyan-400/[0.055]
+                      bg-[#221a3f]
                       p-3
                       text-center
                       sm:p-4
                     "
                   >
-                    <p className="text-sm font-black text-cyan-100">
+                    <p className="text-sm font-black text-[#4aa8ff]">
                       علم {side2}
                     </p>
 

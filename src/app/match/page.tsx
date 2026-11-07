@@ -53,8 +53,8 @@ const GAME_LOADERS = {
 
 function GameLoading() {
   return (
-    <div className="mx-auto w-full max-w-5xl rounded-[24px] border border-white/10 bg-[#121028]/80 p-8 text-center">
-      <p className="text-sm font-black text-cyan-200/70">لحظة نجهز اللعبة...</p>
+    <div className="mx-auto w-full max-w-5xl p-8 text-center">
+      <p className="text-sm font-black text-white/50">لحظة نجهز اللعبة...</p>
     </div>
   );
 }
@@ -739,7 +739,7 @@ export default function MatchPage() {
         title="مين أخذها؟ 🏆"
         side1Name={side1}
         side2Name={side2}
-        noneLabel="ولا أحد 🤝"
+        noneLabel="ولا أحد"
         onPick={applyRoundWinner}
       />
 

@@ -92,21 +92,21 @@ export function WinnerOverlay({
 
       <div className="mx-auto mt-5 grid max-w-2xl grid-cols-[1fr_auto_1fr] items-stretch gap-2 sm:mt-6 sm:gap-4">
         <div
-          className={`min-w-0 rounded-[24px] border p-3 sm:p-5 ${
+          className={`min-w-0 rounded-[24px] p-3 sm:p-5 ${
             side1Leads
-              ? "border-fuchsia-300/80 bg-gradient-to-br from-fuchsia-500/40 to-purple-500/20"
-              : "border-fuchsia-300/30 bg-fuchsia-500/10"
+              ? "bg-[#ffb21e] text-[#241339] shadow-[0_6px_0_#c27700]"
+              : "bg-[#221a3f] text-white/75 shadow-[0_6px_0_#140f29]"
           }`}
         >
           <p
             dir="auto"
-            className="line-clamp-2 text-sm font-black text-fuchsia-100/90 [overflow-wrap:anywhere] sm:text-base"
+            className="line-clamp-2 text-sm font-black [overflow-wrap:anywhere] sm:text-base"
           >
             {side1Leads && "👑 "}
             {side1Name || "فريق 1"}
           </p>
 
-          <p className="mt-2 text-5xl font-black leading-none text-fuchsia-50 sm:text-6xl">
+          <p className="mt-2 text-5xl font-black leading-none sm:text-6xl">
             {side1Score}
           </p>
         </div>
@@ -116,21 +116,21 @@ export function WinnerOverlay({
         </div>
 
         <div
-          className={`min-w-0 rounded-[24px] border p-3 sm:p-5 ${
+          className={`min-w-0 rounded-[24px] p-3 sm:p-5 ${
             side2Leads
-              ? "border-cyan-300/80 bg-gradient-to-br from-cyan-400/40 to-blue-500/20"
-              : "border-cyan-300/30 bg-cyan-400/10"
+              ? "bg-[#2f9bff] text-white shadow-[0_6px_0_#1662b8]"
+              : "bg-[#221a3f] text-white/75 shadow-[0_6px_0_#140f29]"
           }`}
         >
           <p
             dir="auto"
-            className="line-clamp-2 text-sm font-black text-cyan-100/90 [overflow-wrap:anywhere] sm:text-base"
+            className="line-clamp-2 text-sm font-black [overflow-wrap:anywhere] sm:text-base"
           >
             {side2Leads && "👑 "}
             {side2Name || "فريق 2"}
           </p>
 
-          <p className="mt-2 text-5xl font-black leading-none text-cyan-50 sm:text-6xl">
+          <p className="mt-2 text-5xl font-black leading-none sm:text-6xl">
             {side2Score}
           </p>
         </div>
@@ -151,7 +151,7 @@ export function WinnerOverlay({
             {gameStats.map((stat) => (
               <div
                 key={stat.game}
-                className="flex items-center justify-between gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-2.5"
+                className="flex items-center justify-between gap-3 border-b border-white/10 px-1 py-2.5"
               >
                 <div className="min-w-0">
                   <p className="truncate text-sm font-black text-white sm:text-base">
@@ -168,8 +168,8 @@ export function WinnerOverlay({
                   <span
                     className={`flex h-9 min-w-[38px] items-center justify-center rounded-xl border px-2 text-lg font-black ${
                       stat.side1Wins > stat.side2Wins
-                        ? "border-fuchsia-300/70 bg-fuchsia-500/30 text-fuchsia-50"
-                        : "border-fuchsia-300/25 bg-fuchsia-500/10 text-fuchsia-100/70"
+                        ? "border-transparent bg-[#ffb21e] text-[#241339]"
+                        : "border-transparent bg-[#221a3f] text-white/60"
                     }`}
                   >
                     {stat.side1Wins}
@@ -180,8 +180,8 @@ export function WinnerOverlay({
                   <span
                     className={`flex h-9 min-w-[38px] items-center justify-center rounded-xl border px-2 text-lg font-black ${
                       stat.side2Wins > stat.side1Wins
-                        ? "border-cyan-300/70 bg-cyan-400/30 text-cyan-50"
-                        : "border-cyan-300/25 bg-cyan-400/10 text-cyan-100/70"
+                        ? "border-transparent bg-[#2f9bff] text-white"
+                        : "border-transparent bg-[#221a3f] text-white/60"
                     }`}
                   >
                     {stat.side2Wins}
@@ -194,7 +194,7 @@ export function WinnerOverlay({
       )}
 
       {mode === "quick" && (
-        <div className="mt-6 rounded-2xl border border-white/10 px-4 py-4 text-center">
+        <div className="mt-6 rounded-2xl bg-[#221a3f] px-4 py-4 text-center shadow-[0_5px_0_#140f29]">
           <p className="text-lg font-black text-white">عجبتكم؟</p>
 
           <p className="mt-1 text-sm font-bold leading-6 text-white/60">
@@ -257,7 +257,7 @@ export function CountdownOverlay({ countdown }: { countdown: number }) {
 export function TransitionOverlay({ nextRound }: { nextRound: Round }) {
   return (
     <OverlayShell zIndex="z-[998]">
-      <p className="text-sm font-black text-cyan-300/80">اللي بعدها</p>
+      <p className="text-sm font-black text-white/50">اللي بعدها</p>
 
       <p className="mt-4 text-3xl font-black text-white sm:text-4xl">
         {getGameName(nextRound.game)}

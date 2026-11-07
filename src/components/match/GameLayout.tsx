@@ -175,7 +175,7 @@ export default function GameLayout({
   );
 }
 
-function TeamPanel({
+export function TeamPanel({
   name,
   value,
   isStatus,

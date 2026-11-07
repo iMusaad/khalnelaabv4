@@ -17,7 +17,7 @@ export default async function PersonPage({
 
   return (
     <main className="flex min-h-[100dvh] flex-col items-center justify-center gap-4 px-4 py-6 text-center text-white">
-      <p className="text-sm font-black text-cyan-300/70">منهو ذا؟</p>
+      <p className="text-sm font-black text-white/45">منهو ذا؟</p>
 
       <img
         src={person.image}
@@ -25,8 +25,8 @@ export default async function PersonPage({
         className="max-h-[75dvh] w-auto max-w-full rounded-3xl object-contain"
       />
 
-      <p className="rounded-full border border-yellow-300/20 bg-yellow-300/[0.07] px-4 py-2 text-sm font-bold text-yellow-50/80">
-        اوصفها بدون ما تقول الاسم 🤫
+      <p className="text-sm font-black text-[#ffb21e]">
+        اوصفها بدون ما تقول الاسم
       </p>
     </main>
   );

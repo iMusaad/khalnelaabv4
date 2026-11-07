@@ -363,7 +363,7 @@ export default function LogoGame({
       ? "animate-pulse text-red-300"
       : timeLeft <= 10
         ? "text-yellow-300"
-        : "text-cyan-300";
+        : "text-white/70";
 
   return (
     <>

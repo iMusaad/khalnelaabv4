@@ -22,8 +22,8 @@ export default function SessionBattleBar({
         mb-3
         w-full
         rounded-2xl
-        border border-white/[0.08]
-        bg-[#10081c]/95
+        bg-[#1b1535]
+        shadow-[0_4px_0_#0e0a1f]
         px-4 py-2
 
         md:fixed
@@ -42,7 +42,7 @@ export default function SessionBattleBar({
       >
         <p
           dir="auto"
-          className="min-w-0 truncate text-left text-[11px] font-black text-cyan-100/70 sm:text-xs"
+          className="min-w-0 truncate text-left text-[11px] font-black text-[#4aa8ff] sm:text-xs"
         >
           {side2Name || "فريق 2"}
         </p>
@@ -63,29 +63,26 @@ export default function SessionBattleBar({
             </>
           ) : (
             <span className="text-[11px] font-black text-amber-100/80 sm:text-xs">
-              🏆 آخر لعبة
+              آخر لعبة
             </span>
           )}
         </div>
 
         <p
           dir="auto"
-          className="min-w-0 truncate text-right text-[11px] font-black text-fuchsia-100/70 sm:text-xs"
+          className="min-w-0 truncate text-right text-[11px] font-black text-[#ffb21e] sm:text-xs"
         >
           {side1Name || "فريق 1"}
         </p>
       </div>
 
       <div className="relative">
-        <div className="relative h-2.5 overflow-hidden rounded-full border border-white/[0.07] bg-gradient-to-r from-cyan-500 via-cyan-500 to-cyan-400">
+        <div className="relative h-2.5 overflow-hidden rounded-full bg-[#2f9bff]">
           <div
             className="
               absolute inset-0
               origin-right
-              bg-gradient-to-l
-              from-fuchsia-600
-              via-fuchsia-500
-              to-purple-500
+              bg-[#ffb21e]
               transition-transform
               duration-700
               ease-[var(--ease-out)]
@@ -117,10 +114,9 @@ export default function SessionBattleBar({
               -translate-x-1/2 -translate-y-1/2
               items-center justify-center
               rounded-full
-              border border-white/15
-              bg-[#130b20]
+              bg-white
               text-[9px]
-              shadow-[0_0_7px_rgba(139,92,246,.18)]
+              shadow-[0_2px_0_#140f29]
             "
           >
             🏆

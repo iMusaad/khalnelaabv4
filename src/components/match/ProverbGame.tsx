@@ -211,7 +211,7 @@ export default function ProverbGame({
       ? "animate-pulse text-red-300"
       : timeLeft <= 10
         ? "text-yellow-200"
-        : "text-cyan-200";
+        : "text-white/70";
 
   const isLastProverb = index + 1 >= rounds.length;
 
@@ -229,24 +229,22 @@ export default function ProverbGame({
         game="draw"
       >
         <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white/70">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+            <div className="text-sm font-bold text-white/50">
               المثل <span className="text-white">{index + 1}</span>
               {" / "}
               {rounds.length}
             </div>
 
             {secondTurn && !revealed && (
-              <div className="rounded-full border border-yellow-300/25 bg-yellow-400/10 px-4 py-2 text-sm font-bold text-yellow-100">
+              <div className="text-sm font-black text-[#ffb21e]">
                 فرصة ثانية
               </div>
             )}
 
             {timerEnabled && !revealed && (
-              <div
-                className={`rounded-full border border-white/10 bg-white/5 px-4 py-2 text-lg font-black ${timerTextClass}`}
-              >
-                ⏱️ {timeLeft}
+              <div className={`text-sm font-black ${timerTextClass}`}>
+                {timeLeft} ثانية
               </div>
             )}
           </div>
@@ -259,12 +257,10 @@ export default function ProverbGame({
           />
 
           {revealed && (
-            <div className="rounded-2xl border border-yellow-300/25 bg-yellow-300/10 p-5">
-              <p className="text-sm font-bold text-white/60">الإجابة</p>
+            <div className="rounded-2xl bg-[#ffb21e] p-5 text-[#241339] shadow-[0_5px_0_#c27700]">
+              <p className="text-sm font-bold opacity-70">الإجابة</p>
 
-              <p className="mt-2 text-2xl font-black text-white">
-                {current.answer}
-              </p>
+              <p className="mt-2 text-2xl font-black">{current.answer}</p>
             </div>
           )}
 

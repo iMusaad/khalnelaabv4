@@ -51,17 +51,15 @@ export default async function CountryFlagPage({
           w-full
           max-w-md
           rounded-3xl
-          border
-          border-white/10
-          bg-white/5
+          bg-[#1b1535]
           p-6
           text-center
-          shadow-2xl
+          shadow-[0_8px_0_#0e0a1f]
         "
       >
-        <p className="text-sm font-black text-cyan-300/70">خل نلعب</p>
+        <p className="text-sm font-black text-white/45">خل نلعب</p>
 
-        <h1 className="mt-2 text-2xl font-black">خمن العلم 🚩</h1>
+        <h1 className="mt-2 text-2xl font-black">خمن العلم</h1>
 
         <p className="mt-2 text-sm font-bold text-white/55">
           هذا العلم اللي لازم الفريق الثاني يخمنه
@@ -102,13 +100,13 @@ export default async function CountryFlagPage({
               معلومات تساعدك تجاوب على أسئلتهم
             </p>
 
-            <dl className="mt-3 divide-y divide-white/10 rounded-2xl border border-white/10 bg-black/20">
+            <dl className="mt-3 divide-y divide-white/10 rounded-2xl bg-[#15102b]">
               {factRows.map((row) => (
                 <div
                   key={row.label}
                   className="flex items-start justify-between gap-4 px-4 py-2.5"
                 >
-                  <dt className="shrink-0 text-sm font-bold text-cyan-200/80">
+                  <dt className="shrink-0 text-sm font-bold text-white/55">
                     {row.label}
                   </dt>
                   <dd className="text-left text-sm font-black text-white">
@@ -120,21 +118,9 @@ export default async function CountryFlagPage({
           </div>
         )}
 
-        <div
-          className="
-            mt-5
-            rounded-2xl
-            border
-            border-yellow-300/15
-            bg-yellow-300/[0.06]
-            px-4
-            py-3
-          "
-        >
-          <p className="text-sm font-bold text-yellow-50/80">
-            لا توريه الفريق الثاني 🤫
-          </p>
-        </div>
+        <p className="mt-5 text-sm font-black text-[#ffb21e]">
+          لا توريه الفريق الثاني
+        </p>
       </div>
     </main>
   );
