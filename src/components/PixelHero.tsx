@@ -33,7 +33,7 @@ export default function PixelHero({
         width={280}
         height={200}
         priority
-        className="mx-auto h-auto w-[150px] drop-shadow-[0_5px_0_#241339] sm:w-[180px]"
+        className="mx-auto h-auto w-[170px] [filter:drop-shadow(3px_0_0_#241339)_drop-shadow(-3px_0_0_#241339)_drop-shadow(0_3px_0_#241339)_drop-shadow(0_-3px_0_#241339)_drop-shadow(0_6px_0_#241339)] sm:w-[200px]"
       />
 
       {children}
