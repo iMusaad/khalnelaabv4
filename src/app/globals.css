@@ -142,12 +142,10 @@ textarea::placeholder {
   }
 
   .btn-primary {
-    border: 1px solid rgba(255, 191, 63, 0.18);
-    background: linear-gradient(90deg, #ffbf3f 0%, #ff8a2d 42%, #8b5cf6 100%);
-    text-shadow: 0 1px 2px rgba(60, 20, 0, 0.35);
-    box-shadow:
-      0 8px 22px rgba(139, 92, 246, 0.18),
-      inset 0 0 10px rgba(255, 255, 255, 0.14);
+    border: 0;
+    background: #ffc23d;
+    color: #1d1238;
+    box-shadow: 0 4px 0 #c7870f;
   }
 
   .btn-secondary {
@@ -190,11 +188,7 @@ textarea::placeholder {
 
   @media (hover: hover) and (pointer: fine) {
     .btn-primary:not(:disabled):hover {
-      transform: translateY(-1px);
-      filter: brightness(1.06);
-      box-shadow:
-        0 12px 28px rgba(139, 92, 246, 0.26),
-        inset 0 0 12px rgba(255, 255, 255, 0.17);
+      background: #ffcb57;
     }
 
     .btn-secondary:not(:disabled):hover {
@@ -215,7 +209,11 @@ textarea::placeholder {
     }
   }
 
-  .btn-primary:not(:disabled):active,
+  .btn-primary:not(:disabled):active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #c7870f;
+  }
+
   .btn-secondary:not(:disabled):active,
   .btn-team-1:not(:disabled):active,
   .btn-team-2:not(:disabled):active {

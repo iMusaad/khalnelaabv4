@@ -31,7 +31,7 @@ export default async function SuccessPage() {
   const unlockUrl = `${origin}/unlock?code=${encodeURIComponent(code)}`;
 
   return (
-    <PageShell title="تم التفعيل 🎉">
+    <PageShell title="تم التفعيل">
       <section className="arcade-card p-5 text-center sm:p-7">
         <p className="text-lg font-black text-white">
           شكرًا لك! اللعبة صارت مفعلة على هذا الجهاز.
@@ -69,7 +69,7 @@ export default async function SuccessPage() {
         </div>
 
         <Link href="/match" className="btn-primary mt-6 w-full py-3 text-lg">
-          يلا نلعب 🎮
+          يلا نلعب
         </Link>
       </section>
     </PageShell>
