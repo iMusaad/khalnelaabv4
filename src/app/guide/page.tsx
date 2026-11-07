@@ -40,7 +40,7 @@ export default function GuidePage() {
             min-[480px]:grid-cols-2
             lg:min-h-0
             lg:flex-1
-            lg:grid-cols-4
+            lg:grid-cols-5
             lg:grid-rows-2
             lg:pb-0
           "
