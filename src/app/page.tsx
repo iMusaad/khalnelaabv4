@@ -233,14 +233,12 @@ export default function Home() {
 
           <div className="relative mx-auto mt-3 max-w-[1120px] pb-1 pt-3">
             <div className="relative z-10 text-center">
-              <p className="text-sm font-bold text-white/45">لعبة سريعة</p>
-
-              <h2 className="mt-1 text-2xl font-black sm:text-[28px]">
-                لعبة وحدة على السريع
+              <h2 className="text-xl font-black sm:text-2xl">
+                جرّبوا لعبة وحدة
               </h2>
 
               <p className="mt-1 text-sm font-bold text-white/45">
-                اضغطوا على أي لعبة
+                ما عندكم وقت لجلسة كاملة؟ اضغطوا على أي لعبة
               </p>
             </div>
 

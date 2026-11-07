@@ -193,8 +193,31 @@ export function WinnerOverlay({
         </div>
       )}
 
-      <div className="mt-6 grid gap-2 sm:flex sm:flex-wrap sm:justify-center sm:gap-3">
-        <button type="button" onClick={onReplay} className="btn-primary">
+      {mode === "quick" && (
+        <div className="mt-6 rounded-2xl border border-white/10 px-4 py-4 text-center">
+          <p className="text-lg font-black text-white">عجبتكم؟</p>
+
+          <p className="mt-1 text-sm font-bold leading-6 text-white/60">
+            في تحدي الجلسة تختارون كم لعبة، تنجمع نقاطكم، وبالأخير فريق واحد
+            ياخذ اللقب
+          </p>
+
+          <a href="/match?mode=session" className="btn-primary mt-3 px-8">
+            سوّوا تحدي جلسة كامل
+          </a>
+        </div>
+      )}
+
+      <div
+        className={`grid gap-2 sm:flex sm:flex-wrap sm:justify-center sm:gap-3 ${
+          mode === "quick" ? "mt-3" : "mt-6"
+        }`}
+      >
+        <button
+          type="button"
+          onClick={onReplay}
+          className={mode === "quick" ? "btn-secondary" : "btn-primary"}
+        >
           {mode === "quick" ? "نعيدها؟" : "نعيدها بنفس الألعاب"}
         </button>
 
