@@ -204,36 +204,27 @@ export default function SetupGame({
     : GAMES;
 
   return (
-    <div className="intro mx-auto w-full max-w-[1500px] pb-4 text-white sm:px-2 lg:pb-2">
-      <div className="text-center">
-        <div
-          className={`inline-flex items-center gap-2 rounded-full border px-4 py-1 text-xs font-black ${
-            isQuickMode
-              ? "border-cyan-300/20 bg-cyan-400/[0.07] text-cyan-100"
-              : "border-yellow-300/20 bg-yellow-300/[0.06] text-yellow-100"
-          }`}
-        >
-          <span aria-hidden="true">{isQuickMode ? "⚡" : "🏆"}</span>
+    <div className="intro mx-auto w-full max-w-[1100px] pb-6 text-white sm:px-2">
+      <header className="text-center">
+        <p className="text-sm font-bold text-white/45">
+          {isQuickMode ? "لعبة سريعة" : "تحدي الجلسة"}
+        </p>
 
-          <span>{isQuickMode ? "لعبة سريعة" : "تحدي الجلسة"}</span>
-        </div>
-
-        <h1 className="mt-2 text-2xl font-black sm:text-3xl">
+        <h1 className="mt-1 text-3xl font-black sm:text-4xl">
           {isQuickMode ? "جهزوا الفرق" : "اختاروا ألعابكم"}
         </h1>
-      </div>
+      </header>
 
-      <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_290px]">
-        <label className="flex items-center gap-3 rounded-[18px] border border-fuchsia-400/25 bg-fuchsia-500/[0.06] p-2.5">
-          <span
-            aria-hidden="true"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-fuchsia-300/20 bg-fuchsia-400/10 text-lg font-black text-fuchsia-100"
-          >
-            1
-          </span>
+      <section className="mt-8">
+        <h2 className="text-lg font-black">الفرق</h2>
 
-          <span className="min-w-0 flex-1">
-            <span className="mb-1 block text-right text-xs font-black text-fuchsia-200/70">
+        <div className="mt-3 grid gap-4 sm:grid-cols-2">
+          <label className="block">
+            <span className="mb-1.5 flex items-center gap-2 text-sm font-bold text-white/60">
+              <span
+                aria-hidden="true"
+                className="h-2.5 w-2.5 rounded-full bg-fuchsia-400"
+              />
               الفريق الأول
             </span>
 
@@ -244,21 +235,16 @@ export default function SetupGame({
               enterKeyHint="done"
               onChange={(event) => setSide1(event.target.value)}
               placeholder="فريق 1"
-              className="h-10 w-full rounded-xl border border-fuchsia-300/20 bg-black/20 px-3 text-center text-base font-black text-white outline-none transition placeholder:text-white/30 focus:border-fuchsia-300/60"
+              className="h-12 w-full rounded-xl border border-white/15 bg-transparent px-4 text-right text-base font-bold text-white outline-none transition-colors placeholder:text-white/30 focus:border-white/50"
             />
-          </span>
-        </label>
+          </label>
 
-        <label className="flex items-center gap-3 rounded-[18px] border border-cyan-400/25 bg-cyan-400/[0.06] p-2.5">
-          <span
-            aria-hidden="true"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-cyan-300/20 bg-cyan-400/10 text-lg font-black text-cyan-100"
-          >
-            2
-          </span>
-
-          <span className="min-w-0 flex-1">
-            <span className="mb-1 block text-right text-xs font-black text-cyan-200/70">
+          <label className="block">
+            <span className="mb-1.5 flex items-center gap-2 text-sm font-bold text-white/60">
+              <span
+                aria-hidden="true"
+                className="h-2.5 w-2.5 rounded-full bg-cyan-400"
+              />
               الفريق الثاني
             </span>
 
@@ -269,19 +255,19 @@ export default function SetupGame({
               enterKeyHint="done"
               onChange={(event) => setSide2(event.target.value)}
               placeholder="فريق 2"
-              className="h-10 w-full rounded-xl border border-cyan-300/20 bg-black/20 px-3 text-center text-base font-black text-white outline-none transition placeholder:text-white/30 focus:border-cyan-300/60"
+              className="h-12 w-full rounded-xl border border-white/15 bg-transparent px-4 text-right text-base font-bold text-white outline-none transition-colors placeholder:text-white/30 focus:border-white/50"
             />
-          </span>
-        </label>
+          </label>
+        </div>
 
-        <div className="rounded-[18px] border border-white/10 bg-white/[0.025] p-2.5 sm:col-span-2 lg:col-span-1">
-          <div className="flex h-full min-h-[44px] items-center justify-between gap-3">
+        <div className="mt-5 border-t border-white/10 pt-4">
+          <div className="flex items-center justify-between gap-3">
             <div className="text-right">
-              <p className="text-sm font-black">المؤقت</p>
+              <p className="text-base font-black">المؤقت</p>
 
-              <p className="mt-0.5 text-xs font-bold text-white/40">
+              <p className="mt-0.5 text-sm font-bold text-white/45">
                 {timerEnabled
-                  ? `${timerSeconds} ثانية، وضعفها لإنسان حيوان والعلم`
+                  ? `${timerSeconds} ثانية، وضعفها لإنسان حيوان والعلم والنادي`
                   : "اختياري"}
               </p>
             </div>
@@ -292,15 +278,13 @@ export default function SetupGame({
               aria-checked={timerEnabled}
               aria-label="تشغيل المؤقت"
               onClick={() => setTimerEnabled(!timerEnabled)}
-              className={`relative h-7 w-12 shrink-0 rounded-full border transition-colors duration-300 ${
-                timerEnabled
-                  ? "border-cyan-300/50 bg-cyan-400/30"
-                  : "border-white/15 bg-white/[0.06]"
+              className={`relative h-7 w-12 shrink-0 rounded-full transition-colors duration-300 ${
+                timerEnabled ? "bg-[#ffc23d]" : "bg-white/15"
               }`}
             >
               <span
-                className={`absolute top-[3px] h-5 w-5 rounded-full bg-white shadow-md transition-all duration-300 ${
-                  timerEnabled ? "left-[3px]" : "left-[25px]"
+                className={`absolute top-[3px] h-[22px] w-[22px] rounded-full bg-white transition-all duration-300 ${
+                  timerEnabled ? "left-[3px]" : "left-[23px]"
                 }`}
               />
             </button>
@@ -315,20 +299,20 @@ export default function SetupGame({
               value={timerSeconds}
               aria-label="مدة المؤقت بالثواني"
               onChange={(event) => setTimerSeconds(Number(event.target.value))}
-              className="mt-2 h-1 w-full accent-cyan-400"
+              className="mt-3 h-1 w-full accent-[#ffc23d]"
             />
           )}
         </div>
-      </div>
+      </section>
 
-      <div className="mt-4">
-        <div className="flex items-center justify-between gap-3">
+      <section className="mt-8">
+        <div className="flex items-end justify-between gap-3">
           <div className="text-right">
-            <h2 className="text-lg font-black sm:text-xl">
+            <h2 className="text-lg font-black">
               {isQuickMode ? "اللعبة" : "الألعاب"}
             </h2>
 
-            <p className="mt-0.5 text-xs font-bold text-white/40">
+            <p className="mt-0.5 text-sm font-bold text-white/45">
               {isQuickMode
                 ? "اضبطوها وابدأوا"
                 : "اضغطوا على اللعبة وتطلع إعداداتها تحتها"}
@@ -336,17 +320,17 @@ export default function SetupGame({
           </div>
 
           {!isQuickMode && (
-            <div className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-xs font-black text-white/60">
+            <p className="shrink-0 text-sm font-bold text-white/45">
               {selectedGames.length} من {GAMES.length}
-            </div>
+            </p>
           )}
         </div>
 
         <div
-          className={`mt-3 grid items-start gap-2.5 ${
+          className={`mt-4 grid items-start gap-3 ${
             isQuickMode
               ? "mx-auto max-w-[230px] grid-cols-1"
-              : "grid-cols-2 sm:grid-cols-4 lg:grid-cols-8"
+              : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
           }`}
         >
           {visibleGames.map((game) => {
@@ -355,26 +339,21 @@ export default function SetupGame({
             const roundOptions = getRoundOptions(game.id);
 
             return (
-              <div
-                key={game.id}
-                className={`overflow-hidden rounded-[18px] border bg-[#10091e]/90 transition-[border-color,box-shadow] duration-300 ${
-                  active
-                    ? "border-cyan-300/70 shadow-[0_0_22px_rgba(34,211,238,.14)]"
-                    : "border-white/10 shadow-[0_10px_24px_rgba(0,0,0,.22)]"
-                }`}
-              >
+              <div key={game.id}>
                 <button
                   type="button"
                   onClick={() => toggleGame(game.id)}
                   disabled={isQuickMode}
                   aria-pressed={isQuickMode ? undefined : active}
                   aria-label={game.name}
-                  className={`group relative block aspect-[4/5] w-full overflow-hidden ${
+                  className={`group relative block aspect-[4/5] w-full overflow-hidden rounded-2xl outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${
+                    active ? "outline-[#ffc23d]" : "outline-transparent"
+                  } ${
                     isQuickMode
                       ? "cursor-default"
                       : active
                         ? ""
-                        : "opacity-75 transition-opacity hover:opacity-100"
+                        : "opacity-70 hover:opacity-100"
                   }`}
                 >
                   <Image
@@ -384,36 +363,30 @@ export default function SetupGame({
                     sizes={
                       isQuickMode
                         ? "230px"
-                        : "(max-width: 640px) 45vw, (max-width: 1024px) 24vw, 13vw"
+                        : "(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 200px"
                     }
-                    className={`object-cover transition-transform duration-500 ease-out ${
-                      active ? "" : "group-hover:scale-[1.03]"
-                    }`}
+                    className="object-cover"
                   />
 
-                  {!isQuickMode && (
+                  {!isQuickMode && active && (
                     <span
                       aria-hidden="true"
-                      className={`absolute left-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full border text-xs font-black transition-colors duration-300 ${
-                        active
-                          ? "border-cyan-100/70 bg-cyan-400 text-[#03171c]"
-                          : "border-white/25 bg-black/60 text-white/80"
-                      }`}
+                      className="absolute left-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-[#ffc23d] text-sm font-black text-[#1d1238]"
                     >
-                      {active ? "✓" : "+"}
+                      ✓
                     </span>
                   )}
                 </button>
 
                 {active && (
-                  <div className="border-t border-cyan-300/15 bg-gradient-to-b from-cyan-400/[0.065] to-transparent px-2 pb-2.5 pt-2">
+                  <div className="pt-3">
                     {game.id !== "quiz" ? (
                       <>
-                        <p className="mb-1.5 text-center text-xs font-black text-white/60">
+                        <p className="mb-1.5 text-center text-xs font-bold text-white/50">
                           عدد الجولات
                         </p>
 
-                        <div className="flex items-center justify-center gap-1.5">
+                        <div className="flex rounded-xl bg-white/[0.06] p-1">
                           {roundOptions.map((round) => {
                             const selected = gameRounds[game.id] === round;
 
@@ -424,10 +397,10 @@ export default function SetupGame({
                                 aria-pressed={selected}
                                 aria-label={`عدد الجولات ${round}`}
                                 onClick={() => selectRounds(game.id, round)}
-                                className={`flex h-10 min-w-[40px] flex-1 items-center justify-center rounded-xl border text-sm font-black transition-colors duration-200 ${
+                                className={`flex h-9 flex-1 items-center justify-center rounded-lg text-sm font-black transition-colors duration-200 ${
                                   selected
-                                    ? "border-cyan-200/70 bg-cyan-400/25 text-cyan-50"
-                                    : "border-white/10 bg-white/[0.04] text-white/55 hover:border-white/25 hover:text-white/85"
+                                    ? "bg-white text-[#1d1238]"
+                                    : "text-white/60 hover:text-white"
                                 }`}
                               >
                                 {round}
@@ -438,7 +411,7 @@ export default function SetupGame({
                       </>
                     ) : (
                       <>
-                        <p className="mb-1.5 text-center text-xs font-black text-white/60">
+                        <p className="mb-1.5 text-center text-xs font-bold text-white/50">
                           الفئات · كل فئة جولة
                         </p>
 
@@ -454,20 +427,13 @@ export default function SetupGame({
                                 type="button"
                                 aria-pressed={selected}
                                 onClick={() => toggleCategory(category.key)}
-                                className={`flex min-h-[44px] min-w-0 flex-col items-center justify-center rounded-xl border px-1 py-1 text-xs font-black leading-tight transition-colors duration-200 ${
+                                className={`flex min-h-[40px] min-w-0 items-center justify-center rounded-lg px-1 text-xs font-black leading-tight transition-colors duration-200 ${
                                   selected
-                                    ? "border-cyan-300/60 bg-cyan-400/20 text-cyan-50"
-                                    : "border-white/10 bg-white/[0.035] text-white/55 hover:border-white/25 hover:text-white/85"
+                                    ? "bg-white text-[#1d1238]"
+                                    : "bg-white/[0.06] text-white/60 hover:text-white"
                                 }`}
                               >
-                                <span
-                                  aria-hidden="true"
-                                  className="text-sm leading-none"
-                                >
-                                  {selected ? "✓" : category.emoji}
-                                </span>
-
-                                <span className="mt-0.5 max-w-full truncate">
+                                <span className="max-w-full truncate">
                                   {category.title}
                                 </span>
                               </button>
@@ -482,9 +448,9 @@ export default function SetupGame({
             );
           })}
         </div>
-      </div>
+      </section>
 
-      <div className="mt-4 flex flex-col items-center justify-center gap-2">
+      <div className="mt-10 flex flex-col items-center justify-center gap-2">
         <button
           type="button"
           onClick={onStart}
@@ -496,7 +462,7 @@ export default function SetupGame({
 
         <p
           aria-live="polite"
-          className="min-h-[16px] text-xs font-bold text-white/45"
+          className="min-h-[16px] text-sm font-bold text-white/45"
         >
           {startHint ||
             (!isQuickMode ? getSelectedLabel(selectedGames.length) : "")}
