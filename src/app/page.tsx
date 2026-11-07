@@ -1,114 +1,111 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import PixelHero from "@/components/PixelHero";
 import SiteFooter from "@/components/SiteFooter";
 
-type GameCard = {
-  id: string;
-  image: string;
-  title: string;
-};
-
-const GAME_CARDS: GameCard[] = [
-  { id: "car", image: "/images/posters/Cargame.png", title: "عينك عالموتر" },
-  { id: "club", image: "/images/posters/Clubgame.png", title: "وش ناديك؟" },
-  { id: "scramble", image: "/images/posters/Whogame.png", title: "منهو ذا؟" },
-  { id: "word", image: "/images/posters/wordgame.png", title: "خمن الكلمة" },
-  { id: "quiz", image: "/images/posters/Quizgame.png", title: "أسئلة وأجوبة" },
-  { id: "logo", image: "/images/posters/Logogame.png", title: "خمن الشعار" },
-  { id: "country", image: "/images/posters/Countries.png", title: "خمن العلم" },
-  { id: "wheel", image: "/images/posters/Wheelgame.png", title: "لف وخمن" },
-  { id: "draw", image: "/images/posters/Proverbgame.png", title: "خمن المثل" },
+const STEPS = [
   {
-    id: "categories",
-    image: "/images/posters/Categoriesgame.png",
-    title: "إنسان حيوان نبات جماد بلاد",
+    title: "قسموا نفسكم فريقين",
+    text: "جهاز واحد يكفي، وصاحب الجلسة يحكم",
   },
+  { title: "اختاروا ألعابكم", text: "لعبة وحدة أو العشر كلها" },
+  { title: "اللي يجمع أكثر يفوز", text: "النقاط تنجمع لين آخر جولة" },
 ];
+
+const guideLink = (
+  <Link
+    href="/guide"
+    prefetch={false}
+    className="rounded-xl bg-[#241339] px-4 py-2 text-sm font-black text-white shadow-[0_3px_0_#0e0a1f]"
+  >
+    طريقة اللعب
+  </Link>
+);
 
 export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    router.prefetch("/match");
-    router.prefetch("/guide");
+    router.prefetch("/match?mode=session");
+    router.prefetch("/quick");
   }, [router]);
 
   return (
-    <main className="min-h-[100svh] px-4 pb-4 pt-3 text-white sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-[1100px]">
-        <header className="relative flex min-h-[112px] items-start justify-center">
-          <Image
-            src="/logo.png"
-            alt="خل نلعب"
-            width={280}
-            height={200}
-            priority
-            className="h-auto w-[150px] object-contain sm:w-[170px]"
-          />
+    <main className="min-h-[100svh] text-white">
+      <PixelHero action={guideLink} overlap={false}>
+        <h1 className="mt-5 text-3xl font-black sm:text-5xl">
+          جمعتكم ناقصها تحدي
+        </h1>
 
-          <Link
-            href="/guide"
-            prefetch={false}
-            className="nav-pill absolute left-0 top-2"
-          >
-            طريقة اللعب
-          </Link>
-        </header>
+        <p className="mx-auto mt-2 max-w-lg text-base font-bold opacity-75 sm:text-lg">
+          عشر ألعاب، فريقين، وبطل واحد بالأخير
+        </p>
+      </PixelHero>
 
-        <section className="mt-2 text-center">
-          <p className="text-sm font-black text-[#ffb21e] sm:text-base">
-            تحدي الجلسة 🏆
-          </p>
-
-          <h1 className="mt-1 text-4xl font-black leading-normal sm:text-5xl">
-            وش تبون تلعبون؟
-          </h1>
-
-          <p className="mx-auto mt-2 max-w-xl text-base font-bold leading-7 text-white/60">
-            اختاروا لعبة وضيفوا معها اللي تبون. تلعبونها ورا بعض، واللي يجمع
-            نقاط أكثر يفوز.
-          </p>
-        </section>
-
-        <section className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-          {GAME_CARDS.map((card) => (
-            <Link
-              key={card.id}
-              href={`/match?mode=session&pick=${card.id}`}
-              prefetch={false}
-              aria-label={card.title}
-              className="group block rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-[#ffb21e]"
-            >
-              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-[0_6px_0_#0e0a1f] transition-transform duration-200 ease-[var(--ease-out)] group-hover:-translate-y-1 group-active:translate-y-0.5">
-                <Image
-                  src={card.image}
-                  alt=""
-                  fill
-                  sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 210px"
-                  className="object-cover"
-                />
-              </div>
-            </Link>
-          ))}
-        </section>
-
-        <div className="mt-10 flex flex-col items-center gap-2 text-center">
-          <p className="text-sm font-bold text-white/50">
-            تبون تختارون الألعاب بنفسكم من البداية؟
-          </p>
-
+      <div className="mx-auto mt-6 max-w-[1100px] px-4">
+        <div className="relative z-10 mx-auto grid max-w-3xl gap-4 sm:grid-cols-2">
           <Link
             href="/match?mode=session"
             prefetch={false}
-            className="btn-primary px-10 py-3 text-lg"
+            className="block rounded-2xl bg-[#ffc23d] p-6 text-right text-[#241339] shadow-[0_7px_0_#c27700] transition-transform hover:-translate-y-1 active:translate-y-0.5 sm:p-7"
           >
-            ابدأ تحدي الجلسة
+            <span className="text-sm font-black opacity-70">
+              اللي نوصي فيه 🏆
+            </span>
+
+            <span className="mt-1 block text-3xl font-black">تحدي الجلسة</span>
+
+            <span className="mt-2 block text-base font-bold leading-7 opacity-80">
+              كم لعبة ورا بعض، تنجمع نقاطكم، وبالأخير فريق واحد ياخذ اللقب
+            </span>
+          </Link>
+
+          <Link
+            href="/quick"
+            prefetch={false}
+            className="block rounded-2xl bg-[#221a3f] p-6 text-right shadow-[0_7px_0_#140f29] transition-transform hover:-translate-y-1 active:translate-y-0.5 sm:p-7"
+          >
+            <span className="text-sm font-black text-white/50">
+              ما عندكم وقت؟
+            </span>
+
+            <span className="mt-1 block text-3xl font-black">لعبة سريعة</span>
+
+            <span className="mt-2 block text-base font-bold leading-7 text-white/60">
+              اختاروا لعبة وحدة وابدأوا على طول
+            </span>
           </Link>
         </div>
+
+        <section className="mt-16">
+          <h2 className="text-center text-2xl font-black sm:text-3xl">
+            كيف تلعبون؟
+          </h2>
+
+          <ol className="mt-6 grid gap-3 sm:grid-cols-3">
+            {STEPS.map((step, index) => (
+              <li
+                key={step.title}
+                className="flex items-center gap-4 rounded-xl bg-[#221a3f] p-4 shadow-[0_5px_0_#140f29]"
+              >
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#ffc23d] text-2xl font-black text-[#241339] shadow-[0_3px_0_#c27700]">
+                  {index + 1}
+                </span>
+
+                <span>
+                  <span className="block text-lg font-black">{step.title}</span>
+
+                  <span className="block text-sm font-bold text-white/55">
+                    {step.text}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ol>
+        </section>
 
         <SiteFooter />
       </div>

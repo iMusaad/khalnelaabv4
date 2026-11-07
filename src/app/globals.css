@@ -11,8 +11,9 @@
   --brand-purple-deep: #6d28d9;
   --brand-cyan: #4de2ff;
   --brand-gold: #ffbf3f;
-  --team-1: #ffb21e;
-  --team-1-edge: #c27700;
+  --team-1: #ff5a5f;
+  --team-1-edge: #c2343a;
+  --brand-yellow: #ffc23d;
   --team-2: #2f9bff;
   --team-2-edge: #1662b8;
   --surface: #221a3f;
@@ -151,7 +152,7 @@ textarea::placeholder {
     border: 0;
     background: var(--team-1);
     box-shadow: 0 4px 0 var(--team-1-edge);
-    color: #241339;
+    color: #ffffff;
   }
 
   .btn-team-2 {
@@ -251,7 +252,7 @@ textarea::placeholder {
     font-size: clamp(30px, 8vw, 42px);
     line-height: 1.2;
     font-weight: 900;
-    color: var(--team-1);
+    color: var(--brand-yellow);
     text-shadow: 3px 3px 0 var(--team-2-edge);
   }
 
@@ -259,7 +260,7 @@ textarea::placeholder {
     font-size: clamp(24px, 6vw, 34px);
     line-height: 1.3;
     font-weight: 900;
-    color: var(--team-1);
+    color: var(--brand-yellow);
     text-shadow: 2px 2px 0 var(--team-2-edge);
   }
 

@@ -172,7 +172,7 @@ export default function ClubGame({
                   shadow-[0_5px_0_#140f29]
                 "
               >
-                <p className="text-base font-black text-[#ffb21e]">{side1}</p>
+                <p className="text-base font-black text-[#ff7a7f]">{side1}</p>
 
                 <div className="mx-auto mt-3 w-fit rounded-[16px] bg-white p-2">
                   {side2ClubUrl ? (
@@ -273,7 +273,7 @@ export default function ClubGame({
                       sm:p-4
                     "
                   >
-                    <p className="text-sm font-black text-[#ffb21e]">
+                    <p className="text-sm font-black text-[#ff7a7f]">
                       نادي {side1}
                     </p>
 

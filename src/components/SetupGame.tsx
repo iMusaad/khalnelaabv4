@@ -232,7 +232,7 @@ export default function SetupGame({
             <span className="mb-1.5 flex items-center gap-2 text-sm font-bold text-white/60">
               <span
                 aria-hidden="true"
-                className="h-2.5 w-2.5 rounded-full bg-fuchsia-400"
+                className="h-2.5 w-2.5 rounded-full bg-[#ff5a5f]"
               />
               الفريق الأول
             </span>
@@ -252,7 +252,7 @@ export default function SetupGame({
             <span className="mb-1.5 flex items-center gap-2 text-sm font-bold text-white/60">
               <span
                 aria-hidden="true"
-                className="h-2.5 w-2.5 rounded-full bg-cyan-400"
+                className="h-2.5 w-2.5 rounded-full bg-[#2f9bff]"
               />
               الفريق الثاني
             </span>
