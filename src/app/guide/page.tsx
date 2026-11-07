@@ -17,7 +17,7 @@ export default function GuidePage() {
       <div className="mx-auto flex h-full max-w-7xl flex-col">
         <header className="flex shrink-0 items-center justify-between gap-4 pb-3">
           <div>
-            <h1 className="text-2xl font-black sm:text-3xl">🎮 طريقة اللعب</h1>
+            <h1 className="text-2xl font-black sm:text-3xl">طريقة اللعب</h1>
 
             <p className="mt-1 text-sm font-bold text-white/50">
               اضغطوا على اللعبة وتنقلب لكم

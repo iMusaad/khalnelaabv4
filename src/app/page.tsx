@@ -217,7 +217,6 @@ export default function Home() {
               md:mb-0
             "
           >
-            <span aria-hidden="true">🎮</span>
             <span>طريقة اللعب</span>
           </Link>
 
@@ -276,8 +275,6 @@ export default function Home() {
           <div className="relative mx-auto mt-3 max-w-[1120px] pb-1 pt-3">
             <div className="relative z-10 text-center">
               <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-400/[0.09] px-5 py-1.5 shadow-[0_0_16px_rgba(34,211,238,.07)]">
-                <span className="text-sm">⚡</span>
-
                 <span className="text-sm font-black text-cyan-100">
                   لعبة سريعة
                 </span>

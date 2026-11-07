@@ -227,9 +227,9 @@ export default function SetupGame({
         <label className="flex items-center gap-3 rounded-[18px] border border-fuchsia-400/25 bg-fuchsia-500/[0.06] p-2.5">
           <span
             aria-hidden="true"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-fuchsia-300/20 bg-fuchsia-400/10 text-lg"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-fuchsia-300/20 bg-fuchsia-400/10 text-lg font-black text-fuchsia-100"
           >
-            👥
+            1
           </span>
 
           <span className="min-w-0 flex-1">
@@ -252,9 +252,9 @@ export default function SetupGame({
         <label className="flex items-center gap-3 rounded-[18px] border border-cyan-400/25 bg-cyan-400/[0.06] p-2.5">
           <span
             aria-hidden="true"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-cyan-300/20 bg-cyan-400/10 text-lg"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-cyan-300/20 bg-cyan-400/10 text-lg font-black text-cyan-100"
           >
-            👥
+            2
           </span>
 
           <span className="min-w-0 flex-1">
@@ -277,7 +277,7 @@ export default function SetupGame({
         <div className="rounded-[18px] border border-white/10 bg-white/[0.025] p-2.5 sm:col-span-2 lg:col-span-1">
           <div className="flex h-full min-h-[44px] items-center justify-between gap-3">
             <div className="text-right">
-              <p className="text-sm font-black">⏱️ المؤقت</p>
+              <p className="text-sm font-black">المؤقت</p>
 
               <p className="mt-0.5 text-xs font-bold text-white/40">
                 {timerEnabled
@@ -491,7 +491,7 @@ export default function SetupGame({
           disabled={!canStart}
           className="btn-primary min-w-[240px] px-10 py-3 text-lg"
         >
-          ابدأوا 🚀
+          ابدأوا
         </button>
 
         <p

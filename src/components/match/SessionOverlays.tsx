@@ -195,7 +195,7 @@ export function WinnerOverlay({
 
       <div className="mt-6 grid gap-2 sm:flex sm:flex-wrap sm:justify-center sm:gap-3">
         <button type="button" onClick={onReplay} className="btn-primary">
-          {mode === "quick" ? "نعيدها؟ 🔁" : "نعيدها بنفس الألعاب 🔁"}
+          {mode === "quick" ? "نعيدها؟" : "نعيدها بنفس الألعاب"}
         </button>
 
         <button type="button" onClick={onChangeGames} className="btn-secondary">
@@ -208,7 +208,7 @@ export function WinnerOverlay({
           disabled={sharing}
           className="btn-secondary"
         >
-          📤 شارك النتيجة
+          شارك النتيجة
         </button>
 
         <button type="button" onClick={onGoHome} className="btn-secondary">

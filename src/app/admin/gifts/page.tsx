@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function GiftCodesPage() {
   return (
-    <PageShell title="أكواد الهدايا 🎁">
+    <PageShell title="أكواد الهدايا">
       <GiftCodeForm />
     </PageShell>
   );
