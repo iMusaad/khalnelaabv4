@@ -34,6 +34,7 @@ import {
 import { createResultShareImage } from "@/lib/shareImage";
 import type { WinnerType } from "@/types/game";
 import type { ModeType, RoundStat } from "@/types/match";
+import HomeIcon from "@/components/HomeIcon";
 
 type PhaseType = "setup" | "countdown" | "playing" | "transition" | "finished";
 
@@ -52,8 +53,8 @@ const GAME_LOADERS = {
 
 function GameLoading() {
   return (
-    <div className="mx-auto w-full max-w-5xl rounded-[24px] border border-white/10 bg-[#121028]/80 p-8 text-center">
-      <p className="text-sm font-black text-cyan-200/70">لحظة نجهز اللعبة...</p>
+    <div className="mx-auto w-full max-w-5xl p-8 text-center">
+      <p className="text-sm font-black text-white/50">لحظة نجهز اللعبة...</p>
     </div>
   );
 }
@@ -137,6 +138,8 @@ export default function MatchPage() {
   const [side2, setSide2] = useState("");
 
   const [selectedGames, setSelectedGames] = useState<GameType[]>([]);
+
+  const [pinnedGame, setPinnedGame] = useState<GameType | null>(null);
 
   const [gameRounds, setGameRounds] = useState<Record<string, number>>({});
 
@@ -500,6 +503,18 @@ export default function MatchPage() {
 
     if (urlMode === "session" || !isGameType(gameParam)) {
       setMode("session");
+
+      const pickParam = params.get("pick");
+
+      if (isGameType(pickParam)) {
+        setPinnedGame(pickParam);
+        setSelectedGames([pickParam]);
+
+        setGameRounds({
+          [pickParam]: getDefaultRounds(pickParam),
+        });
+      }
+
       return;
     }
 
@@ -691,7 +706,7 @@ export default function MatchPage() {
         aria-label="الرئيسية"
         className="nav-pill fixed left-3 top-3 z-[60] px-0 sm:left-5 sm:top-5 sm:px-4"
       >
-        <span aria-hidden="true">🏠</span>
+        <HomeIcon />
         <span className="hidden lg:inline">الرئيسية</span>
       </Link>
 
@@ -724,7 +739,7 @@ export default function MatchPage() {
         title="مين أخذها؟ 🏆"
         side1Name={side1}
         side2Name={side2}
-        noneLabel="ولا أحد 🤝"
+        noneLabel="ولا أحد"
         onPick={applyRoundWinner}
       />
 
@@ -742,6 +757,7 @@ export default function MatchPage() {
           setSide1={setSide1}
           setSide2={setSide2}
           selectedGames={selectedGames}
+          pinnedGame={pinnedGame}
           setSelectedGames={setSelectedGames}
           gameRounds={gameRounds}
           setGameRounds={setGameRounds}

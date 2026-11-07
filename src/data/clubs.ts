@@ -12,7 +12,7 @@ export type ClubItem = {
   famousPlayer: string;
 };
 
-export const CLUBS_FACTS_AS_OF = "موسم 2025-26";
+export const CLUBS_FACTS_AS_OF = "صيف 2026";
 
 export const CLUBS: ClubItem[] = [
   {

@@ -19,14 +19,14 @@ export default function HowToPlayButton({ game }: { game: GameType }) {
         type="button"
         onClick={() => setOpen(true)}
         aria-label={`طريقة لعب ${info.title}`}
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/[0.06] text-lg font-black text-white/80 transition-colors hover:bg-white/[0.12]"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#221a3f] text-lg font-black text-white/80 shadow-[0_3px_0_#140f29] transition-colors hover:text-white"
       >
         ؟
       </button>
 
       {open && (
         <OverlayShell>
-          <p className="text-sm font-black text-cyan-300/80">طريقة اللعب</p>
+          <p className="text-sm font-black text-white/50">طريقة اللعب</p>
 
           <h2 className="mt-2 text-2xl font-black text-white sm:text-3xl">
             {info.title}
@@ -34,11 +34,8 @@ export default function HowToPlayButton({ game }: { game: GameType }) {
 
           <ol className="mt-5 space-y-2 text-right">
             {info.how.map((step, index) => (
-              <li
-                key={step}
-                className="flex items-start gap-3 rounded-xl border border-white/[0.06] bg-white/[0.04] px-3 py-2.5"
-              >
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cyan-400/15 text-xs font-black text-cyan-100">
+              <li key={step} className="flex items-start gap-3 py-1.5">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#ffb21e] text-xs font-black text-[#241339]">
                   {index + 1}
                 </span>
 

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import SiteFooter from "@/components/SiteFooter";
+import HomeIcon from "@/components/HomeIcon";
 
 export default function PageShell({
   title,
@@ -18,7 +19,7 @@ export default function PageShell({
           <h1 className="text-2xl font-black sm:text-3xl">{title}</h1>
 
           <Link href="/" className="nav-pill shrink-0">
-            <span aria-hidden="true">🏠</span>
+            <HomeIcon />
             الرئيسية
           </Link>
         </header>

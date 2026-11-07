@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { GameTitle } from "@/components/match/GameLayout";
+import { GameTitle, TeamPanel } from "@/components/match/GameLayout";
 import HowToPlayButton from "@/components/match/HowToPlayButton";
 import { CATEGORY_LETTERS as letters } from "@/data/categories";
 import { createDeck } from "@/lib/deck";
@@ -153,7 +153,7 @@ export default function CategoriesGame({
       ? "animate-pulse text-red-300"
       : timeLeft <= 10
         ? "text-yellow-200"
-        : "text-cyan-200";
+        : "text-white/70";
 
   const progressScale =
     timerEnabled && timerSeconds > 0
@@ -164,81 +164,49 @@ export default function CategoriesGame({
   const side2Label = side2Name || "فريق 2";
 
   return (
-    <div className="mx-auto w-full max-w-5xl rounded-[24px] border border-white/10 bg-[#121028]/80 p-3 text-center shadow-[0_0_30px_rgba(0,0,0,0.35)] sm:rounded-[28px] lg:p-4">
-      <div className="mb-2 flex items-center justify-between gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-b from-[#8b5cf6] to-[#6d28d9] text-lg font-black text-white">
-          {currentRound}
-        </div>
+    <div className="mx-auto w-full max-w-3xl text-center">
+      <div className="flex items-center justify-between gap-3">
+        <p className="w-16 shrink-0 text-right text-sm font-bold text-white/45">
+          الجولة {currentRound}
+        </p>
 
         <div className="min-w-0 flex-1 text-center">
           <GameTitle title="إنسان حيوان نبات جماد بلاد" />
         </div>
 
-        <HowToPlayButton game="categories" />
-      </div>
-
-      <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
-        <div
-          className={`flex min-h-[64px] min-w-0 flex-col items-center justify-center rounded-[16px] border px-2 py-1.5 transition-colors duration-500 sm:min-h-[76px] ${
-            side1Ready
-              ? "border-fuchsia-300/25 bg-fuchsia-500/[0.06]"
-              : "border-fuchsia-300/70 bg-gradient-to-br from-fuchsia-500/30 to-purple-500/15"
-          }`}
-        >
-          <p
-            dir="auto"
-            className="line-clamp-2 max-w-full text-center text-xs font-bold text-fuchsia-100 [overflow-wrap:anywhere]"
-          >
-            {side1Label}
-          </p>
-
-          <p className="mt-1 text-lg font-black text-fuchsia-100 sm:text-2xl">
-            {side1Ready ? `✓ ${side1Time ?? ""}ث` : "⏳"}
-          </p>
-        </div>
-
-        <div className="flex min-h-[64px] min-w-0 flex-col items-center justify-center rounded-[16px] border border-violet-300/45 bg-gradient-to-r from-fuchsia-500/20 via-violet-500/20 to-cyan-400/20 px-2 py-1.5 sm:min-h-[76px]">
-          <p className="text-[11px] font-bold text-white/60 sm:text-xs">
-            {timerEnabled && !revealed ? "الوقت" : "الدور"}
-          </p>
-
-          {timerEnabled && !revealed ? (
-            <p className={`mt-1 text-2xl font-black ${timerTextClass}`}>
-              {timeLeft}
-            </p>
-          ) : (
-            <p className="mt-1 truncate text-base font-black text-white sm:text-2xl">
-              الفريقين
-            </p>
-          )}
-        </div>
-
-        <div
-          className={`flex min-h-[64px] min-w-0 flex-col items-center justify-center rounded-[16px] border px-2 py-1.5 transition-colors duration-500 sm:min-h-[76px] ${
-            side2Ready
-              ? "border-cyan-300/25 bg-cyan-400/[0.06]"
-              : "border-cyan-300/70 bg-gradient-to-br from-cyan-400/30 to-blue-500/15"
-          }`}
-        >
-          <p
-            dir="auto"
-            className="line-clamp-2 max-w-full text-center text-xs font-bold text-cyan-100 [overflow-wrap:anywhere]"
-          >
-            {side2Label}
-          </p>
-
-          <p className="mt-1 text-lg font-black text-cyan-100 sm:text-2xl">
-            {side2Ready ? `✓ ${side2Time ?? ""}ث` : "⏳"}
-          </p>
+        <div className="flex w-16 shrink-0 justify-end">
+          <HowToPlayButton game="categories" />
         </div>
       </div>
 
-      <div className="mt-2 rounded-[20px] border border-white/10 bg-[#0d1236]/70 p-3 lg:p-5">
+      <div className="mt-3 grid grid-cols-2 gap-3">
+        <TeamPanel
+          name={side1Label}
+          value={side1Ready ? `خلصوا ${side1Time ?? ""}ث` : "يكتبون"}
+          isStatus
+          active={!side1Ready}
+          tone="orange"
+        />
+
+        <TeamPanel
+          name={side2Label}
+          value={side2Ready ? `خلصوا ${side2Time ?? ""}ث` : "يكتبون"}
+          isStatus
+          active={!side2Ready}
+          tone="blue"
+        />
+      </div>
+
+      <div className="mt-4">
         {timerEnabled && !revealed && (
           <div className="mx-auto mb-4 max-w-md">
-            <div className="h-2 w-full overflow-hidden rounded-full border border-white/10 bg-white/10">
+            <p className={`mb-2 text-lg font-black ${timerTextClass}`}>
+              {timeLeft} ثانية
+            </p>
+
+            <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
               <div
-                className="h-full w-full origin-right bg-gradient-to-r from-fuchsia-500 via-purple-500 to-cyan-400 transition-transform duration-1000 ease-linear"
+                className="h-full w-full origin-right bg-[#ffb21e] transition-transform duration-1000 ease-linear"
                 style={{ transform: `scaleX(${progressScale})` }}
               />
             </div>
@@ -246,12 +214,12 @@ export default function CategoriesGame({
         )}
 
         <div className="flex justify-center">
-          <div className="flex h-24 w-24 items-center justify-center rounded-[28px] border border-purple-300/30 bg-[#1b1537] text-6xl font-black text-white sm:h-32 sm:w-32 sm:text-7xl">
+          <div className="flex h-24 w-24 items-center justify-center rounded-[28px] bg-[#221a3f] text-6xl shadow-[0_6px_0_#140f29] font-black text-white sm:h-32 sm:w-32 sm:text-7xl">
             {letter}
           </div>
         </div>
 
-        <div className="mx-auto mt-4 max-w-2xl rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+        <div className="mx-auto mt-5 max-w-2xl">
           <p className="font-black text-white">
             إنسان • حيوان • نبات • جماد • بلاد
           </p>
@@ -271,7 +239,7 @@ export default function CategoriesGame({
               className="btn-team-1"
             >
               {side1Ready ? (
-                "✓ خلصوا"
+                "خلصوا"
               ) : (
                 <span className="flex min-w-0 max-w-full flex-col items-center leading-tight">
                   <span dir="auto" className="max-w-full truncate">
@@ -289,7 +257,7 @@ export default function CategoriesGame({
               className="btn-team-2"
             >
               {side2Ready ? (
-                "✓ خلصوا"
+                "خلصوا"
               ) : (
                 <span className="flex min-w-0 max-w-full flex-col items-center leading-tight">
                   <span dir="auto" className="max-w-full truncate">

@@ -19,7 +19,7 @@ type GameCard = {
 
 const GAME_CARDS: GameCard[] = [
   {
-    href: "/match?game=scramble",
+    href: "/match?mode=session&pick=scramble",
     image: "/images/posters/Whogame.png",
     title: "منهو ذا؟",
     x: -405,
@@ -29,7 +29,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -1.2,
   },
   {
-    href: "/match?game=quiz",
+    href: "/match?mode=session&pick=quiz",
     image: "/images/posters/Quizgame.png",
     title: "أسئلة وأجوبة",
     x: -315,
@@ -39,7 +39,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -3.6,
   },
   {
-    href: "/match?game=word",
+    href: "/match?mode=session&pick=word",
     image: "/images/posters/wordgame.png",
     title: "خمن الكلمة",
     x: -225,
@@ -49,7 +49,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -2.1,
   },
   {
-    href: "/match?game=logo",
+    href: "/match?mode=session&pick=logo",
     image: "/images/posters/Logogame.png",
     title: "خمن الشعار",
     x: -135,
@@ -59,7 +59,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -5.1,
   },
   {
-    href: "/match?game=car",
+    href: "/match?mode=session&pick=car",
     image: "/images/posters/Cargame.png",
     title: "عينك عالموتر",
     x: -45,
@@ -69,7 +69,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -3.3,
   },
   {
-    href: "/match?game=club",
+    href: "/match?mode=session&pick=club",
     image: "/images/posters/Clubgame.png",
     title: "وش ناديك؟",
     x: 45,
@@ -79,7 +79,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -4.1,
   },
   {
-    href: "/match?game=country",
+    href: "/match?mode=session&pick=country",
     image: "/images/posters/Countries.png",
     title: "خمن العلم",
     x: 135,
@@ -89,7 +89,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -1.8,
   },
   {
-    href: "/match?game=wheel",
+    href: "/match?mode=session&pick=wheel",
     image: "/images/posters/Wheelgame.png",
     title: "لف وخمن",
     x: 225,
@@ -99,7 +99,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -4.4,
   },
   {
-    href: "/match?game=draw",
+    href: "/match?mode=session&pick=draw",
     image: "/images/posters/Proverbgame.png",
     title: "خمن المثل",
     x: 315,
@@ -109,7 +109,7 @@ const GAME_CARDS: GameCard[] = [
     delay: -0.7,
   },
   {
-    href: "/match?game=categories",
+    href: "/match?mode=session&pick=categories",
     image: "/images/posters/Categoriesgame.png",
     title: "إنسان حيوان نبات جماد بلاد",
     x: 405,
@@ -155,25 +155,6 @@ export default function Home() {
 
         ${isLeaving ? "home-leaving" : ""}
       `}
-      style={{
-        backgroundImage: `
-          radial-gradient(
-            ellipse 700px 430px at 50% -100px,
-            rgba(126, 34, 206, 0.20),
-            transparent 72%
-          ),
-          radial-gradient(
-            ellipse 450px 500px at -8% 45%,
-            rgba(217, 70, 239, 0.07),
-            transparent 70%
-          ),
-          radial-gradient(
-            ellipse 450px 500px at 108% 42%,
-            rgba(59, 130, 246, 0.07),
-            transparent 70%
-          )
-        `,
-      }}
     >
       <div className="mx-auto max-w-[1450px]">
         <header className="flex min-h-[112px] items-start justify-center">
@@ -225,8 +206,8 @@ export default function Home() {
               تحدي الجلسة 🏆
             </h1>
 
-            <div className="mx-auto mt-3 max-w-2xl rounded-2xl border border-yellow-300/[0.08] bg-gradient-to-r from-yellow-300/[0.035] via-yellow-200/[0.06] to-yellow-300/[0.035] px-5 py-2">
-              <p className="text-sm font-bold leading-6 text-yellow-50/65 sm:text-[15px]">
+            <div className="mx-auto mt-2 max-w-xl">
+              <p className="text-base font-bold leading-7 text-white/60">
                 تقسمون نفسكم فريقين، تلعبون كم لعبة ورا بعض، واللي يجمع نقاط
                 أكثر يفوز.
               </p>
@@ -236,56 +217,28 @@ export default function Home() {
               href="/match?mode=session"
               prefetch={false}
               onClick={prepareNavigation}
-              className="
-                mt-3
-                inline-flex
-                items-center
-                justify-center
-                rounded-full
-                border
-                border-yellow-200/45
-                bg-gradient-to-r
-                from-yellow-300
-                to-amber-400
-                px-10
-                py-3
-                font-black
-                text-[#241600]
-                shadow-[0_10px_28px_rgba(250,204,21,0.20)]
-                transition-all
-                duration-300
-                hover:-translate-y-1
-                hover:shadow-[0_14px_34px_rgba(250,204,21,0.28)]
-              "
+              className="btn-primary mt-5 px-10 py-3 text-lg"
             >
               ابدأ تحدي الجلسة
             </Link>
           </div>
 
-          <div className="mx-auto mt-4 flex max-w-4xl items-center gap-4">
-            <div className="h-px flex-1 bg-gradient-to-r from-transparent via-white/10 to-cyan-300/15" />
+          <div className="mx-auto mt-8 flex max-w-3xl items-center gap-4">
+            <div className="h-px flex-1 bg-white/10" />
 
-            <div className="flex h-7 w-7 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-[10px] font-black text-white/40">
-              أو
-            </div>
+            <span className="text-sm font-bold text-white/35">أو</span>
 
-            <div className="h-px flex-1 bg-gradient-to-l from-transparent via-white/10 to-cyan-300/15" />
+            <div className="h-px flex-1 bg-white/10" />
           </div>
 
           <div className="relative mx-auto mt-3 max-w-[1120px] pb-1 pt-3">
             <div className="relative z-10 text-center">
-              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-400/[0.09] px-5 py-1.5 shadow-[0_0_16px_rgba(34,211,238,.07)]">
-                <span className="text-sm font-black text-cyan-100">
-                  لعبة سريعة
-                </span>
-              </div>
-
-              <h2 className="mt-1.5 text-2xl font-black sm:text-[28px]">
-                لعبة وحدة على السريع
+              <h2 className="text-xl font-black sm:text-2xl">
+                ابدأوا من لعبة تحبونها
               </h2>
 
-              <p className="mt-0.5 text-xs font-bold text-white/45">
-                اضغطوا على أي لعبة
+              <p className="mt-1 text-sm font-bold text-white/45">
+                اضغطوا على لعبة وتنضاف لتحدي الجلسة، وضيفوا معها اللي تبون
               </p>
             </div>
 
@@ -293,23 +246,6 @@ export default function Home() {
               className="relative mx-auto hidden h-[268px] max-w-[1020px] lg:block"
               onMouseLeave={() => setHoveredCard(null)}
             >
-              <div
-                className="
-                  pointer-events-none
-                  absolute
-                  bottom-0
-                  left-1/2
-                  h-20
-                  w-[760px]
-                  -translate-x-1/2
-                  rounded-[50%]
-                "
-                style={{
-                  background:
-                    "radial-gradient(ellipse at center, rgba(168,85,247,0.16) 0%, rgba(168,85,247,0.05) 42%, transparent 72%)",
-                }}
-              />
-
               <div className="absolute left-1/2 top-[49%]">
                 {GAME_CARDS.map((card, index) => {
                   const active = hoveredCard === index;
@@ -391,12 +327,12 @@ export default function Home() {
                             transition-shadow
                             duration-300
                             group-focus-visible:ring-2
-                            group-focus-visible:ring-cyan-300
+                            group-focus-visible:ring-[#ffc23d]
 
                             ${
                               active
-                                ? "game-idle-paused border-fuchsia-200/80 shadow-[0_22px_38px_rgba(0,0,0,.42),0_0_24px_rgba(168,85,247,.22)]"
-                                : "border-yellow-200/35 shadow-[0_12px_20px_rgba(0,0,0,.28)]"
+                                ? "game-idle-paused border-[#ffc23d]"
+                                : "border-transparent"
                             }
                           `}
                         style={{
@@ -441,13 +377,10 @@ export default function Home() {
                         aspect-[4/5]
                         overflow-hidden
                         rounded-[20px]
-                        border
-                        border-white/10
-                        shadow-[0_10px_24px_rgba(0,0,0,.28)]
                         transition-transform
                         duration-300
                         group-focus-visible:ring-2
-                        group-focus-visible:ring-cyan-300
+                        group-focus-visible:ring-[#ffc23d]
                         group-active:scale-[0.97]
                       "
                     style={{

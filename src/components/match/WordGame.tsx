@@ -269,7 +269,7 @@ export default function WordGame({
     if (guess === normalizedAnswer) {
       setStatus("won");
 
-      setFeedback(`🔥 ${getCurrentTurnName()} عرف الكلمة`);
+      setFeedback(`${getCurrentTurnName()} عرف الكلمة`);
 
       setTimeout(() => {
         onRoundEnd(activeSide);
@@ -352,7 +352,7 @@ export default function WordGame({
       setSide2HintUsed(true);
     }
 
-    setFeedback(`💡 تم حذف حرف خاطئ لـ ${getCurrentTurnName()}`);
+    setFeedback(`تم حذف حرف غلط لـ ${getCurrentTurnName()}`);
   }
 
   function revealLetter() {
@@ -551,7 +551,7 @@ export default function WordGame({
       return "bg-[#2f3750] border-[#4b5676] text-white/25";
     }
 
-    return "bg-white/10 border-white/10 text-white hover:bg-white/15";
+    return "bg-[#2a2150] border-transparent text-white hover:bg-[#342a60]";
   }
 
   function isKeyDisabled(key: string) {
@@ -577,7 +577,7 @@ export default function WordGame({
       ? "text-red-300 animate-pulse"
       : timeLeft <= 10
         ? "text-yellow-300"
-        : "text-cyan-300";
+        : "text-white/70";
 
   const routineFeedback =
     feedback === "ابدأ التخمين" || feedback.startsWith("الدور على ");
@@ -618,19 +618,17 @@ export default function WordGame({
         <div className="flex flex-col gap-2">
           <div className="flex flex-wrap items-center justify-center gap-3">
             {timerEnabled && status === "playing" && (
-              <span
-                className={`rounded-full border border-white/10 bg-white/5 px-4 py-2 font-black ${timerColor}`}
-              >
-                ⏱️ {timeLeft}
+              <span className={`text-sm font-black ${timerColor}`}>
+                {timeLeft} ثانية
               </span>
             )}
           </div>
 
           <div className="mt-1 flex justify-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-400/10 px-5 py-2 shadow-[0_0_18px_rgba(34,211,238,0.08)]">
-              <span className="text-xs font-bold text-white/45">التصنيف</span>
+            <div className="inline-flex items-baseline gap-2">
+              <span className="text-sm font-bold text-white/45">التصنيف:</span>
 
-              <span className="text-sm font-black text-cyan-100 sm:text-base">
+              <span className="text-base font-black text-white sm:text-lg">
                 {category}
               </span>
             </div>
@@ -638,8 +636,8 @@ export default function WordGame({
 
           {revealedLetters.length > 0 && (
             <div className="flex justify-center">
-              <span className="rounded-full border border-yellow-300/25 bg-yellow-300/10 px-4 py-1.5 text-sm font-black text-yellow-100">
-                🔑 فيها: {revealedLetters.join(" ، ")}
+              <span className="text-sm font-black text-[#ffb21e]">
+                فيها حرف: {revealedLetters.join(" ، ")}
               </span>
             </div>
           )}
@@ -686,8 +684,8 @@ export default function WordGame({
                         key={colIndex}
                         className={`flex h-10 w-10 items-center justify-center rounded-lg border text-lg font-black text-white sm:h-11 sm:w-11 sm:text-xl md:h-12 md:w-12 ${
                           rowIndex === 0
-                            ? "border-[#6d6be9] bg-[#20193f]"
-                            : "border-white/10 bg-[#16142a]"
+                            ? "border-white/40 bg-[#221a3f]"
+                            : "border-transparent bg-[#1d1738]"
                         }`}
                       >
                         {previewLetter}
@@ -700,12 +698,10 @@ export default function WordGame({
           </div>
 
           {status === "lost" && (
-            <div className="mx-auto mt-3 w-full max-w-md rounded-2xl border border-yellow-300/25 bg-yellow-300/10 p-5 text-center shadow-[0_0_24px_rgba(253,224,71,0.08)]">
-              <p className="text-sm font-bold text-white/60">الكلمة الصحيحة</p>
+            <div className="mx-auto mt-3 w-full max-w-md rounded-2xl bg-[#ffb21e] p-5 text-center text-[#241339] shadow-[0_5px_0_#c27700]">
+              <p className="text-sm font-bold opacity-70">الكلمة الصحيحة</p>
 
-              <p className="mt-2 text-3xl font-black text-yellow-100">
-                {answer}
-              </p>
+              <p className="mt-2 text-3xl font-black">{answer}</p>
             </div>
           )}
 
@@ -762,20 +758,18 @@ export default function WordGame({
                   type="button"
                   onClick={useHint}
                   disabled={activeTeamHintUsed}
-                  className="btn-secondary min-w-[125px] border-yellow-300/30 bg-yellow-400/10 px-4 py-2 text-sm text-yellow-100"
+                  className="btn-secondary min-w-[125px] px-4 py-2 text-sm"
                 >
-                  {activeTeamHintUsed
-                    ? "استخدمتوا المساعدة"
-                    : "💡 احذف حرف غلط"}
+                  {activeTeamHintUsed ? "استخدمتوا المساعدة" : "احذف حرف غلط"}
                 </button>
 
                 <button
                   type="button"
                   onClick={revealLetter}
                   disabled={activeTeamRevealUsed}
-                  className="btn-secondary min-w-[125px] border-cyan-300/30 bg-cyan-400/10 px-4 py-2 text-sm text-cyan-100"
+                  className="btn-secondary min-w-[125px] px-4 py-2 text-sm"
                 >
-                  {activeTeamRevealUsed ? "كشفتوا حرف" : "🔑 اكشف حرف"}
+                  {activeTeamRevealUsed ? "كشفتوا حرف" : "اكشف حرف"}
                 </button>
 
                 <button

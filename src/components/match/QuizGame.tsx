@@ -298,7 +298,7 @@ export default function QuizGame({
       ? "animate-pulse text-red-300"
       : timeLeft <= 10
         ? "text-yellow-300"
-        : "text-cyan-300";
+        : "text-white/70";
 
   const isLastQuestion = index + 1 >= questions.length;
 
@@ -316,33 +316,29 @@ export default function QuizGame({
         game="quiz"
       >
         <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <div className="rounded-full border border-cyan-300/20 bg-cyan-400/10 px-4 py-2 text-sm font-black text-cyan-100">
-              {meta.emoji} {meta.title}
-            </div>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+            <div className="text-sm font-black text-white/80">{meta.title}</div>
 
-            <div className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-bold text-white/70">
+            <div className="text-sm font-bold text-white/50">
               السؤال <span className="text-white">{index + 1}</span>
               {" / "}
               {questions.length}
             </div>
 
             {secondTurn && !showAnswer && (
-              <div className="rounded-full border border-yellow-300/25 bg-yellow-400/10 px-4 py-2 text-sm font-bold text-yellow-100">
+              <div className="text-sm font-black text-[#ffb21e]">
                 فرصة ثانية
               </div>
             )}
 
             {timerEnabled && !showAnswer && (
-              <div
-                className={`rounded-full border border-white/10 bg-white/5 px-4 py-2 text-lg font-black ${timerColor}`}
-              >
-                ⏱️ {timeLeft}
+              <div className={`text-sm font-black ${timerColor}`}>
+                {timeLeft} ثانية
               </div>
             )}
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-5 sm:p-6">
+          <div className="rounded-3xl bg-[#221a3f] p-5 sm:p-6 shadow-[0_6px_0_#140f29]">
             {current.image && (
               <img
                 src={current.image}
@@ -360,7 +356,7 @@ export default function QuizGame({
                 {currentOptions.map((option) => (
                   <div
                     key={option}
-                    className="rounded-2xl border border-white/10 bg-black/20 p-4 text-base font-bold text-white sm:text-lg"
+                    className="rounded-2xl bg-[#15102b] p-4 text-base font-bold text-white sm:text-lg"
                   >
                     {option}
                   </div>
@@ -370,12 +366,10 @@ export default function QuizGame({
           </div>
 
           {showAnswer && (
-            <div className="rounded-2xl border border-yellow-300/25 bg-yellow-300/10 p-5">
-              <p className="text-sm font-bold text-white/60">الإجابة</p>
+            <div className="rounded-2xl bg-[#ffb21e] p-5 text-[#241339] shadow-[0_5px_0_#c27700]">
+              <p className="text-sm font-bold opacity-70">الإجابة</p>
 
-              <p className="mt-2 text-xl font-black text-yellow-100">
-                {current.answer}
-              </p>
+              <p className="mt-2 text-xl font-black">{current.answer}</p>
             </div>
           )}
 
@@ -393,7 +387,7 @@ export default function QuizGame({
                       ? "المساعدة استخدمت"
                       : showOptions
                         ? "الخيارات ظاهرة"
-                        : "💡 إظهار الخيارات"}
+                        : "إظهار الخيارات"}
                   </button>
                 )}
 
