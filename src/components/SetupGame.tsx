@@ -13,6 +13,7 @@ type SetupGameId =
   | "draw"
   | "logo"
   | "country"
+  | "club"
   | "car";
 
 type SetupGameProps = {
@@ -78,6 +79,11 @@ const GAMES: {
     id: "country",
     name: "خمن العلم",
     image: "/images/posters/Countries.png",
+  },
+  {
+    id: "club",
+    name: "وش ناديك؟",
+    image: "/images/posters/Clubgame.png",
   },
   {
     id: "quiz",

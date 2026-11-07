@@ -1,6 +1,6 @@
 # خل نلعب 🎮
 
-منصة ألعاب جماعية للجلسات: فريقين على جهاز واحد، تسع ألعاب، وبطل واحد.
+منصة ألعاب جماعية للجلسات: فريقين على جهاز واحد، عشر ألعاب، وبطل واحد.
 اللعب يكون في نفس المكان، وصاحب الجلسة هو اللي يدير الجولات ويحكم.
 
 ## الألعاب
@@ -16,6 +16,7 @@
 | خمن الشعار                 | `logo`           | `src/components/match/LogoGame.tsx`       |
 | خمن العلم                  | `country`        | `src/components/match/CountryGame.tsx`    |
 | عينك عالموتر               | `car`            | `src/components/match/CarGame.tsx`        |
+| وش ناديك؟                  | `club`           | `src/components/match/ClubGame.tsx`       |
 
 ## التشغيل
 
@@ -44,9 +45,10 @@ src/
     match/page.tsx        إدارة الجلسة: الإعداد، الجولات، النتيجة
     country/[id]/         صفحة العلم اللي تفتح من كود QR
     person/[id]/          صفحة الشخصية اللي تفتح من كود QR
+    club/[id]/            صفحة النادي اللي تفتح من كود QR
   components/
     SetupGame.tsx         صفحة اختيار الألعاب والفرق
-    match/                الألعاب التسع وواجهات الجلسة المشتركة
+    match/                الألعاب العشر وواجهات الجلسة المشتركة
   data/                   محتوى الألعاب (أسئلة، كلمات، أمثال، شعارات...)
   lib/                    القواعد المشتركة
     deck.ts               عدم تكرار المحتوى خلال الجلسة
@@ -75,6 +77,7 @@ plans/                    خطط تحسين الحركة ومتابعتها
 | منهو ذا؟     | `src/data/scramble.ts`   | `public/images/people/`    | `id` جديد ما يتكرر                                                  |
 | خمن العلم    | `src/data/countries.ts`  | `public/images/flags/`     |                                                                     |
 | عينك عالموتر | `src/data/cars.ts`       | `public/images/cars/`      | السيارة كاملة وواضحة، و`focusX`/`focusY` نقطة الزوم بالنسبة المئوية |
+| وش ناديك؟    | `src/data/clubs.ts`      | `public/images/clubs/`     | شعار مربع بخلفية بيضاء، وحدّث `CLUBS_FACTS_AS_OF` لما تحدّث الأرقام |
 | إنسان حيوان  | `src/data/categories.ts` |                            | حرف واحد                                                            |
 
 فئة أسئلة جديدة: أضف ملفها في `src/data/quiz/`، وسجّلها في `meta.ts` و`index.ts`.
