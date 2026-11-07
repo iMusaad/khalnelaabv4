@@ -46,6 +46,7 @@ const GAME_LOADERS = {
   draw: () => import("@/components/match/ProverbGame"),
   logo: () => import("@/components/match/LogoGame"),
   country: () => import("@/components/match/CountryGame"),
+  club: () => import("@/components/match/ClubGame"),
   car: () => import("@/components/match/CarGame"),
 };
 
@@ -93,6 +94,11 @@ const LogoGame = dynamic(GAME_LOADERS.logo, {
 });
 
 const CountryGame = dynamic(GAME_LOADERS.country, {
+  ssr: false,
+  loading: GameLoading,
+});
+
+const ClubGame = dynamic(GAME_LOADERS.club, {
   ssr: false,
   loading: GameLoading,
 });
@@ -667,6 +673,9 @@ export default function MatchPage() {
 
       case "country":
         return <CountryGame key={index} {...commonGameProps} />;
+
+      case "club":
+        return <ClubGame key={index} {...commonGameProps} />;
 
       case "car":
         return <CarGame key={index} {...commonGameProps} />;

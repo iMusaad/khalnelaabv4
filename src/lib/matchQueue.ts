@@ -10,6 +10,7 @@ export type GameType =
   | "draw"
   | "logo"
   | "country"
+  | "club"
   | "car";
 
 export type Round = {
@@ -26,6 +27,7 @@ export const VALID_GAMES: GameType[] = [
   "draw",
   "logo",
   "country",
+  "club",
   "car",
 ];
 
@@ -38,6 +40,7 @@ export const DEFAULT_ROUNDS: Record<GameType, number> = {
   draw: 1,
   logo: 1,
   country: 1,
+  club: 1,
   car: 1,
 };
 
@@ -98,7 +101,7 @@ export function buildRoundQueue(
   return queue;
 }
 
-const LONG_TIMER_GAMES: GameType[] = ["categories", "country"];
+const LONG_TIMER_GAMES: GameType[] = ["categories", "country", "club"];
 
 export function getTimerSeconds(game: GameType, baseSeconds: number) {
   return LONG_TIMER_GAMES.includes(game) ? baseSeconds * 2 : baseSeconds;

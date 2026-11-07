@@ -70,6 +70,13 @@ export default function CreditsPage() {
             })}
           </ul>
         </PolicySection>
+
+        <PolicySection title="شعارات «وش ناديك؟»">
+          <p>
+            شعارات الأندية علامات تجارية تخص أنديتها، ونستخدمها في اللعبة عشان
+            التعرف عليها فقط. أخذناها من ويكيبيديا، وأرقام البطولات منها بعد.
+          </p>
+        </PolicySection>
       </div>
     </PageShell>
   );

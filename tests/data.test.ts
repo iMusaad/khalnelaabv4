@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { CARS } from "@/data/cars";
+import { CLUBS } from "@/data/clubs";
 import { COUNTRIES } from "@/data/countries";
 import { COUNTRY_FACTS, GULF_COUNTRY_IDS } from "@/data/countryFacts";
 import { CATEGORY_LETTERS } from "@/data/categories";
@@ -132,6 +133,19 @@ describe("image-based games", () => {
       expect(car.focusX).toBeLessThanOrEqual(100);
       expect(car.focusY).toBeGreaterThanOrEqual(0);
       expect(car.focusY).toBeLessThanOrEqual(100);
+    }
+  });
+
+  it("has unique ids, existing crests and complete facts for clubs", () => {
+    expect(duplicates(CLUBS.map((club) => club.id))).toEqual([]);
+
+    for (const club of CLUBS) {
+      expect(publicFileExists(club.crest), club.crest).toBe(true);
+      expect(club.nameAr.trim().length).toBeGreaterThan(0);
+      expect(club.league.trim().length).toBeGreaterThan(0);
+      expect(club.famousPlayer.trim().length).toBeGreaterThan(0);
+      expect(club.leagueTitles).toBeGreaterThanOrEqual(0);
+      expect(club.founded).toBeGreaterThan(1850);
     }
   });
 

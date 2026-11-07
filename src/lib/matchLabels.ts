@@ -9,6 +9,7 @@ export const GAME_NAMES: Record<GameType, string> = {
   draw: "✏️ خمن المثل",
   logo: "🏷️ خمن الشعار",
   country: "🚩 خمن العلم",
+  club: "⚽ وش ناديك؟",
   car: "🚗 عينك عالموتر",
 };
 
