@@ -1,24 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { adminPasswordMatches } from "@/lib/adminAuth";
 import { createLicenseCode, randomId } from "@/lib/license";
 
 export const dynamic = "force-dynamic";
-
-async function sha256(text: string) {
-  return new Uint8Array(
-    await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)),
-  );
-}
-
-async function passwordMatches(input: string, expected: string) {
-  const [a, b] = await Promise.all([sha256(input), sha256(expected)]);
-  let diff = 0;
-
-  for (let i = 0; i < a.length; i += 1) {
-    diff |= a[i] ^ b[i];
-  }
-
-  return diff === 0;
-}
 
 export async function POST(request: NextRequest) {
   const adminPassword = process.env.ADMIN_PASSWORD;
@@ -35,7 +19,7 @@ export async function POST(request: NextRequest) {
 
   const password = typeof body?.password === "string" ? body.password : "";
 
-  if (!(await passwordMatches(password, adminPassword))) {
+  if (!(await adminPasswordMatches(password))) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
 

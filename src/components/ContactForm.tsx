@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { SITE } from "@/data/site";
 
 const COUNTRY_CODES = [
   { label: "السعودية \u2066+966\u2069", code: "+966" },
@@ -21,31 +20,47 @@ export default function ContactForm() {
   const [country, setCountry] = useState(COUNTRY_CODES[0].code);
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle",
+  );
+  const [website, setWebsite] = useState("");
 
   const canSend = name.trim() && message.trim();
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!canSend) {
+    if (!canSend || status === "sending") {
       return;
     }
 
-    const lines = [
-      `الاسم: ${name.trim()}`,
-      ...(email.trim() ? [`الإيميل: ${email.trim()}`] : []),
-      ...(phone.trim() ? [`الجوال: ${country} ${phone.trim()}`] : []),
-      "",
-      message.trim(),
-    ];
+    setStatus("sending");
 
-    const href = `mailto:${SITE.contactEmail}?subject=${encodeURIComponent(
-      `رسالة من ${name.trim()}`,
-    )}&body=${encodeURIComponent(lines.join("\n"))}`;
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          phone: phone.trim() ? `${country} ${phone.trim()}` : "",
+          message,
+          website,
+        }),
+      });
 
-    window.location.href = href;
-    setSent(true);
+      if (!response.ok) {
+        throw new Error(String(response.status));
+      }
+
+      setStatus("sent");
+      setName("");
+      setEmail("");
+      setPhone("");
+      setMessage("");
+    } catch {
+      setStatus("error");
+    }
   }
 
   return (
@@ -53,6 +68,17 @@ export default function ContactForm() {
       onSubmit={handleSubmit}
       className="mx-auto w-full max-w-lg space-y-3 rounded-3xl bg-[#221a3f] p-5 shadow-[0_6px_0_#140f29] sm:p-7"
     >
+      <input
+        type="text"
+        name="website"
+        value={website}
+        onChange={(event) => setWebsite(event.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="hidden"
+      />
+
       <label className="block">
         <span className="sr-only">اسمك</span>
         <input
@@ -128,17 +154,21 @@ export default function ContactForm() {
 
       <button
         type="submit"
-        disabled={!canSend}
+        disabled={!canSend || status === "sending"}
         className="btn-primary w-full py-3 text-lg"
       >
-        إرسال
+        {status === "sending" ? "نرسل..." : "إرسال"}
       </button>
 
       <p
         aria-live="polite"
         className="min-h-[20px] text-center text-sm font-bold text-white/50"
       >
-        {sent ? "فتحنا لك تطبيق الإيميل، اضغط إرسال من هناك" : ""}
+        {status === "sent"
+          ? "وصلتنا رسالتك، شكرًا لك"
+          : status === "error"
+            ? "ما قدرنا نرسلها، جرّب مرة ثانية بعد شوي"
+            : ""}
       </p>
     </form>
   );

@@ -16,6 +16,11 @@
       "service": "khalnelaab",
     },
   ],
+  "kv_namespaces": [
+    {
+      "binding": "CONTACT_MESSAGES",
+    },
+  ],
   "images": {
     "binding": "IMAGES",
   },

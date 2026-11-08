@@ -37,7 +37,7 @@ export default function GiftCodeForm() {
       } else if (response.status === 401) {
         setError("كلمة المرور غلط.");
       } else {
-        setError("أكواد الهدايا غير مفعلة. تأكد من الإعدادات في Vercel.");
+        setError("أكواد الهدايا غير مفعلة. تأكد من الإعدادات في Cloudflare.");
       }
     } catch {
       setError("صار خطأ، جرّب مرة ثانية.");
