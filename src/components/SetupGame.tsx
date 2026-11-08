@@ -44,7 +44,7 @@ const GAMES: {
   {
     id: "word",
     name: "خمن الكلمة",
-    image: "/images/posters/wordgame.png",
+    image: "/images/posters/wordgame-2.png",
   },
   {
     id: "scramble",
@@ -59,7 +59,7 @@ const GAMES: {
   {
     id: "categories",
     name: "إنسان حيوان نبات جماد بلاد",
-    image: "/images/posters/Categoriesgame.png",
+    image: "/images/posters/Categoriesgame-2.png",
   },
   {
     id: "draw",
@@ -69,7 +69,7 @@ const GAMES: {
   {
     id: "logo",
     name: "خمن الشعار",
-    image: "/images/posters/Logogame.png",
+    image: "/images/posters/Logogame-2.png",
   },
   {
     id: "car",

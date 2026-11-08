@@ -27,7 +27,7 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "word",
-    image: "/images/posters/wordgame.png",
+    image: "/images/posters/wordgame-2.png",
     title: "خمن الكلمة",
     how: [
       "كل مرة يكون الدور على فريق",
@@ -86,7 +86,7 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "categories",
-    image: "/images/posters/Categoriesgame.png",
+    image: "/images/posters/Categoriesgame-2.png",
     title: "إنسان حيوان نبات جماد بلاد",
     how: [
       "بيطلع حرف واحد للفريقين",
@@ -100,7 +100,7 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "logo",
-    image: "/images/posters/Logogame.png",
+    image: "/images/posters/Logogame-2.png",
     title: "خمن الشعار",
     how: [
       "يطلع شعار مبكسل للفريق اللي عليه الدور",

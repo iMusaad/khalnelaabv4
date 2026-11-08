@@ -29,7 +29,7 @@ export const HOME_GAMES: HomeGame[] = [
   },
   {
     id: "word",
-    image: "/images/posters/wordgame.png",
+    image: "/images/posters/wordgame-2.png",
     title: "خمن الكلمة",
     text: "خمس حروف وست محاولات",
   },
@@ -41,7 +41,7 @@ export const HOME_GAMES: HomeGame[] = [
   },
   {
     id: "logo",
-    image: "/images/posters/Logogame.png",
+    image: "/images/posters/Logogame-2.png",
     title: "خمن الشعار",
     text: "مبكسل، تعرفونه قبل يتضح؟",
   },
@@ -66,7 +66,7 @@ export const HOME_GAMES: HomeGame[] = [
   },
   {
     id: "categories",
-    image: "/images/posters/Categoriesgame.png",
+    image: "/images/posters/Categoriesgame-2.png",
     title: "إنسان حيوان نبات",
     text: "حرف واحد وخمس خانات",
   },
