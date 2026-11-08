@@ -140,17 +140,6 @@ export default function ContactForm() {
       >
         {sent ? "فتحنا لك تطبيق الإيميل، اضغط إرسال من هناك" : ""}
       </p>
-
-      <p className="text-center text-xs font-bold text-white/40">
-        أو راسلنا على{" "}
-        <a
-          href={`mailto:${SITE.contactEmail}`}
-          dir="ltr"
-          className="text-white/70 underline underline-offset-4"
-        >
-          {SITE.contactEmail}
-        </a>
-      </p>
     </form>
   );
 }
