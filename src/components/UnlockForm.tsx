@@ -114,7 +114,7 @@ export default function UnlockForm({
       >
         <p className="text-base font-black text-white">ضيعت الكود؟</p>
         <p className="mt-1 text-sm font-bold text-white/60">
-          اكتب رقم العملية اللي وصلك في إيصال ميسر، ونطلع لك الكود من جديد.
+          اكتب رقم العملية اللي وصلك في إيصال الدفع، ونطلع لك الكود من جديد.
         </p>
 
         <input

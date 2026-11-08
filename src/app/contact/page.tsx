@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import PageShell from "@/components/PageShell";
-import PolicySection from "@/components/PolicySection";
-import { SITE } from "@/data/site";
+import ContactForm from "@/components/ContactForm";
+import HomeLogoLink from "@/components/HomeLogoLink";
+import PixelHero from "@/components/PixelHero";
+import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "تواصل معنا | خل نلعب",
@@ -9,28 +10,24 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <PageShell title="تواصل معنا">
-      <div className="space-y-3">
-        <PolicySection title="الإيميل">
-          <p>
-            <a
-              href={`mailto:${SITE.contactEmail}`}
-              className="text-lg font-black text-cyan-200 underline"
-              dir="ltr"
-            >
-              {SITE.contactEmail}
-            </a>
-          </p>
-          <p>نرد عادة خلال يومين عمل.</p>
-        </PolicySection>
+    <main className="min-h-[100dvh] overflow-x-clip text-white">
+      <HomeLogoLink />
 
-        <PolicySection title="لو عندك مشكلة في الشراء">
-          <p>
-            أرسل لنا رقم العملية اللي وصلك من ميسر، ونرجع لك كود التفعيل. وتقدر
-            تسترجعه بنفسك من صفحة «عندي كود».
-          </p>
-        </PolicySection>
+      <PixelHero logo={false} overlap={false} compact>
+        <h1 className="pt-20 text-3xl font-black sm:pt-2 sm:text-4xl">
+          تواصل معنا
+        </h1>
+
+        <p className="mt-2 text-sm font-black opacity-70 sm:text-base">
+          نرد عادة خلال يومين
+        </p>
+      </PixelHero>
+
+      <div className="mx-auto mt-8 max-w-3xl px-4 pb-6">
+        <ContactForm />
+
+        <SiteFooter />
       </div>
-    </PageShell>
+    </main>
   );
 }
