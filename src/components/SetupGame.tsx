@@ -120,6 +120,36 @@ function getDefaultRounds(gameId: string) {
   }
 }
 
+const MAX_SESSION_GAMES = 5;
+
+const MINUTES_PER_ROUND: Record<SetupGameId, number> = {
+  word: 4,
+  quiz: 5,
+  scramble: 3,
+  wheel: 6,
+  categories: 4,
+  draw: 4,
+  logo: 3,
+  country: 5,
+  club: 5,
+  car: 4,
+};
+
+function estimateMinutes(
+  games: SetupGameId[],
+  rounds: Record<string, number>,
+  quizCategoryCount: number,
+) {
+  const total = games.reduce((sum, game) => {
+    const count =
+      game === "quiz" ? Math.max(1, quizCategoryCount) : rounds[game] || 1;
+
+    return sum + count * MINUTES_PER_ROUND[game];
+  }, 0);
+
+  return Math.max(5, Math.round(total / 5) * 5);
+}
+
 function getSelectedLabel(count: number) {
   if (count === 0) return "ما اخترتوا شي";
   if (count === 1) return "لعبة وحدة";
@@ -172,8 +202,14 @@ export default function SetupGame({
       return;
     }
 
+    if (selectedGames.length >= MAX_SESSION_GAMES) {
+      return;
+    }
+
     setSelectedGames((previous) =>
-      previous.includes(id) ? previous : [...previous, id],
+      previous.includes(id) || previous.length >= MAX_SESSION_GAMES
+        ? previous
+        : [...previous, id],
     );
 
     setGameRounds((previous) =>
@@ -324,13 +360,15 @@ export default function SetupGame({
             <p className="mt-0.5 text-sm font-bold text-white/45">
               {isQuickMode
                 ? "اضبطوها وابدأوا"
-                : "اضغطوا على اللعبة وتطلع إعداداتها تحتها"}
+                : selectedGames.length >= MAX_SESSION_GAMES
+                  ? "وصلتوا الحد، ٥ ألعاب بالجلسة. شيلوا وحدة عشان تختارون غيرها"
+                  : "اختاروا لين ٥ ألعاب، وتطلع إعدادات كل لعبة تحتها"}
             </p>
           </div>
 
           {!isQuickMode && (
             <p className="shrink-0 text-sm font-bold text-white/45">
-              {selectedGames.length} من {GAMES.length}
+              {selectedGames.length} من {MAX_SESSION_GAMES}
             </p>
           )}
         </div>
@@ -345,6 +383,11 @@ export default function SetupGame({
           {visibleGames.map((game) => {
             const active = selectedGames.includes(game.id);
 
+            const locked =
+              !isQuickMode &&
+              !active &&
+              selectedGames.length >= MAX_SESSION_GAMES;
+
             const roundOptions = getRoundOptions(game.id);
 
             return (
@@ -352,12 +395,12 @@ export default function SetupGame({
                 <button
                   type="button"
                   onClick={() => toggleGame(game.id)}
-                  disabled={isQuickMode}
+                  disabled={isQuickMode || locked}
                   aria-pressed={isQuickMode ? undefined : active}
                   aria-label={game.name}
                   className={`group relative block aspect-[4/5] w-full overflow-hidden rounded-2xl outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${
                     active ? "outline-[#ffc23d]" : "outline-transparent"
-                  } ${isQuickMode ? "cursor-default" : active ? "" : ""}`}
+                  } ${isQuickMode ? "cursor-default" : locked ? "cursor-not-allowed opacity-35" : ""}`}
                 >
                   <Image
                     src={game.image}
@@ -468,7 +511,13 @@ export default function SetupGame({
           className="min-h-[16px] text-sm font-bold text-white/45"
         >
           {startHint ||
-            (!isQuickMode ? getSelectedLabel(selectedGames.length) : "")}
+            (!isQuickMode
+              ? `${getSelectedLabel(selectedGames.length)} · تقريبًا ${estimateMinutes(
+                  selectedGames,
+                  gameRounds,
+                  quizCategories.length,
+                )} دقيقة`
+              : "")}
         </p>
       </div>
     </div>
