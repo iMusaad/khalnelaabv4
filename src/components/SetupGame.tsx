@@ -84,7 +84,7 @@ const GAMES: {
   {
     id: "club",
     name: "وش ناديك؟",
-    image: "/images/posters/Clubgame.png",
+    image: "/images/posters/Clubgame-2.png",
   },
   {
     id: "quiz",

@@ -144,7 +144,7 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "club",
-    image: "/images/posters/Clubgame.png",
+    image: "/images/posters/Clubgame-2.png",
     title: "وش ناديك؟",
     how: [
       "يطلع كود QR لكل فريق",

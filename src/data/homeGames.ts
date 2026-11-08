@@ -15,7 +15,7 @@ export const HOME_GAMES: HomeGame[] = [
   },
   {
     id: "club",
-    image: "/images/posters/Clubgame.png",
+    image: "/images/posters/Clubgame-2.png",
     title: "وش ناديك؟",
     text: "نعم أو لا لين تعرفون ناديكم",
     phone: true,
