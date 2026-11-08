@@ -43,31 +43,6 @@ const GAMES: {
   image: string;
 }[] = [
   {
-    id: "word",
-    name: "خمن الكلمة",
-    image: "/images/posters/wordgame-2.png",
-  },
-  {
-    id: "scramble",
-    name: "منهو ذا؟",
-    image: "/images/posters/Whogame-2.png",
-  },
-  {
-    id: "wheel",
-    name: "لف وخمن",
-    image: "/images/posters/Wheelgame-2.png",
-  },
-  {
-    id: "categories",
-    name: "إنسان حيوان نبات جماد بلاد",
-    image: "/images/posters/Categoriesgame-2.png",
-  },
-  {
-    id: "draw",
-    name: "خمن المثل",
-    image: "/images/posters/Proverbgame-2.png",
-  },
-  {
     id: "logo",
     name: "خمن الشعار",
     image: "/images/posters/Logogame-2.png",
@@ -78,14 +53,39 @@ const GAMES: {
     image: "/images/posters/Cargame-2.png",
   },
   {
-    id: "country",
-    name: "وش علمك؟",
-    image: "/images/posters/Countries-2.png",
+    id: "scramble",
+    name: "منهو ذا؟",
+    image: "/images/posters/Whogame-2.png",
   },
   {
     id: "club",
     name: "وش ناديك؟",
     image: "/images/posters/Clubgame-2.png",
+  },
+  {
+    id: "country",
+    name: "وش علمك؟",
+    image: "/images/posters/Countries-2.png",
+  },
+  {
+    id: "categories",
+    name: "إنسان حيوان نبات جماد بلاد",
+    image: "/images/posters/Categoriesgame-2.png",
+  },
+  {
+    id: "word",
+    name: "خمن الكلمة",
+    image: "/images/posters/wordgame-2.png",
+  },
+  {
+    id: "wheel",
+    name: "لف وخمن",
+    image: "/images/posters/Wheelgame-2.png",
+  },
+  {
+    id: "draw",
+    name: "خمن المثل",
+    image: "/images/posters/Proverbgame-2.png",
   },
   {
     id: "quiz",
