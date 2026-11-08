@@ -896,17 +896,50 @@ export default function WheelGame({
                       onClick={activateShield}
                       disabled={activeShieldUsed && !shieldActive}
                       aria-pressed={shieldActive}
-                      className={
+                      className={`flex items-center gap-3 rounded-2xl px-4 py-2.5 text-right transition-[transform,box-shadow,background-color] duration-150 active:translate-y-[3px] disabled:cursor-not-allowed disabled:opacity-40 ${
                         shieldActive
-                          ? "btn-team-2 w-auto min-w-[150px] px-5"
-                          : "btn-secondary min-w-[150px]"
-                      }
+                          ? "bg-[#2f9bff] text-white shadow-[0_4px_0_#1662b8]"
+                          : "bg-[#221a3f] text-white shadow-[0_4px_0_#140f29] ring-2 ring-[#2f9bff]/60"
+                      }`}
                     >
-                      {shieldActive
-                        ? "الدرع شغّال"
-                        : activeShieldUsed
-                          ? "استخدمتوا الدرع"
-                          : "الدرع"}
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        className="h-8 w-8 shrink-0"
+                      >
+                        <path
+                          d="M12 2.5 4 5.5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10v-6Z"
+                          fill={shieldActive ? "#ffffff" : "#2f9bff"}
+                          stroke="#241339"
+                          strokeWidth="1.6"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M8.5 12.2 11 14.6l4.6-5"
+                          fill="none"
+                          stroke={shieldActive ? "#2f9bff" : "#ffffff"}
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+
+                      <span className="leading-tight">
+                        <span
+                          className={`block text-[11px] font-black ${
+                            shieldActive ? "text-white/85" : "text-[#4aa8ff]"
+                          }`}
+                        >
+                          وسيلة مساعدة
+                        </span>
+                        <span className="block text-base font-black">
+                          {shieldActive
+                            ? "الدرع شغّال"
+                            : activeShieldUsed
+                              ? "استخدمتوا الدرع"
+                              : "الدرع"}
+                        </span>
+                      </span>
                     </button>
                   </div>
 
