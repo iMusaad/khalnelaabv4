@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { posterThumb } from "@/lib/poster";
 import Link from "next/link";
+import HomeLogoLink from "@/components/HomeLogoLink";
 import PixelHero from "@/components/PixelHero";
 import { HOME_GAMES } from "@/data/homeGames";
 
@@ -11,20 +13,7 @@ export const metadata: Metadata = {
 export default function QuickPage() {
   return (
     <main className="min-h-[100dvh] overflow-x-clip pb-6 text-white">
-      <Link
-        href="/"
-        aria-label="خل نلعب، الرجوع للرئيسية"
-        className="fixed right-3 top-3 z-[60] block rounded-xl outline-none transition-transform hover:scale-105 focus-visible:ring-4 focus-visible:ring-white/70 sm:right-4 sm:top-4"
-      >
-        <Image
-          src="/logo.png"
-          alt=""
-          width={280}
-          height={200}
-          priority
-          className="h-auto w-[62px] [filter:drop-shadow(2px_0_0_#241339)_drop-shadow(-2px_0_0_#241339)_drop-shadow(0_2px_0_#241339)_drop-shadow(0_-2px_0_#241339)_drop-shadow(0_4px_0_#241339)] sm:w-[64px] xl:w-[78px]"
-        />
-      </Link>
+      <HomeLogoLink />
 
       <PixelHero logo={false} overlap={false} compact>
         <h1 className="pt-16 text-2xl font-black sm:pt-0 sm:text-3xl lg:text-4xl">
@@ -50,10 +39,11 @@ export default function QuickPage() {
               }`}
             >
               <Image
-                src={game.image}
+                src={posterThumb(game.image)}
                 alt=""
                 fill
-                sizes="(max-width: 640px) 30vw, 130px"
+                unoptimized
+                priority
                 className="object-cover"
               />
             </Link>
