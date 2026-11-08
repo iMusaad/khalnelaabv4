@@ -32,6 +32,7 @@ import {
   type SavedMatch,
 } from "@/lib/savedMatch";
 import { createResultShareImage } from "@/lib/shareImage";
+import type { ShareAction } from "@/components/match/SessionOverlays";
 import type { WinnerType } from "@/types/game";
 import type { ModeType, RoundStat } from "@/types/match";
 
@@ -559,7 +560,7 @@ export default function MatchPage() {
 
   const roundIsDraw = roundResultWinner === "none";
 
-  async function handleShareResult() {
+  async function handleShareResult(action: ShareAction) {
     if (sharingRef.current) {
       return;
     }
@@ -568,29 +569,37 @@ export default function MatchPage() {
     setSharing(true);
 
     try {
-      const imageFile = await createResultShareImage({
-        isDraw,
-        finalWinnerName,
-        side1,
-        side2,
-        side1Score,
-        side2Score,
-        roundStats,
-      });
+      const imageFile = await createResultShareImage(
+        {
+          isDraw,
+          finalWinnerName,
+          side1,
+          side2,
+          side1Score,
+          side2Score,
+          roundStats,
+        },
+        action === "story" ? "story" : "post",
+      );
 
       if (
+        action !== "save" &&
         navigator.share &&
         navigator.canShare?.({
           files: [imageFile],
         })
       ) {
-        await navigator.share({
-          title: "نتيجتنا في خل نلعب 🎮",
-          text: isDraw
-            ? "تعادلنا في خل نلعب 🤝"
-            : `${finalWinnerName} فاز في خل نلعب 🏆`,
-          files: [imageFile],
-        });
+        await navigator.share(
+          action === "story"
+            ? { files: [imageFile] }
+            : {
+                title: "نتيجتنا في خل نلعب",
+                text: isDraw
+                  ? "تعادلنا في خل نلعب"
+                  : `${finalWinnerName} فاز في خل نلعب`,
+                files: [imageFile],
+              },
+        );
 
         return;
       }
@@ -600,7 +609,7 @@ export default function MatchPage() {
       const link = document.createElement("a");
 
       link.href = imageUrl;
-      link.download = "khal-nelab-result.png";
+      link.download = imageFile.name;
 
       document.body.appendChild(link);
       link.click();

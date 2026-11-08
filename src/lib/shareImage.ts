@@ -17,6 +17,8 @@ export type ShareResultData = {
   roundStats: ShareRoundStat[];
 };
 
+export type ShareImageFormat = "post" | "story";
+
 function drawRoundedRect(
   ctx: CanvasRenderingContext2D,
   x: number,
@@ -96,19 +98,23 @@ function getVisibleBounds(image: HTMLImageElement) {
   };
 }
 
-export async function createResultShareImage({
-  isDraw,
-  finalWinnerName,
-  side1,
-  side2,
-  side1Score,
-  side2Score,
-  roundStats,
-}: ShareResultData) {
+export async function createResultShareImage(
+  {
+    isDraw,
+    finalWinnerName,
+    side1,
+    side2,
+    side1Score,
+    side2Score,
+    roundStats,
+  }: ShareResultData,
+  format: ShareImageFormat = "post",
+) {
   const canvas = document.createElement("canvas");
+  const offsetY = format === "story" ? 285 : 0;
 
   canvas.width = 1080;
-  canvas.height = 1350;
+  canvas.height = 1350 + offsetY * 2;
 
   const logo = await new Promise<HTMLImageElement | null>((resolve) => {
     const image = new Image();
@@ -148,10 +154,12 @@ export async function createResultShareImage({
   ctx.fillStyle = BG;
   ctx.fillRect(0, 0, width, height);
 
+  ctx.translate(0, offsetY);
+
   const heroBottom = 560;
 
   ctx.fillStyle = YELLOW;
-  ctx.fillRect(0, 0, width, heroBottom);
+  ctx.fillRect(0, -offsetY, width, heroBottom + offsetY);
 
   const steps = [1, 2, 1, 0, 1, 2, 3, 2, 1, 1, 0, 1, 2, 1, 0, 1, 2, 2];
   const stepWidth = width / steps.length;
@@ -351,7 +359,11 @@ export async function createResultShareImage({
     throw new Error("فشل إنشاء صورة النتيجة");
   }
 
-  return new File([blob], "khal-nelab-result.png", {
-    type: "image/png",
-  });
+  return new File(
+    [blob],
+    format === "story" ? "khal-nelab-story.png" : "khal-nelab-result.png",
+    {
+      type: "image/png",
+    },
+  );
 }

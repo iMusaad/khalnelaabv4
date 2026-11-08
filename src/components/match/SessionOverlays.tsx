@@ -38,6 +38,14 @@ function getGameStats(roundStats: RoundStat[]) {
   }, []);
 }
 
+export type ShareAction = "share" | "story" | "save";
+
+const SHARE_ACTIONS: { action: ShareAction; label: string }[] = [
+  { action: "share", label: "شارك" },
+  { action: "story", label: "ستوري" },
+  { action: "save", label: "حفظ الصورة" },
+];
+
 export function WinnerOverlay({
   show,
   winnerName,
@@ -67,7 +75,7 @@ export function WinnerOverlay({
   onReplay: () => void;
   onChangeGames: () => void;
   onGoHome: () => void;
-  onShare: () => void;
+  onShare: (action: ShareAction) => void;
 }) {
   if (!show) return null;
 
@@ -225,18 +233,29 @@ export function WinnerOverlay({
           {mode === "quick" ? "نغيّر الإعدادات" : "نغيّر الألعاب"}
         </button>
 
-        <button
-          type="button"
-          onClick={onShare}
-          disabled={sharing}
-          className="btn-secondary"
-        >
-          شارك النتيجة
-        </button>
-
         <button type="button" onClick={onGoHome} className="btn-secondary">
           الرئيسية
         </button>
+      </div>
+
+      <div className="mt-5">
+        <p className="text-center text-sm font-black text-white/55">
+          شاركوا النتيجة
+        </p>
+
+        <div className="mx-auto mt-2 grid max-w-md grid-cols-3 gap-2">
+          {SHARE_ACTIONS.map((item) => (
+            <button
+              key={item.action}
+              type="button"
+              onClick={() => onShare(item.action)}
+              disabled={sharing}
+              className="btn-secondary px-2 text-sm disabled:opacity-60"
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
       </div>
     </OverlayShell>
   );
