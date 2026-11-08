@@ -2,9 +2,15 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PixelHero from "@/components/PixelHero";
 import SiteFooter from "@/components/SiteFooter";
+import {
+  ACTIVE_SEASON,
+  isSeason,
+  SEASON_THEMES,
+  type Season,
+} from "@/lib/season";
 
 const STEPS = [
   {
@@ -28,25 +34,49 @@ const guideLink = (
 export default function Home() {
   const router = useRouter();
 
+  const [season, setSeason] = useState<Season>(ACTIVE_SEASON);
+
+  const theme = SEASON_THEMES[season];
+
   useEffect(() => {
     router.prefetch("/match?mode=session");
     router.prefetch("/quick");
+
+    const preview = new URLSearchParams(window.location.search).get("season");
+
+    if (isSeason(preview)) {
+      setSeason(preview);
+    }
   }, [router]);
 
   return (
     <main className="min-h-[100svh] text-white">
-      <PixelHero action={guideLink} overlap={false}>
-        <h1 className="mt-5 text-3xl font-black sm:text-5xl">
-          جمعتكم ناقصها تحدي
+      <PixelHero action={guideLink} overlap={false} season={season}>
+        <h1 className="mt-4 text-balance text-3xl font-black leading-snug sm:text-5xl sm:leading-tight">
+          {theme.headline}
         </h1>
+
+        {theme.subline && (
+          <p
+            className="mx-auto mt-2 max-w-lg text-base font-bold sm:text-lg"
+            style={{ color: theme.heroSubText }}
+          >
+            {theme.subline}
+          </p>
+        )}
       </PixelHero>
 
       <div className="mx-auto mt-6 max-w-[1100px] px-4">
-        <div className="relative z-10 mx-auto grid max-w-3xl gap-4 sm:grid-cols-2">
+        <div className="relative z-10 mx-auto grid max-w-3xl items-stretch gap-4 sm:grid-cols-5">
           <Link
             href="/match?mode=session"
             prefetch={false}
-            className="block rounded-2xl bg-[#ffc23d] p-6 text-right text-[#241339] shadow-[0_7px_0_#c27700] transition-transform hover:-translate-y-1 active:translate-y-0.5 sm:p-7"
+            className="block rounded-2xl p-6 text-right transition-transform sm:col-span-3 hover:-translate-y-1 active:translate-y-0.5 sm:p-7"
+            style={{
+              background: theme.buttonBg,
+              color: theme.buttonText,
+              boxShadow: `0 7px 0 ${theme.buttonEdge}`,
+            }}
           >
             <span className="text-sm font-black opacity-70">
               اللي نوصي فيه 🏆
@@ -62,15 +92,15 @@ export default function Home() {
           <Link
             href="/quick"
             prefetch={false}
-            className="block rounded-2xl bg-[#221a3f] p-6 text-right shadow-[0_7px_0_#140f29] transition-transform hover:-translate-y-1 active:translate-y-0.5 sm:p-7"
+            className="flex flex-col justify-center rounded-2xl bg-[#2f9bff] p-5 text-right text-white shadow-[0_7px_0_#1662b8] transition-transform hover:-translate-y-1 active:translate-y-0.5 sm:col-span-2 sm:p-6"
           >
-            <span className="text-sm font-black text-white/50">
+            <span className="text-sm font-black text-white/75">
               ما عندكم وقت؟
             </span>
 
-            <span className="mt-1 block text-3xl font-black">لعبة سريعة</span>
+            <span className="mt-1 block text-2xl font-black">لعبة سريعة</span>
 
-            <span className="mt-2 block text-base font-bold leading-7 text-white/60">
+            <span className="mt-2 block text-sm font-bold leading-6 text-white/85">
               اختاروا لعبة وحدة وابدأوا على طول
             </span>
           </Link>
