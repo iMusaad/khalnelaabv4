@@ -199,7 +199,7 @@ export function WinnerOverlay({
 
           <p className="mt-1 text-sm font-bold leading-6 text-white/60">
             في تحدي الجلسة تختارون كم لعبة، تنجمع نقاطكم، وبالأخير فريق واحد
-            ياخذ اللقب
+            يفوز
           </p>
 
           <a href="/match?mode=session" className="btn-primary mt-3 px-8">

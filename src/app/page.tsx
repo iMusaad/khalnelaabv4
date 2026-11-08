@@ -39,10 +39,6 @@ export default function Home() {
         <h1 className="mt-5 text-3xl font-black sm:text-5xl">
           جمعتكم ناقصها تحدي
         </h1>
-
-        <p className="mx-auto mt-2 max-w-lg text-base font-bold opacity-75 sm:text-lg">
-          عشر ألعاب، فريقين، وبطل واحد بالأخير
-        </p>
       </PixelHero>
 
       <div className="mx-auto mt-6 max-w-[1100px] px-4">
@@ -59,7 +55,7 @@ export default function Home() {
             <span className="mt-1 block text-3xl font-black">تحدي الجلسة</span>
 
             <span className="mt-2 block text-base font-bold leading-7 opacity-80">
-              كم لعبة ورا بعض، تنجمع نقاطكم، وبالأخير فريق واحد ياخذ اللقب
+              كم لعبة ورا بعض، تنجمع نقاطكم، وبالأخير فريق واحد يفوز
             </span>
           </Link>
 
