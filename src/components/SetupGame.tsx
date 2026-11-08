@@ -89,7 +89,7 @@ const GAMES: {
   {
     id: "quiz",
     name: "أسئلة وأجوبة",
-    image: "/images/posters/Quizgame.png",
+    image: "/images/posters/Quizgame-2.png",
   },
 ];
 

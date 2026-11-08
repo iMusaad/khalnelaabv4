@@ -43,7 +43,7 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "quiz",
-    image: "/images/posters/Quizgame.png",
+    image: "/images/posters/Quizgame-2.png",
     title: "أسئلة وأجوبة",
     how: [
       "كل فئة تختارونها جولة فيها 6 أسئلة",
