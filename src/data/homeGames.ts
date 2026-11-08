@@ -8,17 +8,16 @@ export type HomeGame = {
 
 export const HOME_GAMES: HomeGame[] = [
   {
+    id: "logo",
+    image: "/images/posters/Logogame-2.png",
+    title: "خمن الشعار",
+    text: "مبكسل، تعرفونه قبل يتضح؟",
+  },
+  {
     id: "car",
     image: "/images/posters/Cargame-2.png",
     title: "عينك عالموتر",
     text: "تعرفون الموتر من جزء صغير منه؟",
-  },
-  {
-    id: "club",
-    image: "/images/posters/Clubgame-2.png",
-    title: "وش ناديك؟",
-    text: "نعم أو لا لين تعرفون ناديكم",
-    phone: true,
   },
   {
     id: "scramble",
@@ -28,22 +27,11 @@ export const HOME_GAMES: HomeGame[] = [
     phone: true,
   },
   {
-    id: "word",
-    image: "/images/posters/wordgame-2.png",
-    title: "خمن الكلمة",
-    text: "خمس حروف وست محاولات",
-  },
-  {
-    id: "quiz",
-    image: "/images/posters/Quizgame-2.png",
-    title: "أسئلة وأجوبة",
-    text: "من الفئات اللي تختارونها",
-  },
-  {
-    id: "logo",
-    image: "/images/posters/Logogame-2.png",
-    title: "خمن الشعار",
-    text: "مبكسل، تعرفونه قبل يتضح؟",
+    id: "club",
+    image: "/images/posters/Clubgame-2.png",
+    title: "وش ناديك؟",
+    text: "نعم أو لا لين تعرفون ناديكم",
+    phone: true,
   },
   {
     id: "country",
@@ -51,6 +39,18 @@ export const HOME_GAMES: HomeGame[] = [
     title: "وش علمك؟",
     text: "نعم أو لا لين تعرفون علمكم",
     phone: true,
+  },
+  {
+    id: "categories",
+    image: "/images/posters/Categoriesgame-2.png",
+    title: "إنسان حيوان نبات",
+    text: "حرف واحد وخمس خانات",
+  },
+  {
+    id: "word",
+    image: "/images/posters/wordgame-2.png",
+    title: "خمن الكلمة",
+    text: "خمس حروف وست محاولات",
   },
   {
     id: "wheel",
@@ -65,9 +65,9 @@ export const HOME_GAMES: HomeGame[] = [
     text: "إيموجي يوصف مثل، وش هو؟",
   },
   {
-    id: "categories",
-    image: "/images/posters/Categoriesgame-2.png",
-    title: "إنسان حيوان نبات",
-    text: "حرف واحد وخمس خانات",
+    id: "quiz",
+    image: "/images/posters/Quizgame-2.png",
+    title: "أسئلة وأجوبة",
+    text: "من الفئات اللي تختارونها",
   },
 ];
