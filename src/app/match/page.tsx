@@ -704,7 +704,7 @@ export default function MatchPage() {
         prefetch
         onClick={confirmLeave}
         aria-label="خل نلعب، الرجوع للرئيسية"
-        className="fixed left-3 top-3 z-[60] block rounded-xl outline-none transition-transform hover:scale-105 focus-visible:ring-4 focus-visible:ring-white/70 sm:left-5 sm:top-4"
+        className="fixed right-3 top-3 z-[60] block rounded-xl outline-none transition-transform hover:scale-105 focus-visible:ring-4 focus-visible:ring-white/70 sm:right-4 sm:top-4"
       >
         <Image
           src="/logo.png"
@@ -712,7 +712,7 @@ export default function MatchPage() {
           width={280}
           height={200}
           priority
-          className="h-auto w-[62px] [filter:drop-shadow(2px_0_0_#241339)_drop-shadow(-2px_0_0_#241339)_drop-shadow(0_2px_0_#241339)_drop-shadow(0_-2px_0_#241339)_drop-shadow(0_4px_0_#241339)] sm:w-[78px]"
+          className="h-auto w-[62px] [filter:drop-shadow(2px_0_0_#241339)_drop-shadow(-2px_0_0_#241339)_drop-shadow(0_2px_0_#241339)_drop-shadow(0_-2px_0_#241339)_drop-shadow(0_4px_0_#241339)] sm:w-[64px] xl:w-[78px]"
         />
       </Link>
 
