@@ -25,7 +25,7 @@ export default function QuickPage() {
         </p>
       </PixelHero>
 
-      <div className="mx-auto mt-6 w-full max-w-[724px] px-3">
+      <div className="mx-auto mt-6 w-full max-w-[924px] px-3">
         <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">
           {HOME_GAMES.map((game, index) => (
             <Link

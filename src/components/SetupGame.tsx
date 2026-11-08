@@ -330,7 +330,7 @@ export default function SetupGame({
         className={`mx-auto mt-3 grid w-full gap-3 ${
           isQuickMode
             ? "max-w-[420px]"
-            : "max-w-[700px] [@media(max-height:820px)]:max-w-[620px]"
+            : "max-w-[700px] [@media(min-height:860px)]:max-w-[820px] [@media(min-height:960px)]:max-w-[900px] [@media(max-height:820px)]:max-w-[620px]"
         }`}
       >
         <div>
