@@ -9,7 +9,7 @@ export type HomeGame = {
 export const HOME_GAMES: HomeGame[] = [
   {
     id: "car",
-    image: "/images/posters/Cargame.png",
+    image: "/images/posters/Cargame-2.png",
     title: "عينك عالموتر",
     text: "تعرفون الموتر من جزء صغير منه؟",
   },
@@ -22,7 +22,7 @@ export const HOME_GAMES: HomeGame[] = [
   },
   {
     id: "scramble",
-    image: "/images/posters/Whogame.png",
+    image: "/images/posters/Whogame-2.png",
     title: "منهو ذا؟",
     text: "واحد يوصف والباقي يخمنون",
     phone: true,
@@ -47,20 +47,20 @@ export const HOME_GAMES: HomeGame[] = [
   },
   {
     id: "country",
-    image: "/images/posters/Countries.png",
-    title: "خمن العلم",
+    image: "/images/posters/Countries-2.png",
+    title: "وش علمك؟",
     text: "نعم أو لا لين تعرفون علمكم",
     phone: true,
   },
   {
     id: "wheel",
-    image: "/images/posters/Wheelgame.png",
+    image: "/images/posters/Wheelgame-2.png",
     title: "لف وخمن",
     text: "لفوا العجلة واكشفوا الكلمة",
   },
   {
     id: "draw",
-    image: "/images/posters/Proverbgame.png",
+    image: "/images/posters/Proverbgame-2.png",
     title: "خمن المثل",
     text: "إيموجي يوصف مثل، وش هو؟",
   },

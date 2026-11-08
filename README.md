@@ -14,7 +14,7 @@
 | إنسان حيوان نبات جماد بلاد | `categories`     | `src/components/match/CategoriesGame.tsx` |
 | خمن المثل                  | `draw`           | `src/components/match/ProverbGame.tsx`    |
 | خمن الشعار                 | `logo`           | `src/components/match/LogoGame.tsx`       |
-| خمن العلم                  | `country`        | `src/components/match/CountryGame.tsx`    |
+| وش علمك؟                   | `country`        | `src/components/match/CountryGame.tsx`    |
 | عينك عالموتر               | `car`            | `src/components/match/CarGame.tsx`        |
 | وش ناديك؟                  | `club`           | `src/components/match/ClubGame.tsx`       |
 
@@ -75,7 +75,7 @@ plans/                    خطط تحسين الحركة ومتابعتها
 | خمن المثل    | `src/data/proverbs.ts`   | `public/images/proverbs/`  |                                                                     |
 | خمن الشعار   | `src/data/logos.ts`      | `public/images/logo/`      | صورة مربعة بخلفية بيضاء والشعار في النص                             |
 | منهو ذا؟     | `src/data/scramble.ts`   | `public/images/people/`    | `id` جديد ما يتكرر                                                  |
-| خمن العلم    | `src/data/countries.ts`  | `public/images/flags/`     |                                                                     |
+| وش علمك؟     | `src/data/countries.ts`  | `public/images/flags/`     |                                                                     |
 | عينك عالموتر | `src/data/cars.ts`       | `public/images/cars/`      | السيارة كاملة وواضحة، و`focusX`/`focusY` نقطة الزوم بالنسبة المئوية |
 | وش ناديك؟    | `src/data/clubs.ts`      | `public/images/clubs/`     | شعار مربع بخلفية بيضاء، وحدّث `CLUBS_FACTS_AS_OF` لما تحدّث الأرقام |
 | إنسان حيوان  | `src/data/categories.ts` |                            | حرف واحد                                                            |

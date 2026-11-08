@@ -49,12 +49,12 @@ const GAMES: {
   {
     id: "scramble",
     name: "منهو ذا؟",
-    image: "/images/posters/Whogame.png",
+    image: "/images/posters/Whogame-2.png",
   },
   {
     id: "wheel",
     name: "لف وخمن",
-    image: "/images/posters/Wheelgame.png",
+    image: "/images/posters/Wheelgame-2.png",
   },
   {
     id: "categories",
@@ -64,7 +64,7 @@ const GAMES: {
   {
     id: "draw",
     name: "خمن المثل",
-    image: "/images/posters/Proverbgame.png",
+    image: "/images/posters/Proverbgame-2.png",
   },
   {
     id: "logo",
@@ -74,12 +74,12 @@ const GAMES: {
   {
     id: "car",
     name: "عينك عالموتر",
-    image: "/images/posters/Cargame.png",
+    image: "/images/posters/Cargame-2.png",
   },
   {
     id: "country",
-    name: "خمن العلم",
-    image: "/images/posters/Countries.png",
+    name: "وش علمك؟",
+    image: "/images/posters/Countries-2.png",
   },
   {
     id: "club",

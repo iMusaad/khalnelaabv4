@@ -122,7 +122,7 @@ export default function CountryGame({
 
   return (
     <GameLayout
-      title="خمن العلم"
+      title="وش علمك؟"
       side1={side1}
       side2={side2}
       side1Score={0}
