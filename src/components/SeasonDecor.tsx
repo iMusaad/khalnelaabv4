@@ -42,6 +42,16 @@ const PALM = [
   "....bbb....",
 ];
 
+const SADU_TILE = [
+  "rrrrrrrrrrrr",
+  "kkwkkkkkkwkk",
+  "kwwwkkkkwwwk",
+  "wwrwwkkwwrww",
+  "kwwwkkkkwwwk",
+  "kkwkkkkkkwkk",
+  "rrrrrrrrrrrr",
+];
+
 export default function SeasonDecor({ season }: { season: Season }) {
   if (season === "ramadan") {
     return (
@@ -74,6 +84,36 @@ export default function SeasonDecor({ season }: { season: Season }) {
             className={`absolute ${pos}`}
           />
         ))}
+      </div>
+    );
+  }
+
+  if (season === "founding") {
+    return (
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-x-0 top-0 flex overflow-hidden">
+          {Array.from({ length: 40 }).map((_, index) => (
+            <PixelArt
+              key={index}
+              rows={SADU_TILE}
+              colors={{ r: "#b3261e", k: "#2b1a12", w: "#f6e7c8" }}
+              size={6}
+              className="shrink-0"
+            />
+          ))}
+        </div>
+        <PixelArt
+          rows={PALM}
+          colors={{ g: "#8fae5a", b: "#d9b27c" }}
+          size={9}
+          className="absolute left-[6%] top-28 hidden sm:block"
+        />
+        <PixelArt
+          rows={PALM}
+          colors={{ g: "#8fae5a", b: "#d9b27c" }}
+          size={9}
+          className="absolute right-[6%] top-28 hidden sm:block"
+        />
       </div>
     );
   }

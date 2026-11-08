@@ -1,8 +1,8 @@
-export type Season = "default" | "national" | "ramadan";
+export type Season = "default" | "national" | "ramadan" | "founding";
 
 export const ACTIVE_SEASON: Season = "default";
 
-export const SEASONS: Season[] = ["default", "national", "ramadan"];
+export const SEASONS: Season[] = ["default", "national", "ramadan", "founding"];
 
 export function isSeason(value: string | null): value is Season {
   return value !== null && SEASONS.includes(value as Season);
@@ -59,5 +59,18 @@ export const SEASON_THEMES: Record<Season, SeasonTheme> = {
     buttonBg: "#ffd36b",
     buttonText: "#1b1450",
     buttonEdge: "#b8892a",
+  },
+  founding: {
+    heroBg: "#7a4a2a",
+    heroText: "#f6e7c8",
+    heroSubText: "rgba(246,231,200,0.8)",
+    headline: "يوم التأسيس، وجمعتكم ناقصها تحدي",
+    subline: "من ١٧٢٧ والجمعة تجمعنا، فريقين وتحدي على السوالف",
+    badge: "نسخة يوم التأسيس",
+    badgeBg: "#f6e7c8",
+    badgeText: "#7a4a2a",
+    buttonBg: "#f6e7c8",
+    buttonText: "#5a3018",
+    buttonEdge: "#b8956a",
   },
 };

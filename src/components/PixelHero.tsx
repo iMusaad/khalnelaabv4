@@ -23,15 +23,19 @@ export default function PixelHero({
 
   return (
     <section
-      className={`relative overflow-hidden px-4 pt-6 text-center ${
-        overlap ? "pb-36" : "pb-28"
-      }`}
+      className={`relative overflow-hidden px-4 text-center ${
+        season === "founding" ? "pt-16" : "pt-6"
+      } ${overlap ? "pb-36" : "pb-28"}`}
       style={{ background: theme.heroBg, color: theme.heroText }}
     >
       <SeasonDecor season={season} />
 
       {action && (
-        <div className="relative z-10 mb-4 flex justify-center sm:absolute sm:left-4 sm:top-4 sm:mb-0">
+        <div
+          className={`relative z-10 mb-4 flex justify-center sm:absolute sm:left-4 sm:mb-0 ${
+            season === "founding" ? "sm:top-14" : "sm:top-4"
+          }`}
+        >
           {action}
         </div>
       )}
