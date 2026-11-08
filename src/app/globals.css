@@ -32,6 +32,7 @@ body {
 }
 
 html {
+  overflow-x: clip;
   color-scheme: dark;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
