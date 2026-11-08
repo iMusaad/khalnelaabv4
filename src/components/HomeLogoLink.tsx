@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { MouseEvent } from "react";
-import HomeIcon from "@/components/HomeIcon";
 
 export default function HomeLogoLink({
   onClick,
@@ -14,7 +13,7 @@ export default function HomeLogoLink({
       prefetch
       onClick={onClick}
       aria-label="الرجوع للرئيسية"
-      className="fixed right-3 top-3 z-[60] flex items-center gap-2 rounded-2xl bg-[#241339] py-1.5 pl-3 pr-1.5 text-white shadow-[0_4px_0_#0e0a1f] outline-none transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0.5 focus-visible:ring-4 focus-visible:ring-white/70 sm:right-4 sm:top-4"
+      className="group fixed right-3 top-2 z-[60] flex flex-col items-center rounded-xl outline-none transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0.5 focus-visible:ring-4 focus-visible:ring-white/70 sm:right-4 sm:top-3"
     >
       <Image
         src="/logo.png"
@@ -22,11 +21,10 @@ export default function HomeLogoLink({
         width={280}
         height={200}
         priority
-        className="h-auto w-[40px] sm:w-[46px]"
+        className="h-auto w-[60px] [filter:drop-shadow(2px_0_0_#241339)_drop-shadow(-2px_0_0_#241339)_drop-shadow(0_2px_0_#241339)_drop-shadow(0_-2px_0_#241339)_drop-shadow(0_4px_0_#241339)] sm:w-[76px]"
       />
 
-      <span className="flex items-center gap-1 text-sm font-black">
-        <HomeIcon />
+      <span className="-mt-1 text-xs font-black text-white [text-shadow:0_2px_0_#241339,1px_0_0_#241339,-1px_0_0_#241339,0_-1px_0_#241339] group-hover:underline sm:text-sm">
         الرئيسية
       </span>
     </Link>
