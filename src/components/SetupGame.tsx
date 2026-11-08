@@ -249,7 +249,7 @@ export default function SetupGame({
 
   return (
     <div className="intro text-white">
-      <div className="-mx-3 -mt-4 sm:-mx-6 sm:-mt-6">
+      <div className="-mx-3 -mt-16 sm:-mx-6 sm:-mt-6">
         <PixelHero logo={false} overlap={false} compact>
           <h1 className="pt-12 text-2xl font-black sm:pt-2 sm:text-4xl">
             {isQuickMode ? "جهزوا الفرق" : "اختاروا ألعابكم"}

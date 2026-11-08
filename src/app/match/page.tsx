@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
@@ -34,7 +35,6 @@ import {
 import { createResultShareImage } from "@/lib/shareImage";
 import type { WinnerType } from "@/types/game";
 import type { ModeType, RoundStat } from "@/types/match";
-import HomeIcon from "@/components/HomeIcon";
 
 type PhaseType = "setup" | "countdown" | "playing" | "transition" | "finished";
 
@@ -698,16 +698,22 @@ export default function MatchPage() {
   }
 
   return (
-    <main className="min-h-[100dvh] px-3 pb-6 pt-4 text-white sm:p-6">
+    <main className="min-h-[100dvh] overflow-x-clip px-3 pb-6 pt-16 text-white sm:p-6">
       <Link
         href="/"
         prefetch
         onClick={confirmLeave}
-        aria-label="الرئيسية"
-        className="nav-pill fixed left-3 top-3 z-[60] px-0 sm:left-5 sm:top-5 sm:px-4"
+        aria-label="خل نلعب، الرجوع للرئيسية"
+        className="fixed right-3 top-3 z-[60] block rounded-xl outline-none transition-transform hover:scale-105 focus-visible:ring-4 focus-visible:ring-white/70 sm:right-4 sm:top-4"
       >
-        <HomeIcon />
-        <span className="hidden lg:inline">الرئيسية</span>
+        <Image
+          src="/logo.png"
+          alt=""
+          width={280}
+          height={200}
+          priority
+          className="h-auto w-[62px] [filter:drop-shadow(2px_0_0_#241339)_drop-shadow(-2px_0_0_#241339)_drop-shadow(0_2px_0_#241339)_drop-shadow(0_-2px_0_#241339)_drop-shadow(0_4px_0_#241339)] sm:w-[64px] xl:w-[78px]"
+        />
       </Link>
 
       {phase === "countdown" && <CountdownOverlay countdown={countdown} />}
