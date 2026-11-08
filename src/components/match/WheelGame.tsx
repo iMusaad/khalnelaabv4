@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import GameLayout from "@/components/match/GameLayout";
 
 import {
@@ -27,6 +27,8 @@ type WheelRoundState = {
   currentValue: Value | null;
   score1: number;
   score2: number;
+  shield1Used?: boolean;
+  shield2Used?: boolean;
 };
 
 type Phase = "spin" | "result" | "guess" | "celebrate";
@@ -89,6 +91,14 @@ export default function WheelGame({
   const [score1, setScore1] = useState(0);
   const [score2, setScore2] = useState(0);
 
+  const [shield1Used, setShield1Used] = useState(false);
+
+  const [shield2Used, setShield2Used] = useState(false);
+
+  const [shieldActive, setShieldActive] = useState(false);
+
+  const [shieldNote, setShieldNote] = useState("");
+
   const [timeLeft, setTimeLeft] = useState(timerSeconds);
 
   const [wheelGlow, setWheelGlow] = useState(false);
@@ -97,8 +107,6 @@ export default function WheelGame({
     null,
   );
 
-  const [solveOpen, setSolveOpen] = useState(false);
-  const [solveGuess, setSolveGuess] = useState("");
   const [loaded, setLoaded] = useState(false);
 
   const tickTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -108,7 +116,22 @@ export default function WheelGame({
   const audioContextRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
 
-  const segmentAngle = 360 / SEGMENTS.length;
+  const totalWeight = SEGMENTS.reduce(
+    (sum, segment) => sum + segment.weight,
+    0,
+  );
+
+  const segmentArcs = SEGMENTS.reduce<{ start: number; end: number }[]>(
+    (arcs, segment) => {
+      const start = arcs.length ? arcs[arcs.length - 1].end : 0;
+
+      return [
+        ...arcs,
+        { start, end: start + (segment.weight / totalWeight) * 360 },
+      ];
+    },
+    [],
+  );
 
   const currentTeamName = turn === "side1" ? side1Name : side2Name;
 
@@ -162,6 +185,8 @@ export default function WheelGame({
       setCurrentValue(guessing ? saved.currentValue : null);
       setScore1(saved.score1);
       setScore2(saved.score2);
+      setShield1Used(Boolean(saved.shield1Used));
+      setShield2Used(Boolean(saved.shield2Used));
 
       return cleanup;
     }
@@ -210,10 +235,14 @@ export default function WheelGame({
       currentValue,
       score1,
       score2,
+      shield1Used,
+      shield2Used,
     });
   }, [
     loaded,
     roundKey,
+    shield1Used,
+    shield2Used,
     answer,
     category,
     revealed,
@@ -292,7 +321,7 @@ export default function WheelGame({
     const ctx = new AudioCtx();
     const gain = ctx.createGain();
 
-    gain.gain.value = 0.022;
+    gain.gain.value = 0.09;
     gain.connect(ctx.destination);
 
     audioContextRef.current = ctx;
@@ -377,7 +406,24 @@ export default function WheelGame({
   }
 
   function nextTurn() {
+    setShieldActive(false);
+    setShieldNote("");
     setTurn((prev) => (prev === "side1" ? "side2" : "side1"));
+  }
+
+  const activeShieldUsed = turn === "side1" ? shield1Used : shield2Used;
+
+  function activateShield() {
+    if (phase !== "guess" || activeShieldUsed || shieldActive) return;
+
+    if (turn === "side1") {
+      setShield1Used(true);
+    } else {
+      setShield2Used(true);
+    }
+
+    setShieldActive(true);
+    setShieldNote("");
   }
 
   function finishRound(final1: number, final2: number) {
@@ -401,7 +447,11 @@ export default function WheelGame({
 
     const pointerAngle = (360 - normalized) % 360;
 
-    return Math.floor(pointerAngle / segmentAngle) % SEGMENTS.length;
+    const index = segmentArcs.findIndex(
+      (arc) => pointerAngle >= arc.start && pointerAngle < arc.end,
+    );
+
+    return index === -1 ? 0 : index;
   }
 
   function startTicking() {
@@ -455,13 +505,24 @@ export default function WheelGame({
     setSpinning(true);
     setTimeLeft(timerSeconds);
 
-    const index = Math.floor(Math.random() * SEGMENTS.length);
+    const pick = Math.random() * 360;
+
+    const found = segmentArcs.findIndex(
+      (arc) => pick >= arc.start && pick < arc.end,
+    );
+
+    const index = found === -1 ? 0 : found;
 
     const value: Value = SEGMENTS[index].value as Value;
 
     setCurrentValue(value);
 
-    const targetCenter = index * segmentAngle + segmentAngle / 2;
+    const arc = segmentArcs[index];
+
+    const margin = Math.min(4, (arc.end - arc.start) / 4);
+
+    const targetCenter =
+      arc.start + margin + Math.random() * (arc.end - arc.start - margin * 2);
 
     const extraSpins = 8 * 360;
 
@@ -532,6 +593,11 @@ export default function WheelGame({
 
     setRevealed(next);
 
+    const shielded = shieldActive;
+
+    setShieldActive(false);
+    setShieldNote("");
+
     if (count > 0) {
       const gained = count * currentValue;
 
@@ -555,33 +621,9 @@ export default function WheelGame({
       return;
     }
 
-    setCurrentValue(null);
-
-    nextTurn();
-
-    setPhase("spin");
-
-    setTimeLeft(timerSeconds);
-  }
-
-  useEffect(() => {
-    setSolveOpen(false);
-    setSolveGuess("");
-  }, [phase, turn]);
-
-  function solveWord(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    if (phase !== "guess") return;
-
-    const guess = solveGuess.trim();
-
-    if (!guess) return;
-
-    if (normalizeArabic(guess) === normalizeArabic(answer)) {
-      setRevealed(answer.split("").map((char) => (char === " " ? "" : char)));
-
-      finishRound(score1, score2);
+    if (shielded) {
+      setShieldNote("الدرع حماكم، جربوا حرف ثاني");
+      setTimeLeft(timerSeconds);
       return;
     }
 
@@ -693,84 +735,115 @@ export default function WheelGame({
           <div className="mt-2">
             {(phase === "spin" || phase === "result") && (
               <div className="flex flex-col items-center">
-                <div className="relative h-[290px] w-[290px] max-w-full md:h-[340px] md:w-[340px]">
-                  <div
-                    className={`absolute left-1/2 top-0 z-30 -translate-x-1/2 -translate-y-2 transition ${
-                      wheelGlow
-                        ? "scale-110 drop-shadow-[0_0_20px_rgba(248,113,113,0.95)]"
-                        : "drop-shadow-[0_0_14px_rgba(248,113,113,0.75)]"
+                <div className="relative h-[300px] w-[300px] max-w-full md:h-[350px] md:w-[350px]">
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 40 34"
+                    className={`absolute left-1/2 top-0 z-30 w-11 -translate-x-1/2 -translate-y-3 transition-transform duration-150 ${
+                      wheelGlow ? "scale-110" : ""
                     }`}
                   >
-                    <div className="h-0 w-0 border-l-[16px] border-r-[16px] border-t-[28px] border-l-transparent border-r-transparent border-t-red-500" />
-                  </div>
+                    <path
+                      d="M4 3 H36 L20 31 Z"
+                      fill="#ffc23d"
+                      stroke="#241339"
+                      strokeWidth="4"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
 
                   <div
-                    className="relative h-full w-full rounded-full border-[6px] border-white/25"
+                    className="h-full w-full rounded-full shadow-[0_10px_0_#0b0818]"
                     style={{
-                      background: `conic-gradient(${SEGMENTS.map(
-                        (segment, i) => {
-                          const start = i * segmentAngle;
-
-                          const end = (i + 1) * segmentAngle;
-
-                          return `${segment.color} ${start}deg ${end}deg`;
-                        },
-                      ).join(", ")})`,
-
                       transform: `rotate(${rotation}deg)`,
-
                       transition:
                         "transform 3s cubic-bezier(0.08, 0.9, 0.2, 1)",
-
-                      boxShadow:
-                        "inset 0 0 25px rgba(0,0,0,0.35), 0 18px 40px rgba(0,0,0,0.45), 0 0 30px rgba(168,85,247,0.18)",
-
-                      overflow: "hidden",
                     }}
                   >
-                    <div
-                      className="absolute inset-[10px] rounded-full border border-white/10"
-                      style={{
-                        boxShadow: "inset 0 0 20px rgba(255,255,255,0.06)",
-                      }}
-                    />
+                    <svg viewBox="0 0 200 200" className="h-full w-full">
+                      <circle cx="100" cy="100" r="96" fill="#241339" />
 
-                    {SEGMENTS.map((segment, i) => {
-                      const angle = i * segmentAngle + segmentAngle / 2;
+                      {SEGMENTS.map((segment, i) => {
+                        const { start, end } = segmentArcs[i];
+                        const r = 91;
+                        const toXY = (deg: number) => {
+                          const rad = ((deg - 90) * Math.PI) / 180;
+                          return [
+                            100 + r * Math.cos(rad),
+                            100 + r * Math.sin(rad),
+                          ];
+                        };
+                        const [x1, y1] = toXY(start);
+                        const [x2, y2] = toXY(end);
+                        const large = end - start > 180 ? 1 : 0;
+                        const mid = (start + end) / 2;
+                        const isActive = activeSegmentIndex === i;
+                        const narrow = end - start < 30;
 
-                      const isActive = activeSegmentIndex === i;
+                        return (
+                          <g key={`${segment.label}-${i}`}>
+                            <path
+                              d={`M100 100 L${x1} ${y1} A${r} ${r} 0 ${large} 1 ${x2} ${y2} Z`}
+                              fill={segment.color}
+                              stroke="#241339"
+                              strokeWidth="2.5"
+                              strokeLinejoin="round"
+                              style={{
+                                filter: isActive
+                                  ? "brightness(1.15)"
+                                  : undefined,
+                              }}
+                            />
+                            {narrow ? (
+                              <text
+                                x="100"
+                                y="100"
+                                transform={`rotate(${mid} 100 100) translate(0 -58) rotate(-90 100 100)`}
+                                textAnchor="middle"
+                                dominantBaseline="middle"
+                                fill={segment.text}
+                                fontSize="8"
+                                fontWeight="900"
+                                style={{ fontFamily: "inherit" }}
+                              >
+                                {segment.label}
+                              </text>
+                            ) : (
+                              <text
+                                x="100"
+                                y="34"
+                                transform={`rotate(${mid} 100 100)`}
+                                textAnchor="middle"
+                                dominantBaseline="middle"
+                                fill={segment.text}
+                                fontSize="12"
+                                fontWeight="900"
+                                style={{ fontFamily: "inherit" }}
+                              >
+                                {segment.label}
+                              </text>
+                            )}
+                          </g>
+                        );
+                      })}
 
-                      return (
-                        <div
-                          key={`${segment.label}-${i}`}
-                          className="absolute left-1/2 top-1/2 origin-center"
-                          style={{
-                            transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-108px) rotate(${-angle}deg)`,
-                          }}
-                        >
-                          <div
-                            className={`w-24 text-center text-sm font-black leading-4 text-white transition md:text-base ${
-                              isActive ? "scale-110" : ""
-                            }`}
-                            style={{
-                              textShadow: isActive
-                                ? "0 0 10px rgba(255,255,255,0.95), 0 2px 4px rgba(0,0,0,0.85)"
-                                : "0 2px 4px rgba(0,0,0,0.85)",
-                            }}
-                          >
-                            {segment.label}
-                          </div>
-                        </div>
-                      );
-                    })}
-
-                    <div
-                      className={`absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-4 border-white/25 bg-[radial-gradient(circle_at_30%_30%,#b91c1c,#7a001f)] text-2xl shadow-[0_0_25px_rgba(239,68,68,0.35)] transition ${
-                        wheelGlow ? "scale-105" : ""
-                      }`}
-                    >
-                      🎡
-                    </div>
+                      <circle
+                        cx="100"
+                        cy="100"
+                        r="19"
+                        fill="#241339"
+                        stroke="#ffc23d"
+                        strokeWidth="3"
+                      />
+                      <rect
+                        x="94"
+                        y="94"
+                        width="12"
+                        height="12"
+                        rx="2"
+                        fill="#ffc23d"
+                      />
+                    </svg>
                   </div>
                 </div>
 
@@ -816,53 +889,66 @@ export default function WheelGame({
                   ))}
                 </div>
 
-                {solveOpen ? (
-                  <form
-                    onSubmit={solveWord}
-                    className="mx-auto flex w-full max-w-md flex-col gap-2 sm:flex-row"
-                  >
-                    <input
-                      autoFocus
-                      value={solveGuess}
-                      onChange={(event) => setSolveGuess(event.target.value)}
-                      placeholder="اكتبوا الجواب كامل"
-                      aria-label="الجواب"
-                      autoComplete="off"
-                      autoCorrect="off"
-                      spellCheck={false}
-                      enterKeyHint="done"
-                      className="h-12 min-w-0 flex-1 rounded-2xl border border-white/20 bg-transparent px-4 text-center text-lg font-black text-white outline-none placeholder:text-white/35 focus:border-white/60"
-                    />
-
-                    <div className="grid grid-cols-2 gap-2 sm:flex">
-                      <button
-                        type="submit"
-                        disabled={!solveGuess.trim()}
-                        className="btn-primary"
-                      >
-                        تأكيد
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setSolveOpen(false)}
-                        className="btn-secondary"
-                      >
-                        رجوع
-                      </button>
-                    </div>
-                  </form>
-                ) : (
-                  <div className="flex justify-center">
+                <div className="flex flex-col items-center gap-2">
+                  <div className="flex flex-wrap justify-center gap-3">
                     <button
                       type="button"
-                      onClick={() => setSolveOpen(true)}
-                      className="btn-primary min-w-[170px]"
+                      onClick={activateShield}
+                      disabled={activeShieldUsed && !shieldActive}
+                      aria-pressed={shieldActive}
+                      className={`flex items-center gap-3 rounded-2xl px-4 py-2.5 text-right transition-[transform,box-shadow,background-color] duration-150 active:translate-y-[3px] disabled:cursor-not-allowed disabled:opacity-40 ${
+                        shieldActive
+                          ? "bg-[#2f9bff] text-white shadow-[0_4px_0_#1662b8]"
+                          : "bg-[#221a3f] text-white shadow-[0_4px_0_#140f29] ring-2 ring-[#2f9bff]/60"
+                      }`}
                     >
-                      عرفتوها؟ حلّوها
+                      <svg
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        className="h-8 w-8 shrink-0"
+                      >
+                        <path
+                          d="M12 2.5 4 5.5v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10v-6Z"
+                          fill={shieldActive ? "#ffffff" : "#2f9bff"}
+                          stroke="#241339"
+                          strokeWidth="1.6"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M8.5 12.2 11 14.6l4.6-5"
+                          fill="none"
+                          stroke={shieldActive ? "#2f9bff" : "#ffffff"}
+                          strokeWidth="2.2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+
+                      <span className="leading-tight">
+                        <span
+                          className={`block text-[11px] font-black ${
+                            shieldActive ? "text-white/85" : "text-[#4aa8ff]"
+                          }`}
+                        >
+                          وسيلة مساعدة
+                        </span>
+                        <span className="block text-base font-black">
+                          {shieldActive
+                            ? "الدرع شغّال"
+                            : activeShieldUsed
+                              ? "استخدمتوا الدرع"
+                              : "الدرع"}
+                        </span>
+                      </span>
                     </button>
                   </div>
-                )}
+
+                  {(shieldActive || shieldNote) && (
+                    <p className="text-sm font-bold text-white/60">
+                      {shieldNote || "لو طلع الحرف غلط تجربون مرة ثانية"}
+                    </p>
+                  )}
+                </div>
               </div>
             )}
 

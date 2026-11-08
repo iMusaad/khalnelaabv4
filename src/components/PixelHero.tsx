@@ -29,7 +29,7 @@ export default function PixelHero({
     <section
       className={`relative overflow-hidden px-4 text-center ${
         season === "founding" ? "pt-16" : "pt-6"
-      } ${overlap ? "pb-36" : compact ? "pb-16" : logo ? "pb-28" : "pb-24"}`}
+      } ${overlap ? "pb-36" : compact ? "pb-14" : logo ? "pb-28" : "pb-24"}`}
       style={{ background: theme.heroBg, color: theme.heroText }}
     >
       <SeasonDecor season={season} />

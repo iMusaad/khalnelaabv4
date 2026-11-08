@@ -93,6 +93,16 @@ describe("wheel of fortune", () => {
           ? segment.value > 0
           : ["bankrupt", "lose"].includes(segment.value),
       ).toBe(true);
+      expect(segment.weight).toBeGreaterThan(0);
+    }
+  });
+
+  it("makes bankrupt and skip rarer than point slices", () => {
+    const total = WHEEL_SEGMENTS.reduce((sum, s) => sum + s.weight, 0);
+    const special = WHEEL_SEGMENTS.filter((s) => typeof s.value !== "number");
+
+    for (const segment of special) {
+      expect(segment.weight / total).toBeLessThan(0.08);
     }
   });
 });
