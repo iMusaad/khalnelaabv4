@@ -4,16 +4,30 @@ export const WHEEL_SEGMENTS: {
   label: string;
   value: WheelValue;
   color: string;
+  text: string;
+  weight: number;
 }[] = [
-  { label: "100", value: 100, color: "#22c55e" },
-  { label: "200", value: 200, color: "#3b82f6" },
-  { label: "400", value: 400, color: "#8b5cf6" },
-  { label: "500", value: 500, color: "#f59e0b" },
-  { label: "600", value: 600, color: "#f97316" },
-  { label: "700", value: 700, color: "#ea580c" },
-  { label: "1000", value: 1000, color: "#eab308" },
-  { label: "إفلاس", value: "bankrupt", color: "#ef4444" },
-  { label: "تخطي", value: "lose", color: "#6b7280" },
+  { label: "100", value: 100, color: "#22b573", text: "#ffffff", weight: 1 },
+  { label: "500", value: 500, color: "#ffc23d", text: "#241339", weight: 1 },
+  { label: "200", value: 200, color: "#2f9bff", text: "#ffffff", weight: 1 },
+  {
+    label: "إفلاس",
+    value: "bankrupt",
+    color: "#d62839",
+    text: "#ffffff",
+    weight: 0.45,
+  },
+  { label: "600", value: 600, color: "#ff8a1e", text: "#241339", weight: 1 },
+  { label: "400", value: 400, color: "#8b5cf6", text: "#ffffff", weight: 1 },
+  { label: "1000", value: 1000, color: "#ffe28a", text: "#241339", weight: 1 },
+  { label: "700", value: 700, color: "#14b8a6", text: "#ffffff", weight: 1 },
+  {
+    label: "تخطي",
+    value: "lose",
+    color: "#5b5675",
+    text: "#ffffff",
+    weight: 0.45,
+  },
 ];
 
 export const WHEEL_PUZZLES = [
