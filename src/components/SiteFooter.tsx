@@ -5,7 +5,6 @@ const LINKS = [
   { href: "/privacy", label: "الخصوصية" },
   { href: "/contact", label: "تواصل معنا" },
   { href: "/unlock", label: "عندي كود" },
-  { href: "/credits", label: "حقوق الصور" },
 ];
 
 export default function SiteFooter() {
