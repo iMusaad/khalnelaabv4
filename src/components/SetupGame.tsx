@@ -44,47 +44,47 @@ const GAMES: {
   {
     id: "word",
     name: "خمن الكلمة",
-    image: "/images/posters/wordgame.png",
+    image: "/images/posters/wordgame-2.png",
   },
   {
     id: "scramble",
     name: "منهو ذا؟",
-    image: "/images/posters/Whogame.png",
+    image: "/images/posters/Whogame-2.png",
   },
   {
     id: "wheel",
     name: "لف وخمن",
-    image: "/images/posters/Wheelgame.png",
+    image: "/images/posters/Wheelgame-2.png",
   },
   {
     id: "categories",
     name: "إنسان حيوان نبات جماد بلاد",
-    image: "/images/posters/Categoriesgame.png",
+    image: "/images/posters/Categoriesgame-2.png",
   },
   {
     id: "draw",
     name: "خمن المثل",
-    image: "/images/posters/Proverbgame.png",
+    image: "/images/posters/Proverbgame-2.png",
   },
   {
     id: "logo",
     name: "خمن الشعار",
-    image: "/images/posters/Logogame.png",
+    image: "/images/posters/Logogame-2.png",
   },
   {
     id: "car",
     name: "عينك عالموتر",
-    image: "/images/posters/Cargame.png",
+    image: "/images/posters/Cargame-2.png",
   },
   {
     id: "country",
-    name: "خمن العلم",
-    image: "/images/posters/Countries.png",
+    name: "وش علمك؟",
+    image: "/images/posters/Countries-2.png",
   },
   {
     id: "club",
     name: "وش ناديك؟",
-    image: "/images/posters/Clubgame.png",
+    image: "/images/posters/Clubgame-2.png",
   },
   {
     id: "quiz",
@@ -232,7 +232,7 @@ export default function SetupGame({
             <span className="mb-1.5 flex items-center gap-2 text-sm font-bold text-white/60">
               <span
                 aria-hidden="true"
-                className="h-2.5 w-2.5 rounded-full bg-fuchsia-400"
+                className="h-2.5 w-2.5 rounded-full bg-[#ff5a5f]"
               />
               الفريق الأول
             </span>
@@ -252,7 +252,7 @@ export default function SetupGame({
             <span className="mb-1.5 flex items-center gap-2 text-sm font-bold text-white/60">
               <span
                 aria-hidden="true"
-                className="h-2.5 w-2.5 rounded-full bg-cyan-400"
+                className="h-2.5 w-2.5 rounded-full bg-[#2f9bff]"
               />
               الفريق الثاني
             </span>

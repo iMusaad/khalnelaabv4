@@ -11,7 +11,7 @@ export type HowToPlay = {
 export const HOW_TO_PLAY: HowToPlay[] = [
   {
     id: "wheel",
-    image: "/images/posters/Wheelgame.png",
+    image: "/images/posters/Wheelgame-2.png",
     title: "لف وخمن",
     how: [
       "لف العجلة وشف وش تطلع لك",
@@ -27,7 +27,7 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "word",
-    image: "/images/posters/wordgame.png",
+    image: "/images/posters/wordgame-2.png",
     title: "خمن الكلمة",
     how: [
       "كل مرة يكون الدور على فريق",
@@ -58,7 +58,7 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "draw",
-    image: "/images/posters/Proverbgame.png",
+    image: "/images/posters/Proverbgame-2.png",
     title: "خمن المثل",
     how: [
       "بيطلع لكم لغز يمثل مثل معروف",
@@ -71,7 +71,7 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "scramble",
-    image: "/images/posters/Whogame.png",
+    image: "/images/posters/Whogame-2.png",
     title: "منهو ذا؟",
     how: [
       "يطلع كود QR لشخصية",
@@ -86,7 +86,7 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "categories",
-    image: "/images/posters/Categoriesgame.png",
+    image: "/images/posters/Categoriesgame-2.png",
     title: "إنسان حيوان نبات جماد بلاد",
     how: [
       "بيطلع حرف واحد للفريقين",
@@ -100,7 +100,7 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "logo",
-    image: "/images/posters/Logogame.png",
+    image: "/images/posters/Logogame-2.png",
     title: "خمن الشعار",
     how: [
       "يطلع شعار مبكسل للفريق اللي عليه الدور",
@@ -114,7 +114,7 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "car",
-    image: "/images/posters/Cargame.png",
+    image: "/images/posters/Cargame-2.png",
     title: "عينك عالموتر",
     how: [
       "يطلع جزء صغير من سيارة مكبّر للفريق اللي عليه الدور",
@@ -129,8 +129,8 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "country",
-    image: "/images/posters/Countries.png",
-    title: "خمن العلم",
+    image: "/images/posters/Countries-2.png",
+    title: "وش علمك؟",
     how: [
       "يطلع كود QR لكل فريق",
       "كل فريق يمسح كوده ويشوف العلم اللي لازم الفريق الثاني يخمنه",
@@ -144,7 +144,7 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "club",
-    image: "/images/posters/Clubgame.png",
+    image: "/images/posters/Clubgame-2.png",
     title: "وش ناديك؟",
     how: [
       "يطلع كود QR لكل فريق",

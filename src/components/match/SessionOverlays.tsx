@@ -94,7 +94,7 @@ export function WinnerOverlay({
         <div
           className={`min-w-0 rounded-[24px] p-3 sm:p-5 ${
             side1Leads
-              ? "bg-[#ffb21e] text-[#241339] shadow-[0_6px_0_#c27700]"
+              ? "bg-[#ff5a5f] text-white shadow-[0_6px_0_#c2343a]"
               : "bg-[#221a3f] text-white/75 shadow-[0_6px_0_#140f29]"
           }`}
         >
@@ -168,7 +168,7 @@ export function WinnerOverlay({
                   <span
                     className={`flex h-9 min-w-[38px] items-center justify-center rounded-xl border px-2 text-lg font-black ${
                       stat.side1Wins > stat.side2Wins
-                        ? "border-transparent bg-[#ffb21e] text-[#241339]"
+                        ? "border-transparent bg-[#ff5a5f] text-white"
                         : "border-transparent bg-[#221a3f] text-white/60"
                     }`}
                   >

@@ -185,7 +185,7 @@ export default function CategoriesGame({
           value={side1Ready ? `خلصوا ${side1Time ?? ""}ث` : "يكتبون"}
           isStatus
           active={!side1Ready}
-          tone="orange"
+          tone="red"
         />
 
         <TeamPanel

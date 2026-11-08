@@ -116,7 +116,7 @@ export default function GameLayout({
   const displayedTurn = isSide1Turn ? side1 : isSide2Turn ? side2 : cleanTurn;
 
   const turnColor = isSide1Turn
-    ? "text-[#ffb21e]"
+    ? "text-[#ff7a7f]"
     : isSide2Turn
       ? "text-[#4aa8ff]"
       : "text-white";
@@ -143,7 +143,7 @@ export default function GameLayout({
           value={sideStatus ? sideStatus.side1 : side1Score}
           isStatus={Boolean(sideStatus)}
           active={isSide1Turn || useDuoNeutral}
-          tone="orange"
+          tone="red"
         />
 
         <TeamPanel
@@ -186,11 +186,11 @@ export function TeamPanel({
   value: ReactNode;
   isStatus: boolean;
   active: boolean;
-  tone: "orange" | "blue";
+  tone: "red" | "blue";
 }) {
   const activeClass =
-    tone === "orange"
-      ? "bg-[#ffb21e] text-[#241339] shadow-[0_5px_0_#c27700]"
+    tone === "red"
+      ? "bg-[#ff5a5f] text-white shadow-[0_5px_0_#c2343a]"
       : "bg-[#2f9bff] text-white shadow-[0_5px_0_#1662b8]";
 
   return (

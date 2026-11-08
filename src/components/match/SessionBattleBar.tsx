@@ -70,7 +70,7 @@ export default function SessionBattleBar({
 
         <p
           dir="auto"
-          className="min-w-0 truncate text-right text-[11px] font-black text-[#ffb21e] sm:text-xs"
+          className="min-w-0 truncate text-right text-[11px] font-black text-[#ff7a7f] sm:text-xs"
         >
           {side1Name || "فريق 1"}
         </p>
@@ -82,7 +82,7 @@ export default function SessionBattleBar({
             className="
               absolute inset-0
               origin-right
-              bg-[#ffb21e]
+              bg-[#ff5a5f]
               transition-transform
               duration-700
               ease-[var(--ease-out)]

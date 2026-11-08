@@ -59,7 +59,7 @@ export default async function CountryFlagPage({
       >
         <p className="text-sm font-black text-white/45">خل نلعب</p>
 
-        <h1 className="mt-2 text-2xl font-black">خمن العلم</h1>
+        <h1 className="mt-2 text-2xl font-black">وش علمك؟</h1>
 
         <p className="mt-2 text-sm font-bold text-white/55">
           هذا العلم اللي لازم الفريق الثاني يخمنه
