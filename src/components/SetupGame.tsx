@@ -357,13 +357,7 @@ export default function SetupGame({
                   aria-label={game.name}
                   className={`group relative block aspect-[4/5] w-full overflow-hidden rounded-2xl outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${
                     active ? "outline-[#ffc23d]" : "outline-transparent"
-                  } ${
-                    isQuickMode
-                      ? "cursor-default"
-                      : active
-                        ? ""
-                        : "opacity-70 hover:opacity-100"
-                  }`}
+                  } ${isQuickMode ? "cursor-default" : active ? "" : ""}`}
                 >
                   <Image
                     src={game.image}
