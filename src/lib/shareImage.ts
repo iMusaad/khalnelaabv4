@@ -1,3 +1,4 @@
+import QRCode from "qrcode";
 import { getRoundsLabel } from "@/lib/matchLabels";
 import type { WinnerType } from "@/types/game";
 
@@ -290,25 +291,56 @@ export async function createResultShareImage({
   ctx.font = `700 32px ${fontFamily}`;
   ctx.fillText(`${roundText}  ·  ${drawText}`, width / 2, 1000);
 
-  drawRoundedRect(ctx, 190, 1062, 700, 130, 32);
+  const panelX = 170;
+  const panelY = 1040;
+  const panelWidth = 740;
+  const panelHeight = 240;
+
+  drawRoundedRect(ctx, panelX, panelY + 12, panelWidth, panelHeight, 36);
   ctx.fillStyle = "#c27700";
   ctx.fill();
 
-  drawRoundedRect(ctx, 190, 1050, 700, 130, 32);
+  drawRoundedRect(ctx, panelX, panelY, panelWidth, panelHeight, 36);
   ctx.fillStyle = "#ffc23d";
   ctx.fill();
 
+  const qrBox = 196;
+  const qrBoxX = panelX + 22;
+  const qrBoxY = panelY + 22;
+
+  drawRoundedRect(ctx, qrBoxX, qrBoxY, qrBox, qrBox, 20);
+  ctx.fillStyle = "#ffffff";
+  ctx.fill();
+
+  const qr = QRCode.create(window.location.origin, {
+    errorCorrectionLevel: "M",
+  });
+  const moduleCount = qr.modules.size;
+  const qrPadding = 14;
+  const cell = Math.floor((qrBox - qrPadding * 2) / moduleCount);
+  const qrSize = cell * moduleCount;
+  const qrX = qrBoxX + (qrBox - qrSize) / 2;
+  const qrY = qrBoxY + (qrBox - qrSize) / 2;
+
   ctx.fillStyle = INK;
-  ctx.font = `900 46px ${fontFamily}`;
-  ctx.fillText("تقدرون تتحدونا؟", width / 2, 1110);
 
-  ctx.font = `700 28px ${fontFamily}`;
-  ctx.fillStyle = "rgba(36,19,57,0.75)";
-  ctx.fillText("العبوا خل نلعب وشوفوا مين يفوز", width / 2, 1155);
+  for (let row = 0; row < moduleCount; row += 1) {
+    for (let col = 0; col < moduleCount; col += 1) {
+      if (qr.modules.get(row, col)) {
+        ctx.fillRect(qrX + col * cell, qrY + row * cell, cell, cell);
+      }
+    }
+  }
 
-  ctx.fillStyle = "rgba(255,255,255,0.55)";
+  const textCenter = (panelX + panelWidth + qrBoxX + qrBox) / 2;
+
+  ctx.fillStyle = INK;
+  ctx.font = `900 64px ${fontFamily}`;
+  ctx.fillText("العبها الآن", textCenter, panelY + 118);
+
   ctx.font = `800 30px ${fontFamily}`;
-  ctx.fillText(window.location.host, width / 2, 1270);
+  ctx.fillStyle = "rgba(36,19,57,0.7)";
+  ctx.fillText(window.location.host, textCenter, panelY + 172);
 
   const blob = await new Promise<Blob | null>((resolve) => {
     canvas.toBlob(resolve, "image/png", 1);
