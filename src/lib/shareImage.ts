@@ -1,3 +1,5 @@
+import QRCode from "qrcode";
+import { SITE } from "@/data/site";
 import { getRoundsLabel } from "@/lib/matchLabels";
 import type { WinnerType } from "@/types/game";
 
@@ -133,64 +135,88 @@ export async function createResultShareImage({
 
   const { width, height } = canvas;
 
-  const background = ctx.createLinearGradient(0, 0, width, height);
+  const YELLOW = "#ffb21e";
+  const INK = "#241339";
+  const BG = "#130e28";
+  const SURFACE = "#221a3f";
+  const SURFACE_EDGE = "#140f29";
+  const TEAM1 = "#ff5a5f";
+  const TEAM1_EDGE = "#c2343a";
+  const TEAM2 = "#2f9bff";
+  const TEAM2_EDGE = "#1662b8";
 
-  background.addColorStop(0, "#06020e");
-
-  background.addColorStop(0.5, "#170628");
-
-  background.addColorStop(1, "#050914");
-
-  ctx.fillStyle = background;
-
+  ctx.fillStyle = BG;
   ctx.fillRect(0, 0, width, height);
 
-  const pinkGlow = ctx.createRadialGradient(930, 470, 20, 930, 470, 430);
+  const heroBottom = 560;
 
-  pinkGlow.addColorStop(0, "rgba(217,70,239,0.30)");
+  ctx.fillStyle = YELLOW;
+  ctx.fillRect(0, 0, width, heroBottom);
 
-  pinkGlow.addColorStop(1, "rgba(217,70,239,0)");
+  const steps = [1, 2, 1, 0, 1, 2, 3, 2, 1, 1, 0, 1, 2, 1, 0, 1, 2, 2];
+  const stepWidth = width / steps.length;
 
-  ctx.fillStyle = pinkGlow;
-
-  ctx.fillRect(0, 0, width, height);
-
-  const cyanGlow = ctx.createRadialGradient(150, 500, 20, 150, 500, 430);
-
-  cyanGlow.addColorStop(0, "rgba(34,211,238,0.25)");
-
-  cyanGlow.addColorStop(1, "rgba(34,211,238,0)");
-
-  ctx.fillStyle = cyanGlow;
-
-  ctx.fillRect(0, 0, width, height);
-
-  drawRoundedRect(ctx, 65, 60, 950, 1230, 48);
-
-  const cardGradient = ctx.createLinearGradient(65, 60, 1015, 1290);
-
-  cardGradient.addColorStop(0, "rgba(33,8,57,0.96)");
-
-  cardGradient.addColorStop(1, "rgba(9,6,27,0.98)");
-
-  ctx.fillStyle = cardGradient;
-
-  ctx.fill();
-
-  ctx.lineWidth = 5;
-
-  ctx.strokeStyle = "rgba(34,211,238,0.65)";
-
-  ctx.stroke();
+  ctx.fillStyle = BG;
+  steps.forEach((step, index) => {
+    const stepHeight = 26 + step * 22;
+    ctx.fillRect(
+      Math.floor(index * stepWidth),
+      heroBottom - stepHeight,
+      Math.ceil(stepWidth) + 1,
+      stepHeight,
+    );
+  });
 
   ctx.textAlign = "center";
-
   ctx.direction = "rtl";
 
   if (logo) {
     const bounds = getVisibleBounds(logo);
-    const logoHeight = 160;
+    const logoHeight = 190;
     const logoWidth = (bounds.width / bounds.height) * logoHeight;
+    const logoX = (width - logoWidth) / 2;
+    const logoY = 50;
+
+    const outline = document.createElement("canvas");
+    outline.width = Math.ceil(logoWidth) + 24;
+    outline.height = Math.ceil(logoHeight) + 30;
+    const outlineCtx = outline.getContext("2d");
+
+    if (outlineCtx) {
+      const offsets = [
+        [-5, 0],
+        [5, 0],
+        [0, -5],
+        [0, 5],
+        [-4, -4],
+        [4, -4],
+        [-4, 4],
+        [4, 4],
+        [0, 10],
+        [-4, 9],
+        [4, 9],
+      ];
+
+      offsets.forEach(([dx, dy]) => {
+        outlineCtx.drawImage(
+          logo,
+          bounds.x,
+          bounds.y,
+          bounds.width,
+          bounds.height,
+          12 + dx,
+          12 + dy,
+          logoWidth,
+          logoHeight,
+        );
+      });
+
+      outlineCtx.globalCompositeOperation = "source-in";
+      outlineCtx.fillStyle = INK;
+      outlineCtx.fillRect(0, 0, outline.width, outline.height);
+
+      ctx.drawImage(outline, logoX - 12, logoY - 12);
+    }
 
     ctx.drawImage(
       logo,
@@ -198,146 +224,124 @@ export async function createResultShareImage({
       bounds.y,
       bounds.width,
       bounds.height,
-      (width - logoWidth) / 2,
-      70,
+      logoX,
+      logoY,
       logoWidth,
       logoHeight,
     );
   } else {
-    ctx.fillStyle = "#67e8f9";
-
-    ctx.font = `900 44px ${fontFamily}`;
-
+    ctx.fillStyle = INK;
+    ctx.font = `900 64px ${fontFamily}`;
     ctx.fillText("خل نلعب", width / 2, 170);
   }
 
-  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = INK;
+  ctx.font = `900 84px ${fontFamily}`;
+  ctx.fillText(isDraw ? "تعادل!" : "كفووو!", width / 2, 350);
 
-  ctx.font = `900 72px ${fontFamily}`;
-
-  ctx.fillText(isDraw ? "تعادل! 🤝" : "كفووو! 🏆", width / 2, 300);
-
-  ctx.font = `900 40px ${fontFamily}`;
-
-  ctx.fillStyle = "#f5e9ff";
-
+  ctx.font = `900 42px ${fontFamily}`;
+  ctx.fillStyle = "rgba(36,19,57,0.78)";
   ctx.fillText(
     isDraw ? "الفريقين قدّها" : `الفائز: ${finalWinnerName}`,
     width / 2,
-    370,
-    940,
+    425,
+    900,
   );
 
-  drawRoundedRect(ctx, 585, 445, 390, 270, 38);
+  const side1Leads = isDraw || side1Score > side2Score;
+  const side2Leads = isDraw || side2Score > side1Score;
 
-  const team1Gradient = ctx.createLinearGradient(585, 445, 975, 715);
+  function teamPanel(
+    x: number,
+    name: string,
+    score: number,
+    leads: boolean,
+    fill: string,
+    edge: string,
+  ) {
+    const y = 620;
+    const panelWidth = 410;
+    const panelHeight = 290;
 
-  team1Gradient.addColorStop(0, "rgba(217,70,239,0.55)");
+    drawRoundedRect(ctx!, x, y + 12, panelWidth, panelHeight, 40);
+    ctx!.fillStyle = leads ? edge : SURFACE_EDGE;
+    ctx!.fill();
 
-  team1Gradient.addColorStop(1, "rgba(126,34,206,0.25)");
+    drawRoundedRect(ctx!, x, y, panelWidth, panelHeight, 40);
+    ctx!.fillStyle = leads ? fill : SURFACE;
+    ctx!.fill();
 
-  ctx.fillStyle = team1Gradient;
+    ctx!.fillStyle = leads ? "#ffffff" : fill;
+    ctx!.font = `900 36px ${fontFamily}`;
+    ctx!.fillText(name, x + panelWidth / 2, y + 78, panelWidth - 50);
 
-  ctx.fill();
+    ctx!.fillStyle = leads ? "#ffffff" : "rgba(255,255,255,0.75)";
+    ctx!.font = `900 130px ${fontFamily}`;
+    ctx!.fillText(String(score), x + panelWidth / 2, y + 225);
+  }
 
-  ctx.strokeStyle = "rgba(240,171,252,0.75)";
-
-  ctx.lineWidth = 3;
-
-  ctx.stroke();
-
-  ctx.fillStyle = "#fae8ff";
-
-  ctx.font = `900 32px ${fontFamily}`;
-
-  ctx.fillText(side1 || "فريق 1", 780, 515, 340);
-
-  ctx.font = `900 110px ${fontFamily}`;
-
-  ctx.fillText(String(side1Score), 780, 645);
-
-  drawRoundedRect(ctx, 105, 445, 390, 270, 38);
-
-  const team2Gradient = ctx.createLinearGradient(105, 445, 495, 715);
-
-  team2Gradient.addColorStop(0, "rgba(34,211,238,0.52)");
-
-  team2Gradient.addColorStop(1, "rgba(37,99,235,0.25)");
-
-  ctx.fillStyle = team2Gradient;
-
-  ctx.fill();
-
-  ctx.strokeStyle = "rgba(103,232,249,0.75)";
-
-  ctx.lineWidth = 3;
-
-  ctx.stroke();
-
-  ctx.fillStyle = "#cffafe";
-
-  ctx.font = `900 32px ${fontFamily}`;
-
-  ctx.fillText(side2 || "فريق 2", 300, 515, 340);
-
-  ctx.font = `900 110px ${fontFamily}`;
-
-  ctx.fillText(String(side2Score), 300, 645);
-
-  ctx.fillStyle = "rgba(255,255,255,0.35)";
-
-  ctx.font = `900 48px ${fontFamily}`;
-
-  ctx.fillText("-", width / 2, 595);
+  teamPanel(570, side1 || "فريق 1", side1Score, side1Leads, TEAM1, TEAM1_EDGE);
+  teamPanel(100, side2 || "فريق 2", side2Score, side2Leads, TEAM2, TEAM2_EDGE);
 
   const draws = roundStats.filter((stat) => stat.winner === "none").length;
-
   const roundText = getRoundsLabel(roundStats.length);
-
   const drawText =
     draws === 0 ? "بدون تعادل" : draws === 1 ? "تعادل واحد" : `${draws} تعادل`;
 
-  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = "rgba(255,255,255,0.65)";
+  ctx.font = `700 32px ${fontFamily}`;
+  ctx.fillText(`${roundText}  ·  ${drawText}`, width / 2, 1000);
 
-  ctx.font = `900 40px ${fontFamily}`;
+  const panelX = 170;
+  const panelY = 1040;
+  const panelWidth = 740;
+  const panelHeight = 240;
 
-  ctx.fillText("نتيجة الجلسة", width / 2, 810);
-
-  ctx.fillStyle = "rgba(255,255,255,0.68)";
-
-  ctx.font = `700 28px ${fontFamily}`;
-
-  ctx.fillText(`${roundText}  •  ${drawText}`, width / 2, 865);
-
-  drawRoundedRect(ctx, 145, 950, 790, 205, 38);
-
-  ctx.fillStyle = "rgba(255,255,255,0.055)";
-
+  drawRoundedRect(ctx, panelX, panelY + 12, panelWidth, panelHeight, 36);
+  ctx.fillStyle = "#c27700";
   ctx.fill();
 
-  ctx.strokeStyle = "rgba(255,255,255,0.12)";
+  drawRoundedRect(ctx, panelX, panelY, panelWidth, panelHeight, 36);
+  ctx.fillStyle = "#ffc23d";
+  ctx.fill();
 
-  ctx.lineWidth = 2;
+  const qrBox = 196;
+  const qrBoxX = panelX + 22;
+  const qrBoxY = panelY + 22;
 
-  ctx.stroke();
-
+  drawRoundedRect(ctx, qrBoxX, qrBoxY, qrBox, qrBox, 20);
   ctx.fillStyle = "#ffffff";
+  ctx.fill();
 
-  ctx.font = `900 44px ${fontFamily}`;
+  const qr = QRCode.create(SITE.url, {
+    errorCorrectionLevel: "M",
+  });
+  const moduleCount = qr.modules.size;
+  const qrPadding = 14;
+  const cell = Math.floor((qrBox - qrPadding * 2) / moduleCount);
+  const qrSize = cell * moduleCount;
+  const qrX = qrBoxX + (qrBox - qrSize) / 2;
+  const qrY = qrBoxY + (qrBox - qrSize) / 2;
 
-  ctx.fillText("تقدرون تتحدونا؟ 👀", width / 2, 1030);
+  ctx.fillStyle = INK;
 
-  ctx.fillStyle = "rgba(255,255,255,0.60)";
+  for (let row = 0; row < moduleCount; row += 1) {
+    for (let col = 0; col < moduleCount; col += 1) {
+      if (qr.modules.get(row, col)) {
+        ctx.fillRect(qrX + col * cell, qrY + row * cell, cell, cell);
+      }
+    }
+  }
 
-  ctx.font = `700 27px ${fontFamily}`;
+  const textCenter = (panelX + panelWidth + qrBoxX + qrBox) / 2;
 
-  ctx.fillText("العبوا خل نلعب وشوفوا مين يفوز", width / 2, 1090);
+  ctx.fillStyle = INK;
+  ctx.font = `900 64px ${fontFamily}`;
+  ctx.fillText("العبها الآن", textCenter, panelY + 118);
 
-  ctx.fillStyle = "rgba(255,255,255,0.38)";
-
-  ctx.font = `600 23px ${fontFamily}`;
-
-  ctx.fillText(window.location.host, width / 2, 1235);
+  ctx.font = `800 30px ${fontFamily}`;
+  ctx.fillStyle = "rgba(36,19,57,0.7)";
+  ctx.fillText(new URL(SITE.url).host, textCenter, panelY + 172);
 
   const blob = await new Promise<Blob | null>((resolve) => {
     canvas.toBlob(resolve, "image/png", 1);
