@@ -38,11 +38,10 @@ function getGameStats(roundStats: RoundStat[]) {
   }, []);
 }
 
-export type ShareAction = "share" | "story" | "save";
+export type ShareAction = "share" | "save";
 
 const SHARE_ACTIONS: { action: ShareAction; label: string }[] = [
   { action: "share", label: "شارك" },
-  { action: "story", label: "ستوري" },
   { action: "save", label: "حفظ الصورة" },
 ];
 
@@ -201,26 +200,7 @@ export function WinnerOverlay({
         </div>
       )}
 
-      {mode === "quick" && (
-        <div className="mt-6 rounded-2xl bg-[#221a3f] px-4 py-4 text-center shadow-[0_5px_0_#140f29]">
-          <p className="text-lg font-black text-white">عجبتكم؟</p>
-
-          <p className="mt-1 text-sm font-bold leading-6 text-white/60">
-            في تحدي الجلسة تختارون كم لعبة، تنجمع نقاطكم، وبالأخير فريق واحد
-            يفوز
-          </p>
-
-          <a href="/match?mode=session" className="btn-primary mt-3 px-8">
-            سوّوا تحدي جلسة كامل
-          </a>
-        </div>
-      )}
-
-      <div
-        className={`grid gap-2 sm:flex sm:flex-wrap sm:justify-center sm:gap-3 ${
-          mode === "quick" ? "mt-3" : "mt-6"
-        }`}
-      >
+      <div className="mt-6 grid gap-2 sm:flex sm:flex-wrap sm:justify-center sm:gap-3">
         <button
           type="button"
           onClick={onReplay}
@@ -243,7 +223,7 @@ export function WinnerOverlay({
           شاركوا النتيجة
         </p>
 
-        <div className="mx-auto mt-2 grid max-w-md grid-cols-3 gap-2">
+        <div className="mx-auto mt-2 grid max-w-xs grid-cols-2 gap-2">
           {SHARE_ACTIONS.map((item) => (
             <button
               key={item.action}

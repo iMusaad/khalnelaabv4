@@ -569,18 +569,15 @@ export default function MatchPage() {
     setSharing(true);
 
     try {
-      const imageFile = await createResultShareImage(
-        {
-          isDraw,
-          finalWinnerName,
-          side1,
-          side2,
-          side1Score,
-          side2Score,
-          roundStats,
-        },
-        action === "story" ? "story" : "post",
-      );
+      const imageFile = await createResultShareImage({
+        isDraw,
+        finalWinnerName,
+        side1,
+        side2,
+        side1Score,
+        side2Score,
+        roundStats,
+      });
 
       if (
         action !== "save" &&
@@ -589,17 +586,13 @@ export default function MatchPage() {
           files: [imageFile],
         })
       ) {
-        await navigator.share(
-          action === "story"
-            ? { files: [imageFile] }
-            : {
-                title: "نتيجتنا في خل نلعب",
-                text: isDraw
-                  ? "تعادلنا في خل نلعب"
-                  : `${finalWinnerName} فاز في خل نلعب`,
-                files: [imageFile],
-              },
-        );
+        await navigator.share({
+          title: "نتيجتنا في خل نلعب",
+          text: isDraw
+            ? "تعادلنا في خل نلعب"
+            : `${finalWinnerName} فاز في خل نلعب`,
+          files: [imageFile],
+        });
 
         return;
       }
