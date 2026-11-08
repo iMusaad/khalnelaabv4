@@ -14,12 +14,14 @@ export default function PixelHero({
   overlap = true,
   season = "default",
   logo = true,
+  compact = false,
 }: {
   children: ReactNode;
   action?: ReactNode;
   overlap?: boolean;
   season?: Season;
   logo?: boolean;
+  compact?: boolean;
 }) {
   const theme = SEASON_THEMES[season];
 
@@ -27,7 +29,7 @@ export default function PixelHero({
     <section
       className={`relative overflow-hidden px-4 text-center ${
         season === "founding" ? "pt-16" : "pt-6"
-      } ${overlap ? "pb-36" : logo ? "pb-28" : "pb-24"}`}
+      } ${overlap ? "pb-36" : compact ? "pb-16" : logo ? "pb-28" : "pb-24"}`}
       style={{ background: theme.heroBg, color: theme.heroText }}
     >
       <SeasonDecor season={season} />
@@ -72,7 +74,11 @@ export default function PixelHero({
           <div
             key={index}
             className="flex-1 bg-[#130e28]"
-            style={{ height: `${16 + height * 20}px` }}
+            style={{
+              height: compact
+                ? `${10 + height * 10}px`
+                : `${16 + height * 20}px`,
+            }}
           />
         ))}
       </div>

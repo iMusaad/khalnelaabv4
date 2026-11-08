@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import type { Dispatch, SetStateAction } from "react";
+import PixelHero from "@/components/PixelHero";
 import { quizCategoryList, type QuizCategoryKey } from "@/data/quiz/meta";
 
 type SetupGameId =
@@ -24,7 +25,6 @@ type SetupGameProps = {
   setSide2: (value: string) => void;
   selectedGames: SetupGameId[];
   pinnedGame?: SetupGameId | null;
-  hideHeader?: boolean;
   setSelectedGames: Dispatch<SetStateAction<SetupGameId[]>>;
   gameRounds: Record<string, number>;
   setGameRounds: Dispatch<SetStateAction<Record<string, number>>>;
@@ -151,14 +151,6 @@ function estimateMinutes(
   return Math.max(5, Math.round(total / 5) * 5);
 }
 
-function getSelectedLabel(count: number) {
-  if (count === 0) return "ما اخترتوا شي";
-  if (count === 1) return "لعبة وحدة";
-  if (count === 2) return "لعبتين";
-
-  return `${count} ألعاب`;
-}
-
 export default function SetupGame({
   mode = "session",
   side1,
@@ -167,7 +159,6 @@ export default function SetupGame({
   setSide2,
   selectedGames,
   pinnedGame = null,
-  hideHeader = false,
   setSelectedGames,
   gameRounds,
   setGameRounds,
@@ -250,139 +241,105 @@ export default function SetupGame({
     ? GAMES.filter((game) => selectedGames.includes(game.id))
     : orderedGames;
 
+  const minutes = estimateMinutes(
+    selectedGames,
+    gameRounds,
+    quizCategories.length,
+  );
+
   return (
-    <div className="intro mx-auto w-full max-w-[1100px] pb-6 text-white sm:px-2">
-      <header className={hideHeader ? "sr-only" : "text-center"}>
-        <p className="text-sm font-bold text-white/45">
-          {isQuickMode ? "لعبة سريعة" : "تحدي الجلسة"}
-        </p>
+    <div className="intro text-white">
+      <div className="-mx-3 -mt-4 sm:-mx-6 sm:-mt-6">
+        <PixelHero logo={false} overlap={false} compact>
+          <h1 className="pt-12 text-2xl font-black sm:pt-2 sm:text-4xl">
+            {isQuickMode ? "جهزوا الفرق" : "اختاروا ألعابكم"}
+          </h1>
 
-        <h1 className="mt-1 text-3xl font-black sm:text-4xl">
-          {isQuickMode ? "جهزوا الفرق" : "اختاروا ألعابكم"}
-        </h1>
-      </header>
+          <div className="mx-auto mt-4 grid max-w-2xl grid-cols-2 gap-2 sm:gap-3">
+            {[
+              { value: side1, set: setSide1, label: "فريق 1", dot: "#ff5a5f" },
+              { value: side2, set: setSide2, label: "فريق 2", dot: "#2f9bff" },
+            ].map((team) => (
+              <label key={team.label} className="relative block">
+                <span className="sr-only">{team.label}</span>
 
-      <section className="mt-8">
-        <h2 className="text-lg font-black">الفرق</h2>
+                <span
+                  aria-hidden="true"
+                  className="absolute right-3 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full"
+                  style={{ background: team.dot }}
+                />
 
-        <div className="mt-3 grid gap-4 sm:grid-cols-2">
-          <label className="block">
-            <span className="mb-1.5 flex items-center gap-2 text-sm font-bold text-white/60">
-              <span
-                aria-hidden="true"
-                className="h-2.5 w-2.5 rounded-full bg-[#ff5a5f]"
-              />
-              الفريق الأول
-            </span>
+                <input
+                  value={team.value}
+                  maxLength={20}
+                  autoComplete="off"
+                  enterKeyHint="done"
+                  onChange={(event) => team.set(event.target.value)}
+                  placeholder={team.label}
+                  className="h-11 w-full rounded-xl bg-[#241339] pl-3 pr-8 text-right text-base font-bold text-white outline-none shadow-[0_4px_0_#140a24] placeholder:text-white/40 focus:ring-2 focus:ring-white/60"
+                />
+              </label>
+            ))}
+          </div>
 
-            <input
-              value={side1}
-              maxLength={20}
-              autoComplete="off"
-              enterKeyHint="done"
-              onChange={(event) => setSide1(event.target.value)}
-              placeholder="فريق 1"
-              className="h-12 w-full rounded-xl border border-white/15 bg-transparent px-4 text-right text-base font-bold text-white outline-none transition-colors placeholder:text-white/30 focus:border-white/50"
-            />
-          </label>
-
-          <label className="block">
-            <span className="mb-1.5 flex items-center gap-2 text-sm font-bold text-white/60">
-              <span
-                aria-hidden="true"
-                className="h-2.5 w-2.5 rounded-full bg-[#2f9bff]"
-              />
-              الفريق الثاني
-            </span>
-
-            <input
-              value={side2}
-              maxLength={20}
-              autoComplete="off"
-              enterKeyHint="done"
-              onChange={(event) => setSide2(event.target.value)}
-              placeholder="فريق 2"
-              className="h-12 w-full rounded-xl border border-white/15 bg-transparent px-4 text-right text-base font-bold text-white outline-none transition-colors placeholder:text-white/30 focus:border-white/50"
-            />
-          </label>
-        </div>
-
-        <div className="mt-5 border-t border-white/10 pt-4">
-          <div className="flex items-center justify-between gap-3">
-            <div className="text-right">
-              <p className="text-base font-black">المؤقت</p>
-
-              <p className="mt-0.5 text-sm font-bold text-white/45">
-                {timerEnabled
-                  ? `${timerSeconds} ثانية، وضعفها لإنسان حيوان والعلم والنادي`
-                  : "اختياري"}
-              </p>
-            </div>
-
+          <div className="mx-auto mt-3 flex max-w-2xl items-center justify-center gap-3 text-sm font-black">
             <button
               type="button"
               role="switch"
               aria-checked={timerEnabled}
-              aria-label="تشغيل المؤقت"
               onClick={() => setTimerEnabled(!timerEnabled)}
-              className={`relative h-7 w-12 shrink-0 rounded-full transition-colors duration-300 ${
-                timerEnabled ? "bg-[#ffc23d]" : "bg-white/15"
-              }`}
+              className="flex items-center gap-2"
             >
               <span
-                className={`absolute top-[3px] h-[22px] w-[22px] rounded-full bg-white transition-all duration-300 ${
-                  timerEnabled ? "left-[3px]" : "left-[23px]"
+                className={`relative h-6 w-10 shrink-0 rounded-full transition-colors duration-200 ${
+                  timerEnabled ? "bg-[#241339]" : "bg-black/20"
                 }`}
-              />
+              >
+                <span
+                  className={`absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white transition-all duration-200 ${
+                    timerEnabled ? "left-[3px]" : "left-[19px]"
+                  }`}
+                />
+              </span>
+              مؤقت
             </button>
+
+            {timerEnabled && (
+              <span className="flex items-center gap-2">
+                <input
+                  type="range"
+                  min={10}
+                  max={120}
+                  step={5}
+                  value={timerSeconds}
+                  aria-label="مدة المؤقت بالثواني"
+                  onChange={(event) =>
+                    setTimerSeconds(Number(event.target.value))
+                  }
+                  className="h-1 w-28 accent-[#241339]"
+                />
+                <span className="w-12 tabular-nums">{timerSeconds} ث</span>
+              </span>
+            )}
           </div>
+        </PixelHero>
+      </div>
 
-          {timerEnabled && (
-            <input
-              type="range"
-              min={10}
-              max={120}
-              step={5}
-              value={timerSeconds}
-              aria-label="مدة المؤقت بالثواني"
-              onChange={(event) => setTimerSeconds(Number(event.target.value))}
-              className="mt-3 h-1 w-full accent-[#ffc23d]"
-            />
-          )}
-        </div>
-      </section>
-
-      <section className="mt-8">
-        <div className="flex items-end justify-between gap-3">
-          <div className="text-right">
-            <h2 className="text-lg font-black">
-              {isQuickMode ? "اللعبة" : "الألعاب"}
-            </h2>
-
-            <p className="mt-0.5 text-sm font-bold text-white/45">
-              {isQuickMode
-                ? "اضبطوها وابدأوا"
-                : selectedGames.length >= MAX_SESSION_GAMES
-                  ? "وصلتوا الحد، ٥ ألعاب بالجلسة. شيلوا وحدة عشان تختارون غيرها"
-                  : "اختاروا لين ٥ ألعاب، وتطلع إعدادات كل لعبة تحتها"}
-            </p>
-          </div>
-
-          {!isQuickMode && (
-            <p className="shrink-0 text-sm font-bold text-white/45">
-              {selectedGames.length} من {MAX_SESSION_GAMES}
-            </p>
-          )}
-        </div>
+      <div className="mx-auto mt-3 w-full max-w-[820px]">
+        {!isQuickMode && (
+          <p className="mb-2 text-left text-sm font-bold text-white/45">
+            {selectedGames.length}/{MAX_SESSION_GAMES}
+          </p>
+        )}
 
         <div
-          className={`mt-4 grid items-start gap-3 ${
+          className={`grid gap-3 ${
             isQuickMode
-              ? "mx-auto max-w-[230px] grid-cols-1"
-              : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
+              ? "mx-auto max-w-[200px] grid-cols-1"
+              : "grid-cols-3 sm:grid-cols-5"
           }`}
         >
-          {visibleGames.map((game) => {
+          {visibleGames.map((game, gameIndex) => {
             const active = selectedGames.includes(game.id);
 
             const locked =
@@ -393,102 +350,105 @@ export default function SetupGame({
             const roundOptions = getRoundOptions(game.id);
 
             return (
-              <div key={game.id}>
+              <div
+                key={game.id}
+                className={`relative aspect-[4/5] overflow-hidden rounded-2xl ${
+                  !isQuickMode &&
+                  visibleGames.length % 3 === 1 &&
+                  gameIndex === visibleGames.length - 1
+                    ? "col-start-2 sm:col-start-auto"
+                    : ""
+                } outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${
+                  active ? "outline-[#ffc23d]" : "outline-transparent"
+                } ${locked ? "opacity-35" : ""}`}
+              >
                 <button
                   type="button"
                   onClick={() => toggleGame(game.id)}
                   disabled={isQuickMode || locked}
                   aria-pressed={isQuickMode ? undefined : active}
                   aria-label={game.name}
-                  className={`group relative block aspect-[4/5] w-full overflow-hidden rounded-2xl outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${
-                    active ? "outline-[#ffc23d]" : "outline-transparent"
-                  } ${isQuickMode ? "cursor-default" : locked ? "cursor-not-allowed opacity-35" : ""}`}
+                  className={`absolute inset-0 block ${
+                    isQuickMode
+                      ? "cursor-default"
+                      : locked
+                        ? "cursor-not-allowed"
+                        : ""
+                  }`}
                 >
                   <Image
                     src={game.image}
                     alt=""
                     fill
                     sizes={
-                      isQuickMode
-                        ? "230px"
-                        : "(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 200px"
+                      isQuickMode ? "200px" : "(max-width: 640px) 30vw, 160px"
                     }
                     className="object-cover"
                   />
-
-                  {!isQuickMode && active && (
-                    <span
-                      aria-hidden="true"
-                      className="absolute left-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-[#ffc23d] text-sm font-black text-[#1d1238]"
-                    >
-                      ✓
-                    </span>
-                  )}
                 </button>
 
+                {!isQuickMode && active && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute left-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-[#ffc23d] text-sm font-black text-[#1d1238]"
+                  >
+                    ✓
+                  </span>
+                )}
+
                 {active && (
-                  <div className="pt-3">
+                  <div className="absolute inset-x-1.5 bottom-1.5 z-10 rounded-xl bg-[#130e28]/90 p-1 backdrop-blur-sm">
                     {game.id !== "quiz" ? (
-                      <>
-                        <p className="mb-1.5 text-center text-xs font-bold text-white/50">
-                          عدد الجولات
-                        </p>
+                      <div
+                        className="flex"
+                        role="group"
+                        aria-label="عدد الجولات"
+                      >
+                        {roundOptions.map((round) => {
+                          const selected = gameRounds[game.id] === round;
 
-                        <div className="flex rounded-xl bg-white/[0.06] p-1">
-                          {roundOptions.map((round) => {
-                            const selected = gameRounds[game.id] === round;
-
-                            return (
-                              <button
-                                key={round}
-                                type="button"
-                                aria-pressed={selected}
-                                aria-label={`عدد الجولات ${round}`}
-                                onClick={() => selectRounds(game.id, round)}
-                                className={`flex h-9 flex-1 items-center justify-center rounded-lg text-sm font-black transition-colors duration-200 ${
-                                  selected
-                                    ? "bg-white text-[#1d1238]"
-                                    : "text-white/60 hover:text-white"
-                                }`}
-                              >
-                                {round}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </>
+                          return (
+                            <button
+                              key={round}
+                              type="button"
+                              aria-pressed={selected}
+                              aria-label={`${round} جولات`}
+                              onClick={() => selectRounds(game.id, round)}
+                              className={`flex h-7 flex-1 items-center justify-center rounded-lg text-xs font-black sm:h-8 sm:text-sm transition-colors duration-150 ${
+                                selected
+                                  ? "bg-white text-[#1d1238]"
+                                  : "text-white/70 hover:text-white"
+                              }`}
+                            >
+                              {round}
+                            </button>
+                          );
+                        })}
+                      </div>
                     ) : (
-                      <>
-                        <p className="mb-1.5 text-center text-xs font-bold text-white/50">
-                          الفئات · كل فئة جولة
-                        </p>
+                      <div className="grid grid-cols-2 gap-1">
+                        {quizCategoryList.map((category) => {
+                          const selected = quizCategories.includes(
+                            category.key,
+                          );
 
-                        <div className="grid grid-cols-2 gap-1.5">
-                          {quizCategoryList.map((category) => {
-                            const selected = quizCategories.includes(
-                              category.key,
-                            );
-
-                            return (
-                              <button
-                                key={category.key}
-                                type="button"
-                                aria-pressed={selected}
-                                onClick={() => toggleCategory(category.key)}
-                                className={`flex min-h-[40px] min-w-0 items-center justify-center rounded-lg px-1 text-xs font-black leading-tight transition-colors duration-200 ${
-                                  selected
-                                    ? "bg-white text-[#1d1238]"
-                                    : "bg-white/[0.06] text-white/60 hover:text-white"
-                                }`}
-                              >
-                                <span className="max-w-full truncate">
-                                  {category.title}
-                                </span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </>
+                          return (
+                            <button
+                              key={category.key}
+                              type="button"
+                              aria-pressed={selected}
+                              onClick={() => toggleCategory(category.key)}
+                              className={`min-h-7 rounded-lg px-0.5 py-1 text-[10px] font-black leading-tight sm:text-[11px] transition-colors duration-150 ${
+                                selected
+                                  ? "bg-white text-[#1d1238]"
+                                  : "text-white/70 hover:text-white"
+                              }`}
+                            >
+                              {category.title}
+                            </button>
+                          );
+                        })}
+                      </div>
                     )}
                   </div>
                 )}
@@ -496,31 +456,27 @@ export default function SetupGame({
             );
           })}
         </div>
-      </section>
 
-      <div className="mt-10 flex flex-col items-center justify-center gap-2">
-        <button
-          type="button"
-          onClick={onStart}
-          disabled={!canStart}
-          className="btn-primary min-w-[240px] px-10 py-3 text-lg"
-        >
-          ابدأوا
-        </button>
+        <div className="mt-4 flex flex-col items-center gap-1.5">
+          <button
+            type="button"
+            onClick={onStart}
+            disabled={!canStart}
+            className="btn-primary min-w-[220px] px-10 py-3 text-lg"
+          >
+            ابدأوا
+          </button>
 
-        <p
-          aria-live="polite"
-          className="min-h-[16px] text-sm font-bold text-white/45"
-        >
-          {startHint ||
-            (!isQuickMode
-              ? `${getSelectedLabel(selectedGames.length)} · تقريبًا ${estimateMinutes(
-                  selectedGames,
-                  gameRounds,
-                  quizCategories.length,
-                )} دقيقة`
-              : "")}
-        </p>
+          <p
+            aria-live="polite"
+            className="min-h-[20px] text-sm font-bold text-white/45"
+          >
+            {startHint ||
+              (!isQuickMode && selectedGames.length > 0
+                ? `تقريبًا ${minutes} دقيقة`
+                : "")}
+          </p>
+        </div>
       </div>
     </div>
   );

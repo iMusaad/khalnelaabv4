@@ -35,7 +35,6 @@ import { createResultShareImage } from "@/lib/shareImage";
 import type { WinnerType } from "@/types/game";
 import type { ModeType, RoundStat } from "@/types/match";
 import HomeIcon from "@/components/HomeIcon";
-import PixelHero from "@/components/PixelHero";
 
 type PhaseType = "setup" | "countdown" | "playing" | "transition" | "finished";
 
@@ -750,23 +749,8 @@ export default function MatchPage() {
         isDraw={roundIsDraw}
       />
 
-      {!started && (
-        <div className="-mx-3 -mt-4 mb-2 sm:-mx-6 sm:-mt-6">
-          <PixelHero logo={false} overlap={false}>
-            <p className="pt-14 text-sm font-black opacity-70 sm:pt-6">
-              {mode === "quick" ? "لعبة سريعة" : "تحدي الجلسة"}
-            </p>
-
-            <h1 className="mt-1 text-3xl font-black sm:text-5xl">
-              {mode === "quick" ? "جهزوا الفرق" : "اختاروا ألعابكم"}
-            </h1>
-          </PixelHero>
-        </div>
-      )}
-
       {!started ? (
         <SetupGame
-          hideHeader
           mode={mode}
           side1={side1}
           side2={side2}
