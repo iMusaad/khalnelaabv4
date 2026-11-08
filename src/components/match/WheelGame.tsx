@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import GameLayout from "@/components/match/GameLayout";
 
 import {
@@ -107,8 +107,6 @@ export default function WheelGame({
     null,
   );
 
-  const [solveOpen, setSolveOpen] = useState(false);
-  const [solveGuess, setSolveGuess] = useState("");
   const [loaded, setLoaded] = useState(false);
 
   const tickTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -638,36 +636,6 @@ export default function WheelGame({
     setTimeLeft(timerSeconds);
   }
 
-  useEffect(() => {
-    setSolveOpen(false);
-    setSolveGuess("");
-  }, [phase, turn]);
-
-  function solveWord(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    if (phase !== "guess") return;
-
-    const guess = solveGuess.trim();
-
-    if (!guess) return;
-
-    if (normalizeArabic(guess) === normalizeArabic(answer)) {
-      setRevealed(answer.split("").map((char) => (char === " " ? "" : char)));
-
-      finishRound(score1, score2);
-      return;
-    }
-
-    setCurrentValue(null);
-
-    nextTurn();
-
-    setPhase("spin");
-
-    setTimeLeft(timerSeconds);
-  }
-
   if (!answer) {
     if (!loaded) return null;
 
@@ -826,19 +794,35 @@ export default function WheelGame({
                                   : undefined,
                               }}
                             />
-                            <text
-                              x="100"
-                              y={narrow ? 30 : 34}
-                              transform={`rotate(${mid} 100 100)`}
-                              textAnchor="middle"
-                              dominantBaseline="middle"
-                              fill={segment.text}
-                              fontSize={narrow ? 8.5 : 12}
-                              fontWeight="900"
-                              style={{ fontFamily: "inherit" }}
-                            >
-                              {segment.label}
-                            </text>
+                            {narrow ? (
+                              <text
+                                x="100"
+                                y="100"
+                                transform={`rotate(${mid} 100 100) translate(0 -58) rotate(-90 100 100)`}
+                                textAnchor="middle"
+                                dominantBaseline="middle"
+                                fill={segment.text}
+                                fontSize="8"
+                                fontWeight="900"
+                                style={{ fontFamily: "inherit" }}
+                              >
+                                {segment.label}
+                              </text>
+                            ) : (
+                              <text
+                                x="100"
+                                y="34"
+                                transform={`rotate(${mid} 100 100)`}
+                                textAnchor="middle"
+                                dominantBaseline="middle"
+                                fill={segment.text}
+                                fontSize="12"
+                                fontWeight="900"
+                                style={{ fontFamily: "inherit" }}
+                              >
+                                {segment.label}
+                              </text>
+                            )}
                           </g>
                         );
                       })}
@@ -905,79 +889,33 @@ export default function WheelGame({
                   ))}
                 </div>
 
-                {solveOpen ? (
-                  <form
-                    onSubmit={solveWord}
-                    className="mx-auto flex w-full max-w-md flex-col gap-2 sm:flex-row"
-                  >
-                    <input
-                      autoFocus
-                      value={solveGuess}
-                      onChange={(event) => setSolveGuess(event.target.value)}
-                      placeholder="اكتبوا الجواب كامل"
-                      aria-label="الجواب"
-                      autoComplete="off"
-                      autoCorrect="off"
-                      spellCheck={false}
-                      enterKeyHint="done"
-                      className="h-12 min-w-0 flex-1 rounded-2xl border border-white/20 bg-transparent px-4 text-center text-lg font-black text-white outline-none placeholder:text-white/35 focus:border-white/60"
-                    />
-
-                    <div className="grid grid-cols-2 gap-2 sm:flex">
-                      <button
-                        type="submit"
-                        disabled={!solveGuess.trim()}
-                        className="btn-primary"
-                      >
-                        تأكيد
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setSolveOpen(false)}
-                        className="btn-secondary"
-                      >
-                        رجوع
-                      </button>
-                    </div>
-                  </form>
-                ) : (
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="flex flex-wrap justify-center gap-3">
-                      <button
-                        type="button"
-                        onClick={activateShield}
-                        disabled={activeShieldUsed && !shieldActive}
-                        aria-pressed={shieldActive}
-                        className={
-                          shieldActive
-                            ? "btn-team-2 w-auto min-w-[150px] px-5"
-                            : "btn-secondary min-w-[150px]"
-                        }
-                      >
-                        {shieldActive
-                          ? "الدرع شغّال"
-                          : activeShieldUsed
-                            ? "استخدمتوا الدرع"
-                            : "الدرع"}
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setSolveOpen(true)}
-                        className="btn-primary min-w-[170px]"
-                      >
-                        عرفتوها؟ حلّوها
-                      </button>
-                    </div>
-
-                    {(shieldActive || shieldNote) && (
-                      <p className="text-sm font-bold text-white/60">
-                        {shieldNote || "لو طلع الحرف غلط تجربون مرة ثانية"}
-                      </p>
-                    )}
+                <div className="flex flex-col items-center gap-2">
+                  <div className="flex flex-wrap justify-center gap-3">
+                    <button
+                      type="button"
+                      onClick={activateShield}
+                      disabled={activeShieldUsed && !shieldActive}
+                      aria-pressed={shieldActive}
+                      className={
+                        shieldActive
+                          ? "btn-team-2 w-auto min-w-[150px] px-5"
+                          : "btn-secondary min-w-[150px]"
+                      }
+                    >
+                      {shieldActive
+                        ? "الدرع شغّال"
+                        : activeShieldUsed
+                          ? "استخدمتوا الدرع"
+                          : "الدرع"}
+                    </button>
                   </div>
-                )}
+
+                  {(shieldActive || shieldNote) && (
+                    <p className="text-sm font-bold text-white/60">
+                      {shieldNote || "لو طلع الحرف غلط تجربون مرة ثانية"}
+                    </p>
+                  )}
+                </div>
               </div>
             )}
 
