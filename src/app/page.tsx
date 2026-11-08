@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PixelHero from "@/components/PixelHero";
 import SiteFooter from "@/components/SiteFooter";
+import { HOME_GAMES } from "@/data/homeGames";
+import { posterThumb } from "@/lib/poster";
 import {
   ACTIVE_SEASON,
   isSeason,
@@ -41,6 +43,19 @@ export default function Home() {
   useEffect(() => {
     router.prefetch("/match?mode=session");
     router.prefetch("/quick");
+
+    const warm = () => {
+      HOME_GAMES.forEach((game) => {
+        const image = new window.Image();
+        image.src = posterThumb(game.image);
+      });
+    };
+
+    const idle =
+      window.requestIdleCallback ??
+      ((fn: () => void) => window.setTimeout(fn, 300));
+
+    idle(warm);
 
     const preview = new URLSearchParams(window.location.search).get("season");
 

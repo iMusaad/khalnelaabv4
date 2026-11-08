@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { posterThumb } from "@/lib/poster";
 import Link from "next/link";
 import { useState } from "react";
 import HomeIcon from "@/components/HomeIcon";
@@ -54,10 +55,11 @@ export default function GuidePage() {
                 >
                   <div className="absolute inset-0 overflow-hidden rounded-2xl shadow-[0_6px_0_#0e0a1f] [backface-visibility:hidden]">
                     <Image
-                      src={game.image}
+                      src={posterThumb(game.image)}
                       alt={game.title}
                       fill
-                      sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 220px"
+                      unoptimized
+                      priority
                       className="object-cover"
                     />
                   </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { posterThumb } from "@/lib/poster";
 import type { Dispatch, SetStateAction } from "react";
 import PixelHero from "@/components/PixelHero";
 import { quizCategoryList, type QuizCategoryKey } from "@/data/quiz/meta";
@@ -248,7 +249,7 @@ export default function SetupGame({
   );
 
   return (
-    <div className="intro text-white">
+    <div className="text-white">
       <div className="-mx-3 -mt-16 sm:-mx-6 sm:-mt-6">
         <PixelHero logo={false} overlap={false} compact>
           <h1 className="pt-16 text-2xl font-black sm:pt-0 sm:text-3xl lg:text-4xl">
@@ -329,7 +330,7 @@ export default function SetupGame({
         className={`mx-auto mt-3 grid w-full gap-3 ${
           isQuickMode
             ? "max-w-[420px]"
-            : "max-w-[700px] [@media(max-height:820px)]:max-w-[620px]"
+            : "max-w-[700px] [@media(min-height:860px)]:max-w-[820px] [@media(min-height:960px)]:max-w-[900px] [@media(max-height:820px)]:max-w-[620px]"
         }`}
       >
         <div>
@@ -380,12 +381,11 @@ export default function SetupGame({
                     }`}
                   >
                     <Image
-                      src={game.image}
+                      src={posterThumb(game.image)}
                       alt=""
                       fill
-                      sizes={
-                        isQuickMode ? "200px" : "(max-width: 640px) 30vw, 150px"
-                      }
+                      unoptimized
+                      priority
                       className="object-cover"
                     />
 
