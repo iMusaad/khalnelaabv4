@@ -27,6 +27,8 @@ type WheelRoundState = {
   currentValue: Value | null;
   score1: number;
   score2: number;
+  shield1Used?: boolean;
+  shield2Used?: boolean;
 };
 
 type Phase = "spin" | "result" | "guess" | "celebrate";
@@ -88,6 +90,14 @@ export default function WheelGame({
 
   const [score1, setScore1] = useState(0);
   const [score2, setScore2] = useState(0);
+
+  const [shield1Used, setShield1Used] = useState(false);
+
+  const [shield2Used, setShield2Used] = useState(false);
+
+  const [shieldActive, setShieldActive] = useState(false);
+
+  const [shieldNote, setShieldNote] = useState("");
 
   const [timeLeft, setTimeLeft] = useState(timerSeconds);
 
@@ -177,6 +187,8 @@ export default function WheelGame({
       setCurrentValue(guessing ? saved.currentValue : null);
       setScore1(saved.score1);
       setScore2(saved.score2);
+      setShield1Used(Boolean(saved.shield1Used));
+      setShield2Used(Boolean(saved.shield2Used));
 
       return cleanup;
     }
@@ -225,10 +237,14 @@ export default function WheelGame({
       currentValue,
       score1,
       score2,
+      shield1Used,
+      shield2Used,
     });
   }, [
     loaded,
     roundKey,
+    shield1Used,
+    shield2Used,
     answer,
     category,
     revealed,
@@ -307,7 +323,7 @@ export default function WheelGame({
     const ctx = new AudioCtx();
     const gain = ctx.createGain();
 
-    gain.gain.value = 0.022;
+    gain.gain.value = 0.09;
     gain.connect(ctx.destination);
 
     audioContextRef.current = ctx;
@@ -392,7 +408,24 @@ export default function WheelGame({
   }
 
   function nextTurn() {
+    setShieldActive(false);
+    setShieldNote("");
     setTurn((prev) => (prev === "side1" ? "side2" : "side1"));
+  }
+
+  const activeShieldUsed = turn === "side1" ? shield1Used : shield2Used;
+
+  function activateShield() {
+    if (phase !== "guess" || activeShieldUsed || shieldActive) return;
+
+    if (turn === "side1") {
+      setShield1Used(true);
+    } else {
+      setShield2Used(true);
+    }
+
+    setShieldActive(true);
+    setShieldNote("");
   }
 
   function finishRound(final1: number, final2: number) {
@@ -562,6 +595,11 @@ export default function WheelGame({
 
     setRevealed(next);
 
+    const shielded = shieldActive;
+
+    setShieldActive(false);
+    setShieldNote("");
+
     if (count > 0) {
       const gained = count * currentValue;
 
@@ -582,6 +620,12 @@ export default function WheelGame({
         );
       }
 
+      return;
+    }
+
+    if (shielded) {
+      setShieldNote("الدرع حماكم، جربوا حرف ثاني");
+      setTimeLeft(timerSeconds);
       return;
     }
 
@@ -749,11 +793,11 @@ export default function WheelGame({
                     }}
                   >
                     <svg viewBox="0 0 200 200" className="h-full w-full">
-                      <circle cx="100" cy="100" r="99" fill="#241339" />
+                      <circle cx="100" cy="100" r="96" fill="#241339" />
 
                       {SEGMENTS.map((segment, i) => {
                         const { start, end } = segmentArcs[i];
-                        const r = 88;
+                        const r = 91;
                         const toXY = (deg: number) => {
                           const rad = ((deg - 90) * Math.PI) / 180;
                           return [
@@ -796,22 +840,6 @@ export default function WheelGame({
                               {segment.label}
                             </text>
                           </g>
-                        );
-                      })}
-
-                      {Array.from({ length: 24 }).map((_, i) => {
-                        const rad = ((i * 15 - 90) * Math.PI) / 180;
-
-                        return (
-                          <rect
-                            key={i}
-                            x={100 + 94 * Math.cos(rad) - 2}
-                            y={100 + 94 * Math.sin(rad) - 2}
-                            width="4"
-                            height="4"
-                            rx="0.6"
-                            fill={i % 2 === 0 ? "#ffc23d" : "#fff3c4"}
-                          />
                         );
                       })}
 
@@ -914,14 +942,40 @@ export default function WheelGame({
                     </div>
                   </form>
                 ) : (
-                  <div className="flex justify-center">
-                    <button
-                      type="button"
-                      onClick={() => setSolveOpen(true)}
-                      className="btn-primary min-w-[170px]"
-                    >
-                      عرفتوها؟ حلّوها
-                    </button>
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="flex flex-wrap justify-center gap-3">
+                      <button
+                        type="button"
+                        onClick={activateShield}
+                        disabled={activeShieldUsed && !shieldActive}
+                        aria-pressed={shieldActive}
+                        className={
+                          shieldActive
+                            ? "btn-team-2 w-auto min-w-[150px] px-5"
+                            : "btn-secondary min-w-[150px]"
+                        }
+                      >
+                        {shieldActive
+                          ? "الدرع شغّال"
+                          : activeShieldUsed
+                            ? "استخدمتوا الدرع"
+                            : "الدرع"}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setSolveOpen(true)}
+                        className="btn-primary min-w-[170px]"
+                      >
+                        عرفتوها؟ حلّوها
+                      </button>
+                    </div>
+
+                    {(shieldActive || shieldNote) && (
+                      <p className="text-sm font-bold text-white/60">
+                        {shieldNote || "لو طلع الحرف غلط تجربون مرة ثانية"}
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
