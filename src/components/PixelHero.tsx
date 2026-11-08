@@ -1,5 +1,7 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
+import SeasonDecor from "@/components/SeasonDecor";
+import { SEASON_THEMES, type Season } from "@/lib/season";
 
 const PIXELS = [
   1, 2, 1, 0, 1, 2, 3, 2, 1, 1, 0, 1, 2, 1, 0, 0, 1, 2, 2, 1, 0, 1, 3, 2, 1, 0,
@@ -10,19 +12,26 @@ export default function PixelHero({
   children,
   action,
   overlap = true,
+  season = "default",
 }: {
   children: ReactNode;
   action?: ReactNode;
   overlap?: boolean;
+  season?: Season;
 }) {
+  const theme = SEASON_THEMES[season];
+
   return (
     <section
-      className={`relative overflow-hidden bg-[#ffb21e] px-4 pt-6 text-center text-[#241339] ${
+      className={`relative overflow-hidden px-4 pt-6 text-center ${
         overlap ? "pb-36" : "pb-28"
       }`}
+      style={{ background: theme.heroBg, color: theme.heroText }}
     >
+      <SeasonDecor season={season} />
+
       {action && (
-        <div className="mb-4 flex justify-center sm:absolute sm:left-4 sm:top-4 sm:mb-0">
+        <div className="relative z-10 mb-4 flex justify-center sm:absolute sm:left-4 sm:top-4 sm:mb-0">
           {action}
         </div>
       )}
@@ -33,10 +42,19 @@ export default function PixelHero({
         width={280}
         height={200}
         priority
-        className="mx-auto h-auto w-[170px] [filter:drop-shadow(3px_0_0_#241339)_drop-shadow(-3px_0_0_#241339)_drop-shadow(0_3px_0_#241339)_drop-shadow(0_-3px_0_#241339)_drop-shadow(0_6px_0_#241339)] sm:w-[200px]"
+        className="relative mx-auto h-auto w-[170px] [filter:drop-shadow(3px_0_0_#241339)_drop-shadow(-3px_0_0_#241339)_drop-shadow(0_3px_0_#241339)_drop-shadow(0_-3px_0_#241339)_drop-shadow(0_6px_0_#241339)] sm:w-[200px]"
       />
 
-      {children}
+      {theme.badge && (
+        <p
+          className="relative mx-auto mt-4 w-fit rounded-lg px-3 py-1 text-sm font-black"
+          style={{ background: theme.badgeBg, color: theme.badgeText }}
+        >
+          {theme.badge}
+        </p>
+      )}
+
+      <div className="relative">{children}</div>
 
       <div
         aria-hidden="true"

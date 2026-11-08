@@ -2,9 +2,15 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PixelHero from "@/components/PixelHero";
 import SiteFooter from "@/components/SiteFooter";
+import {
+  ACTIVE_SEASON,
+  isSeason,
+  SEASON_THEMES,
+  type Season,
+} from "@/lib/season";
 
 const STEPS = [
   {
@@ -28,17 +34,36 @@ const guideLink = (
 export default function Home() {
   const router = useRouter();
 
+  const [season, setSeason] = useState<Season>(ACTIVE_SEASON);
+
+  const theme = SEASON_THEMES[season];
+
   useEffect(() => {
     router.prefetch("/match?mode=session");
     router.prefetch("/quick");
+
+    const preview = new URLSearchParams(window.location.search).get("season");
+
+    if (isSeason(preview)) {
+      setSeason(preview);
+    }
   }, [router]);
 
   return (
     <main className="min-h-[100svh] text-white">
-      <PixelHero action={guideLink} overlap={false}>
-        <h1 className="mt-5 text-3xl font-black sm:text-5xl">
-          جمعتكم ناقصها تحدي
+      <PixelHero action={guideLink} overlap={false} season={season}>
+        <h1 className="mt-4 text-balance text-3xl font-black leading-snug sm:text-5xl sm:leading-tight">
+          {theme.headline}
         </h1>
+
+        {theme.subline && (
+          <p
+            className="mx-auto mt-2 max-w-lg text-base font-bold sm:text-lg"
+            style={{ color: theme.heroSubText }}
+          >
+            {theme.subline}
+          </p>
+        )}
       </PixelHero>
 
       <div className="mx-auto mt-6 max-w-[1100px] px-4">
@@ -46,7 +71,12 @@ export default function Home() {
           <Link
             href="/match?mode=session"
             prefetch={false}
-            className="block rounded-2xl bg-[#ffc23d] p-6 text-right text-[#241339] shadow-[0_7px_0_#c27700] transition-transform hover:-translate-y-1 active:translate-y-0.5 sm:p-7"
+            className="block rounded-2xl p-6 text-right transition-transform hover:-translate-y-1 active:translate-y-0.5 sm:p-7"
+            style={{
+              background: theme.buttonBg,
+              color: theme.buttonText,
+              boxShadow: `0 7px 0 ${theme.buttonEdge}`,
+            }}
           >
             <span className="text-sm font-black opacity-70">
               اللي نوصي فيه 🏆
