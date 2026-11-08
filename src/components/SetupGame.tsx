@@ -24,6 +24,7 @@ type SetupGameProps = {
   setSide2: (value: string) => void;
   selectedGames: SetupGameId[];
   pinnedGame?: SetupGameId | null;
+  hideHeader?: boolean;
   setSelectedGames: Dispatch<SetStateAction<SetupGameId[]>>;
   gameRounds: Record<string, number>;
   setGameRounds: Dispatch<SetStateAction<Record<string, number>>>;
@@ -166,6 +167,7 @@ export default function SetupGame({
   setSide2,
   selectedGames,
   pinnedGame = null,
+  hideHeader = false,
   setSelectedGames,
   gameRounds,
   setGameRounds,
@@ -250,7 +252,7 @@ export default function SetupGame({
 
   return (
     <div className="intro mx-auto w-full max-w-[1100px] pb-6 text-white sm:px-2">
-      <header className="text-center">
+      <header className={hideHeader ? "sr-only" : "text-center"}>
         <p className="text-sm font-bold text-white/45">
           {isQuickMode ? "لعبة سريعة" : "تحدي الجلسة"}
         </p>

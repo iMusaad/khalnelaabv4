@@ -13,11 +13,13 @@ export default function PixelHero({
   action,
   overlap = true,
   season = "default",
+  logo = true,
 }: {
   children: ReactNode;
   action?: ReactNode;
   overlap?: boolean;
   season?: Season;
+  logo?: boolean;
 }) {
   const theme = SEASON_THEMES[season];
 
@@ -25,7 +27,7 @@ export default function PixelHero({
     <section
       className={`relative overflow-hidden px-4 text-center ${
         season === "founding" ? "pt-16" : "pt-6"
-      } ${overlap ? "pb-36" : "pb-28"}`}
+      } ${overlap ? "pb-36" : logo ? "pb-28" : "pb-24"}`}
       style={{ background: theme.heroBg, color: theme.heroText }}
     >
       <SeasonDecor season={season} />
@@ -40,14 +42,16 @@ export default function PixelHero({
         </div>
       )}
 
-      <Image
-        src="/logo.png"
-        alt="خل نلعب"
-        width={280}
-        height={200}
-        priority
-        className="relative mx-auto h-auto w-[170px] [filter:drop-shadow(3px_0_0_#241339)_drop-shadow(-3px_0_0_#241339)_drop-shadow(0_3px_0_#241339)_drop-shadow(0_-3px_0_#241339)_drop-shadow(0_6px_0_#241339)] sm:w-[200px]"
-      />
+      {logo && (
+        <Image
+          src="/logo.png"
+          alt="خل نلعب"
+          width={280}
+          height={200}
+          priority
+          className="relative mx-auto h-auto w-[170px] [filter:drop-shadow(3px_0_0_#241339)_drop-shadow(-3px_0_0_#241339)_drop-shadow(0_3px_0_#241339)_drop-shadow(0_-3px_0_#241339)_drop-shadow(0_6px_0_#241339)] sm:w-[200px]"
+        />
+      )}
 
       {theme.badge && (
         <p
