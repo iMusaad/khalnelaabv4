@@ -1,4 +1,5 @@
 import QRCode from "qrcode";
+import { SITE } from "@/data/site";
 import { getRoundsLabel } from "@/lib/matchLabels";
 import type { WinnerType } from "@/types/game";
 
@@ -312,7 +313,7 @@ export async function createResultShareImage({
   ctx.fillStyle = "#ffffff";
   ctx.fill();
 
-  const qr = QRCode.create(window.location.origin, {
+  const qr = QRCode.create(SITE.url, {
     errorCorrectionLevel: "M",
   });
   const moduleCount = qr.modules.size;
@@ -340,7 +341,7 @@ export async function createResultShareImage({
 
   ctx.font = `800 30px ${fontFamily}`;
   ctx.fillStyle = "rgba(36,19,57,0.7)";
-  ctx.fillText(window.location.host, textCenter, panelY + 172);
+  ctx.fillText(new URL(SITE.url).host, textCenter, panelY + 172);
 
   const blob = await new Promise<Blob | null>((resolve) => {
     canvas.toBlob(resolve, "image/png", 1);
