@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PixelHero from "@/components/PixelHero";
+import SaudiMadeSticker from "@/components/SaudiMadeSticker";
 import SiteFooter from "@/components/SiteFooter";
 import { HOME_GAMES } from "@/data/homeGames";
 import { posterThumb } from "@/lib/poster";
@@ -147,6 +148,8 @@ export default function Home() {
             ))}
           </ol>
         </section>
+
+        <SaudiMadeSticker />
 
         <SiteFooter />
       </div>
