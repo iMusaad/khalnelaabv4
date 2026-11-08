@@ -251,7 +251,7 @@ export default function SetupGame({
     <div className="intro text-white">
       <div className="-mx-3 -mt-16 sm:-mx-6 sm:-mt-6">
         <PixelHero logo={false} overlap={false} compact>
-          <h1 className="pt-12 text-2xl font-black sm:pt-2 sm:text-4xl">
+          <h1 className="pt-16 text-2xl font-black sm:pt-2 sm:text-4xl">
             {isQuickMode ? "جهزوا الفرق" : "اختاروا ألعابكم"}
           </h1>
 
@@ -325,54 +325,54 @@ export default function SetupGame({
         </PixelHero>
       </div>
 
-      <div className="mx-auto mt-3 w-full max-w-[820px]">
-        {!isQuickMode && (
-          <p className="mb-2 text-left text-sm font-bold text-white/45">
-            {selectedGames.length}/{MAX_SESSION_GAMES}
-          </p>
-        )}
+      <div
+        className={`mx-auto mt-3 grid w-full gap-5 ${
+          isQuickMode
+            ? "max-w-[420px]"
+            : "max-w-[1120px] lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start"
+        }`}
+      >
+        <div>
+          {!isQuickMode && (
+            <p className="mb-2 text-left text-sm font-bold text-white/45">
+              {selectedGames.length}/{MAX_SESSION_GAMES}
+            </p>
+          )}
 
-        <div
-          className={`grid gap-3 ${
-            isQuickMode
-              ? "mx-auto max-w-[200px] grid-cols-1"
-              : "grid-cols-3 sm:grid-cols-5"
-          }`}
-        >
-          {visibleGames.map((game, gameIndex) => {
-            const active = selectedGames.includes(game.id);
+          <div
+            className={`grid gap-3 ${
+              isQuickMode
+                ? "mx-auto max-w-[200px] grid-cols-1"
+                : "grid-cols-3 sm:grid-cols-5"
+            }`}
+          >
+            {visibleGames.map((game, gameIndex) => {
+              const active = selectedGames.includes(game.id);
 
-            const locked =
-              !isQuickMode &&
-              !active &&
-              selectedGames.length >= MAX_SESSION_GAMES;
+              const locked =
+                !isQuickMode &&
+                !active &&
+                selectedGames.length >= MAX_SESSION_GAMES;
 
-            const roundOptions = getRoundOptions(game.id);
-
-            return (
-              <div
-                key={game.id}
-                className={`relative aspect-[4/5] overflow-hidden rounded-2xl ${
-                  !isQuickMode &&
-                  visibleGames.length % 3 === 1 &&
-                  gameIndex === visibleGames.length - 1
-                    ? "col-start-2 sm:col-start-auto"
-                    : ""
-                } outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${
-                  active ? "outline-[#ffc23d]" : "outline-transparent"
-                } ${locked ? "opacity-35" : ""}`}
-              >
+              return (
                 <button
+                  key={game.id}
                   type="button"
                   onClick={() => toggleGame(game.id)}
                   disabled={isQuickMode || locked}
                   aria-pressed={isQuickMode ? undefined : active}
                   aria-label={game.name}
-                  className={`absolute inset-0 block ${
+                  className={`relative block aspect-[4/5] overflow-hidden rounded-2xl outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${
+                    !isQuickMode &&
+                    visibleGames.length % 3 === 1 &&
+                    gameIndex === visibleGames.length - 1
+                      ? "col-start-2 sm:col-start-auto"
+                      : ""
+                  } ${active ? "outline-[#ffc23d]" : "outline-transparent"} ${
                     isQuickMode
                       ? "cursor-default"
                       : locked
-                        ? "cursor-not-allowed"
+                        ? "cursor-not-allowed opacity-35"
                         : ""
                   }`}
                 >
@@ -381,30 +381,40 @@ export default function SetupGame({
                     alt=""
                     fill
                     sizes={
-                      isQuickMode ? "200px" : "(max-width: 640px) 30vw, 160px"
+                      isQuickMode ? "200px" : "(max-width: 640px) 30vw, 150px"
                     }
                     className="object-cover"
                   />
+
+                  {!isQuickMode && active && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute left-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-[#ffc23d] text-sm font-black text-[#1d1238]"
+                    >
+                      ✓
+                    </span>
+                  )}
                 </button>
+              );
+            })}
+          </div>
+        </div>
 
-                {!isQuickMode && active && (
-                  <span
-                    aria-hidden="true"
-                    className="absolute left-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-[#ffc23d] text-sm font-black text-[#1d1238]"
-                  >
-                    ✓
-                  </span>
-                )}
+        <aside className="rounded-2xl bg-[#221a3f] p-3 shadow-[0_5px_0_#140f29] lg:mt-7">
+          {selectedGames.length > 0 && (
+            <ul className="mb-3 space-y-2">
+              {GAMES.filter((game) => selectedGames.includes(game.id)).map(
+                (game) => (
+                  <li key={game.id}>
+                    <p className="mb-1 text-sm font-black">{game.name}</p>
 
-                {active && (
-                  <div className="absolute inset-x-1.5 bottom-1.5 z-10 rounded-xl bg-[#130e28]/90 p-1 backdrop-blur-sm">
                     {game.id !== "quiz" ? (
                       <div
-                        className="flex"
+                        className="flex rounded-xl bg-[#15102b] p-1"
                         role="group"
-                        aria-label="عدد الجولات"
+                        aria-label={`عدد جولات ${game.name}`}
                       >
-                        {roundOptions.map((round) => {
+                        {getRoundOptions(game.id).map((round) => {
                           const selected = gameRounds[game.id] === round;
 
                           return (
@@ -414,10 +424,10 @@ export default function SetupGame({
                               aria-pressed={selected}
                               aria-label={`${round} جولات`}
                               onClick={() => selectRounds(game.id, round)}
-                              className={`flex h-7 flex-1 items-center justify-center rounded-lg text-xs font-black sm:h-8 sm:text-sm transition-colors duration-150 ${
+                              className={`flex h-7 flex-1 items-center justify-center rounded-lg text-sm font-black transition-colors duration-150 ${
                                 selected
                                   ? "bg-white text-[#1d1238]"
-                                  : "text-white/70 hover:text-white"
+                                  : "text-white/60 hover:text-white"
                               }`}
                             >
                               {round}
@@ -426,7 +436,7 @@ export default function SetupGame({
                         })}
                       </div>
                     ) : (
-                      <div className="grid grid-cols-2 gap-1">
+                      <div className="grid grid-cols-2 gap-1 rounded-xl bg-[#15102b] p-1">
                         {quizCategoryList.map((category) => {
                           const selected = quizCategories.includes(
                             category.key,
@@ -438,10 +448,10 @@ export default function SetupGame({
                               type="button"
                               aria-pressed={selected}
                               onClick={() => toggleCategory(category.key)}
-                              className={`min-h-7 rounded-lg px-0.5 py-1 text-[10px] font-black leading-tight sm:text-[11px] transition-colors duration-150 ${
+                              className={`h-7 rounded-lg px-1 text-xs font-black transition-colors duration-150 ${
                                 selected
                                   ? "bg-white text-[#1d1238]"
-                                  : "text-white/70 hover:text-white"
+                                  : "text-white/60 hover:text-white"
                               }`}
                             >
                               {category.title}
@@ -450,33 +460,31 @@ export default function SetupGame({
                         })}
                       </div>
                     )}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                  </li>
+                ),
+              )}
+            </ul>
+          )}
 
-        <div className="mt-4 flex flex-col items-center gap-1.5">
           <button
             type="button"
             onClick={onStart}
             disabled={!canStart}
-            className="btn-primary min-w-[220px] px-10 py-3 text-lg"
+            className="btn-primary w-full py-3 text-lg"
           >
             ابدأوا
           </button>
 
           <p
             aria-live="polite"
-            className="min-h-[20px] text-sm font-bold text-white/45"
+            className="mt-2 min-h-[20px] text-center text-sm font-bold text-white/45"
           >
             {startHint ||
               (!isQuickMode && selectedGames.length > 0
                 ? `تقريبًا ${minutes} دقيقة`
                 : "")}
           </p>
-        </div>
+        </aside>
       </div>
     </div>
   );
