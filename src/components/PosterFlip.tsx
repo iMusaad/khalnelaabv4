@@ -37,7 +37,7 @@ export default function PosterFlip({
             style={{ transform: "rotateY(180deg)" }}
             inert={!flipped}
           >
-            <h3 className="shrink-0 pl-7 text-xs font-black text-white sm:text-sm">
+            <h3 className="shrink-0 pl-6 text-xs font-black text-white sm:text-sm">
               {info.title}
             </h3>
 
@@ -66,7 +66,7 @@ export default function PosterFlip({
             flipped ? `رجوع لبوستر ${info.title}` : `طريقة لعب ${info.title}`
           }
           aria-expanded={flipped}
-          className="absolute left-1 top-1 z-20 flex h-6 w-6 items-center justify-center rounded-full bg-[#241339] text-xs font-black text-white shadow-[0_2px_0_#0e0a1f] ring-2 ring-white/80 transition-transform hover:scale-110 active:scale-95"
+          className="absolute -left-2 -top-2 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#2f9bff] text-base font-black text-white shadow-[0_3px_0_#1662b8] ring-[3px] ring-[#130e28] transition-transform hover:scale-110 active:scale-95"
         >
           {flipped ? "✕" : "؟"}
         </button>
