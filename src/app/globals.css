@@ -272,6 +272,89 @@ textarea::placeholder {
   .animate-fade-in-up {
     animation: fade-in-up 0.2s var(--ease-out);
   }
+
+  .tile-pop {
+    animation: tile-pop 120ms var(--ease-out);
+  }
+
+  .tile-flip {
+    animation: tile-flip 460ms ease-in-out both;
+  }
+
+  .tile-bounce {
+    animation: tile-bounce 600ms ease both;
+  }
+}
+
+@keyframes tile-pop {
+  from {
+    transform: scale(0.82);
+  }
+
+  40% {
+    transform: scale(1.1);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes tile-flip {
+  0% {
+    transform: rotateX(0deg);
+    background: #221a3f;
+    border-color: rgba(255, 255, 255, 0.55);
+    color: #ffffff;
+  }
+
+  49% {
+    transform: rotateX(-90deg);
+    background: #221a3f;
+    border-color: rgba(255, 255, 255, 0.55);
+    color: #ffffff;
+  }
+
+  50% {
+    transform: rotateX(-90deg);
+    background: var(--tile-bg);
+    border-color: var(--tile-border);
+    color: var(--tile-text);
+  }
+
+  100% {
+    transform: rotateX(0deg);
+    background: var(--tile-bg);
+    border-color: var(--tile-border);
+    color: var(--tile-text);
+  }
+}
+
+@keyframes tile-bounce {
+  0%,
+  20% {
+    transform: translateY(0);
+  }
+
+  40% {
+    transform: translateY(-22px);
+  }
+
+  50% {
+    transform: translateY(4px);
+  }
+
+  60% {
+    transform: translateY(-10px);
+  }
+
+  80% {
+    transform: translateY(2px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
 }
 
 @keyframes intro {
