@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import GameLayout from "@/components/match/GameLayout";
 import { WORDS } from "@/data/words";
 import { createDeck } from "@/lib/deck";
@@ -19,6 +19,23 @@ import type { WinnerType } from "@/types/game";
 type TeamSide = "side1" | "side2";
 
 const MAX_TRIES = 6;
+
+const FLIP_STEP = 230;
+
+const FLIP_DURATION = 460;
+
+const REVEAL_MS = FLIP_STEP * (WORD_LENGTH - 1) + FLIP_DURATION;
+
+const BOUNCE_STEP = 90;
+
+const TILE_COLORS: Record<
+  CellState,
+  { bg: string; border: string; text: string }
+> = {
+  correct: { bg: "#22c55e", border: "#4ade80", text: "#ffffff" },
+  present: { bg: "#facc15", border: "#fde047", text: "#000000" },
+  absent: { bg: "#2f3750", border: "#4b5676", text: "#ffffff" },
+};
 
 type WordRoundState = {
   answer: string;
@@ -92,6 +109,14 @@ export default function WordGame({
 
   const [side2RevealUsed, setSide2RevealUsed] = useState(false);
 
+  const [revealRow, setRevealRow] = useState<number | null>(null);
+
+  const [revealing, setRevealing] = useState(false);
+
+  const [bounceRow, setBounceRow] = useState<number | null>(null);
+
+  const revealTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const resetRoundRef = useRef(resetRound);
   resetRoundRef.current = resetRound;
 
@@ -104,7 +129,15 @@ export default function WordGame({
   }, [roundKey, currentRound, timerSeconds]);
 
   useEffect(() => {
-    if (!timerEnabled || status !== "playing") {
+    return () => {
+      if (revealTimerRef.current) {
+        clearTimeout(revealTimerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!timerEnabled || status !== "playing" || revealing) {
       return;
     }
 
@@ -118,12 +151,21 @@ export default function WordGame({
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [timerEnabled, timeLeft, status, activeSide]);
+  }, [timerEnabled, timeLeft, status, activeSide, revealing]);
 
   function resetRound() {
     const startingSide: TeamSide = currentRound % 2 === 1 ? "side1" : "side2";
 
     const saved = readRoundState<WordRoundState>("word", roundKey);
+
+    if (revealTimerRef.current) {
+      clearTimeout(revealTimerRef.current);
+      revealTimerRef.current = null;
+    }
+
+    setRevealRow(null);
+    setRevealing(false);
+    setBounceRow(null);
 
     if (saved && saved.answer) {
       setAnswer(saved.answer);
@@ -204,7 +246,7 @@ export default function WordGame({
   }
 
   function submitGuess() {
-    if (status !== "playing" || !answer) {
+    if (status !== "playing" || !answer || revealing) {
       return;
     }
 
@@ -260,43 +302,64 @@ export default function WordGame({
       }
     });
 
-    setGuesses(nextGuesses);
+    const rowIndex = nextGuesses.length - 1;
 
-    setKeyStatus(nextKeyStatus);
+    const guessingSide = activeSide;
+
+    const guessingName = getCurrentTurnName();
+
+    setGuesses(nextGuesses);
 
     setCurrent("");
 
-    if (guess === normalizedAnswer) {
-      setStatus("won");
+    setRevealRow(rowIndex);
 
-      setFeedback(`${getCurrentTurnName()} عرف الكلمة`);
+    setRevealing(true);
 
-      setTimeout(() => {
-        onRoundEnd(activeSide);
-      }, 500);
+    revealTimerRef.current = setTimeout(() => {
+      revealTimerRef.current = null;
 
-      return;
-    }
+      setKeyStatus(nextKeyStatus);
 
-    if (nextGuesses.length >= MAX_TRIES) {
-      setStatus("lost");
+      setRevealing(false);
 
-      setFeedback("انتهت المحاولات");
+      if (guess === normalizedAnswer) {
+        setStatus("won");
 
-      return;
-    }
+        setFeedback(`${guessingName} عرف الكلمة`);
 
-    const nextSide: TeamSide = activeSide === "side1" ? "side2" : "side1";
+        setBounceRow(rowIndex);
 
-    setActiveSide(nextSide);
+        revealTimerRef.current = setTimeout(
+          () => {
+            onRoundEnd(guessingSide);
+          },
+          BOUNCE_STEP * (WORD_LENGTH - 1) + 900,
+        );
 
-    setTimeLeft(timerSeconds);
+        return;
+      }
 
-    setFeedback(`الدور على ${nextSide === "side1" ? side1Name : side2Name}`);
+      if (nextGuesses.length >= MAX_TRIES) {
+        setStatus("lost");
+
+        setFeedback("انتهت المحاولات");
+
+        return;
+      }
+
+      const nextSide: TeamSide = guessingSide === "side1" ? "side2" : "side1";
+
+      setActiveSide(nextSide);
+
+      setTimeLeft(timerSeconds);
+
+      setFeedback(`الدور على ${nextSide === "side1" ? side1Name : side2Name}`);
+    }, REVEAL_MS);
   }
 
   function useHint() {
-    if (status !== "playing" || !answer) {
+    if (status !== "playing" || !answer || revealing) {
       return;
     }
 
@@ -356,7 +419,7 @@ export default function WordGame({
   }
 
   function revealLetter() {
-    if (status !== "playing" || !answer) {
+    if (status !== "playing" || !answer || revealing) {
       return;
     }
 
@@ -402,7 +465,7 @@ export default function WordGame({
   }
 
   function handleKeyboardClick(key: string) {
-    if (status !== "playing") {
+    if (status !== "playing" || revealing) {
       return;
     }
 
@@ -488,6 +551,11 @@ export default function WordGame({
 
     if (event.key === "Backspace") {
       event.preventDefault();
+
+      if (revealing) {
+        return;
+      }
+
       setCurrent((previous) => previous.slice(0, -1));
       return;
     }
@@ -512,20 +580,39 @@ export default function WordGame({
     return () => window.removeEventListener("keydown", listener);
   }, []);
 
-  function getCellColor(guess: string, index: number) {
-    const evaluation = evaluateGuess(guess, answer);
+  function getTileStyle(
+    guess: string,
+    rowIndex: number,
+    colIndex: number,
+  ): { className: string; style: CSSProperties } {
+    const state = evaluateGuess(guess, answer)[colIndex];
 
-    const state = evaluation[index];
+    const colors = TILE_COLORS[state];
 
-    if (state === "correct") {
-      return "bg-green-500 border-green-400 text-white";
+    const style = {
+      "--tile-bg": colors.bg,
+      "--tile-border": colors.border,
+      "--tile-text": colors.text,
+      background: colors.bg,
+      borderColor: colors.border,
+      color: colors.text,
+    } as CSSProperties;
+
+    if (rowIndex === revealRow && revealing) {
+      return {
+        className: "tile-flip",
+        style: { ...style, animationDelay: `${colIndex * FLIP_STEP}ms` },
+      };
     }
 
-    if (state === "present") {
-      return "bg-yellow-400 border-yellow-300 text-black";
+    if (rowIndex === bounceRow) {
+      return {
+        className: "tile-bounce",
+        style: { ...style, animationDelay: `${colIndex * BOUNCE_STEP}ms` },
+      };
     }
 
-    return "bg-[#2f3750] border-[#4b5676] text-white";
+    return { className: "", style };
   }
 
   function getKeyColor(key: string) {
@@ -652,17 +739,19 @@ export default function WordGame({
             <div className="space-y-1.5">
               {guesses.map((guess, rowIndex) => (
                 <div key={rowIndex} className="flex justify-center gap-1.5">
-                  {Array.from(guess).map((letter, colIndex) => (
-                    <div
-                      key={colIndex}
-                      className={`flex h-10 w-10 items-center justify-center rounded-lg border text-lg font-black sm:h-11 sm:w-11 sm:text-xl md:h-12 md:w-12 ${getCellColor(
-                        guess,
-                        colIndex,
-                      )}`}
-                    >
-                      {letter}
-                    </div>
-                  ))}
+                  {Array.from(guess).map((letter, colIndex) => {
+                    const tile = getTileStyle(guess, rowIndex, colIndex);
+
+                    return (
+                      <div
+                        key={colIndex}
+                        style={tile.style}
+                        className={`flex h-10 w-10 items-center justify-center rounded-lg border-2 text-lg font-black sm:h-11 sm:w-11 sm:text-xl md:h-12 md:w-12 ${tile.className}`}
+                      >
+                        {letter}
+                      </div>
+                    );
+                  })}
                 </div>
               ))}
 
@@ -681,11 +770,13 @@ export default function WordGame({
 
                     return (
                       <div
-                        key={colIndex}
-                        className={`flex h-10 w-10 items-center justify-center rounded-lg border text-lg font-black text-white sm:h-11 sm:w-11 sm:text-xl md:h-12 md:w-12 ${
-                          rowIndex === 0
-                            ? "border-white/40 bg-[#221a3f]"
-                            : "border-transparent bg-[#1d1738]"
+                        key={previewLetter ? `${colIndex}-filled` : colIndex}
+                        className={`flex h-10 w-10 items-center justify-center rounded-lg border-2 text-lg font-black text-white sm:h-11 sm:w-11 sm:text-xl md:h-12 md:w-12 ${
+                          previewLetter
+                            ? "tile-pop border-white/55 bg-[#221a3f]"
+                            : rowIndex === 0
+                              ? "border-white/20 bg-[#221a3f]"
+                              : "border-transparent bg-[#1d1738]"
                         }`}
                       >
                         {previewLetter}
