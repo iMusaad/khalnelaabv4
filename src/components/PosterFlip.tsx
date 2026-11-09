@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { getHowToPlay } from "@/data/howToPlay";
 import type { GameType } from "@/lib/matchQueue";
 
@@ -13,10 +13,64 @@ export default function PosterFlip({
 }) {
   const [flipped, setFlipped] = useState(false);
 
+  const [origin, setOrigin] = useState("center top");
+
+  const rootRef = useRef<HTMLDivElement>(null);
+
   const info = getHowToPlay(game);
 
+  useEffect(() => {
+    if (!flipped) {
+      return;
+    }
+
+    function close(event: PointerEvent) {
+      if (!rootRef.current?.contains(event.target as Node)) {
+        setFlipped(false);
+      }
+    }
+
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setFlipped(false);
+      }
+    }
+
+    document.addEventListener("pointerdown", close);
+    document.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.removeEventListener("pointerdown", close);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [flipped]);
+
+  function toggle() {
+    if (!flipped && rootRef.current) {
+      const rect = rootRef.current.getBoundingClientRect();
+      const center = rect.left + rect.width / 2;
+      const third = window.innerWidth / 3;
+      const x =
+        center < third ? "left" : center > third * 2 ? "right" : "center";
+
+      setOrigin(`${x} top`);
+    }
+
+    setFlipped((value) => !value);
+  }
+
   return (
-    <div className="relative aspect-[4/5] w-full [perspective:1200px]">
+    <div
+      ref={rootRef}
+      className={`relative aspect-[4/5] w-full transition-transform duration-500 [perspective:1200px] ${
+        flipped ? "z-30" : "z-0"
+      }`}
+      style={{
+        transform: flipped ? "scale(1.45)" : "scale(1)",
+        transformOrigin: origin,
+        transitionTimingFunction: "var(--ease-out)",
+      }}
+    >
       <div
         className="relative h-full w-full transition-transform duration-500 [transform-style:preserve-3d]"
         style={{
@@ -33,7 +87,7 @@ export default function PosterFlip({
 
         {info && (
           <div
-            className="absolute inset-0 flex flex-col overflow-hidden rounded-2xl bg-[#221a3f] p-2.5 text-right shadow-[0_5px_0_#140f29] [backface-visibility:hidden] sm:p-3"
+            className="absolute inset-0 flex flex-col overflow-hidden rounded-2xl bg-[#221a3f] p-2.5 text-right shadow-[0_5px_0_#140f29,0_18px_40px_rgba(0,0,0,0.55)] ring-2 ring-[#2f9bff] [backface-visibility:hidden] sm:p-3"
             style={{ transform: "rotateY(180deg)" }}
             inert={!flipped}
           >
@@ -61,7 +115,7 @@ export default function PosterFlip({
       {info && (
         <button
           type="button"
-          onClick={() => setFlipped((value) => !value)}
+          onClick={toggle}
           aria-label={
             flipped ? `رجوع لبوستر ${info.title}` : `طريقة لعب ${info.title}`
           }
