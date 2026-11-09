@@ -24,16 +24,6 @@ const STEPS = [
   { title: "اللي يجمع أكثر يفوز", text: "النقاط تنجمع لين آخر جولة" },
 ];
 
-const guideLink = (
-  <Link
-    href="/guide"
-    prefetch={false}
-    className="rounded-xl bg-[#241339] px-4 py-2 text-sm font-black text-white shadow-[0_3px_0_#0e0a1f]"
-  >
-    طريقة اللعب
-  </Link>
-);
-
 export default function Home() {
   const router = useRouter();
 
@@ -67,7 +57,7 @@ export default function Home() {
 
   return (
     <main className="min-h-[100svh] text-white">
-      <PixelHero action={guideLink} overlap={false} season={season}>
+      <PixelHero overlap={false} season={season}>
         <h1 className="mt-4 text-balance text-3xl font-black leading-snug sm:text-5xl sm:leading-tight">
           {theme.headline}
         </h1>

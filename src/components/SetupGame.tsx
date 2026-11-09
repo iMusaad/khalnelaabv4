@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { posterThumb } from "@/lib/poster";
+import PosterFlip from "@/components/PosterFlip";
 import type { Dispatch, SetStateAction } from "react";
 import PixelHero from "@/components/PixelHero";
 import { quizCategoryList, type QuizCategoryKey } from "@/data/quiz/meta";
@@ -366,38 +367,40 @@ export default function SetupGame({
                       : ""
                   }
                 >
-                  <button
-                    type="button"
-                    onClick={() => toggleGame(game.id)}
-                    disabled={isQuickMode || locked}
-                    aria-pressed={isQuickMode ? undefined : active}
-                    aria-label={game.name}
-                    className={`relative block aspect-[4/5] w-full overflow-hidden rounded-2xl outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${active ? "outline-[#ffc23d]" : "outline-transparent"} ${
-                      isQuickMode
-                        ? "cursor-default"
-                        : locked
-                          ? "cursor-not-allowed opacity-35"
-                          : ""
-                    }`}
-                  >
-                    <Image
-                      src={posterThumb(game.image)}
-                      alt=""
-                      fill
-                      unoptimized
-                      priority
-                      className="object-cover"
-                    />
+                  <PosterFlip game={game.id}>
+                    <button
+                      type="button"
+                      onClick={() => toggleGame(game.id)}
+                      disabled={isQuickMode || locked}
+                      aria-pressed={isQuickMode ? undefined : active}
+                      aria-label={game.name}
+                      className={`relative block h-full w-full overflow-hidden rounded-2xl outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${active ? "outline-[#ffc23d]" : "outline-transparent"} ${
+                        isQuickMode
+                          ? "cursor-default"
+                          : locked
+                            ? "cursor-not-allowed opacity-35"
+                            : ""
+                      }`}
+                    >
+                      <Image
+                        src={posterThumb(game.image)}
+                        alt=""
+                        fill
+                        unoptimized
+                        priority
+                        className="object-cover"
+                      />
 
-                    {!isQuickMode && active && (
-                      <span
-                        aria-hidden="true"
-                        className="absolute left-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-[#ffc23d] text-sm font-black text-[#1d1238]"
-                      >
-                        ✓
-                      </span>
-                    )}
-                  </button>
+                      {!isQuickMode && active && (
+                        <span
+                          aria-hidden="true"
+                          className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-[#ffc23d] text-sm font-black text-[#1d1238]"
+                        >
+                          ✓
+                        </span>
+                      )}
+                    </button>
+                  </PosterFlip>
                   {active && (
                     <div className="mt-2">
                       {game.id !== "quiz" ? (
