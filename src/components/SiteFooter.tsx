@@ -27,7 +27,10 @@ export default function SiteFooter() {
       <p className="mt-2 text-xs font-bold text-white/35">
         © {new Date().getFullYear()} خل نلعب
         {SITE.freelanceNumber && (
-          <> · وثيقة عمل حر رقم {SITE.freelanceNumber}</>
+          <>
+            {" "}
+            · وثيقة عمل حر رقم <bdi>{SITE.freelanceNumber}</bdi>
+          </>
         )}
       </p>
     </footer>
