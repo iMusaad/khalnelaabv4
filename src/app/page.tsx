@@ -8,6 +8,7 @@ import SaudiMadeSticker from "@/components/SaudiMadeSticker";
 import SiteFooter from "@/components/SiteFooter";
 import { HOME_GAMES } from "@/data/homeGames";
 import { posterThumb } from "@/lib/poster";
+import { PRICING, getCurrentPrice } from "@/lib/pricing";
 import {
   ACTIVE_SEASON,
   isSeason,
@@ -111,6 +112,26 @@ export default function Home() {
             </span>
           </Link>
         </div>
+
+        <Link
+          href="/buy"
+          prefetch={false}
+          className="mx-auto mt-6 flex w-fit flex-wrap items-baseline justify-center gap-x-2 rounded-xl px-3 py-2 text-center text-sm font-bold text-white/70 transition-colors hover:text-white sm:text-base"
+        >
+          <span>كل الألعاب بـ</span>
+
+          {PRICING.onSale && (
+            <span className="text-white/40 line-through">
+              {PRICING.basePrice}
+            </span>
+          )}
+
+          <span className="text-lg font-black text-[#ffc23d] sm:text-xl">
+            {getCurrentPrice()} ريال
+          </span>
+
+          <span>تدفعونها مرة وحدة بدون اشتراك</span>
+        </Link>
 
         <section className="mt-16">
           <h2 className="text-center text-2xl font-black sm:text-3xl">
