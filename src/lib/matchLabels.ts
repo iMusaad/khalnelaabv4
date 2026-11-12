@@ -11,6 +11,7 @@ export const GAME_NAMES: Record<GameType, string> = {
   country: "وش علمك؟",
   club: "وش ناديك؟",
   car: "عينك عالموتر",
+  zoom: "زووم",
 };
 
 export function getGameName(game: GameType) {

@@ -124,6 +124,17 @@ export const HOW_TO_PLAY: HowToPlay[] = [
   },
 
   {
+    id: "zoom",
+    image: "/images/posters/Zoomgame.png",
+    title: "زووم",
+    how: [
+      "تطلع صورة مقرّبة مرة للفريق اللي عليه الدور",
+      "إذا ما عرفتوها، بعّدوا الصورة عشان يبان أكثر",
+      "من أول نظرة 3 نقاط، وبعدها نقطتين، ولما تبان كاملة نقطة",
+    ],
+  },
+
+  {
     id: "country",
     image: "/images/posters/Countries-2.png",
     title: "وش علمك؟",

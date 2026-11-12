@@ -49,6 +49,7 @@ const GAME_LOADERS = {
   country: () => import("@/components/match/CountryGame"),
   club: () => import("@/components/match/ClubGame"),
   car: () => import("@/components/match/CarGame"),
+  zoom: () => import("@/components/match/ZoomGame"),
 };
 
 function GameLoading() {
@@ -105,6 +106,11 @@ const ClubGame = dynamic(GAME_LOADERS.club, {
 });
 
 const CarGame = dynamic(GAME_LOADERS.car, {
+  ssr: false,
+  loading: GameLoading,
+});
+
+const ZoomGame = dynamic(GAME_LOADERS.zoom, {
   ssr: false,
   loading: GameLoading,
 });
@@ -695,6 +701,9 @@ export default function MatchPage() {
 
       case "car":
         return <CarGame key={index} {...commonGameProps} />;
+
+      case "zoom":
+        return <ZoomGame key={index} {...commonGameProps} />;
     }
   }
 
