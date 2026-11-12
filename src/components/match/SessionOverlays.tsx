@@ -90,7 +90,7 @@ export function WinnerOverlay({
     <OverlayShell size="lg">
       <OverlayHeading
         kicker={mode === "quick" ? "خلصت اللعبة" : "خلصت الجلسة"}
-        title={isDraw ? "تعادل! 🤝" : "كفووو! 🏆"}
+        title={isDraw ? "تعادل!" : "كفووو!"}
       />
 
       <p className="mt-2 text-xl font-black text-white [overflow-wrap:anywhere] sm:text-3xl">
@@ -109,7 +109,6 @@ export function WinnerOverlay({
             dir="auto"
             className="line-clamp-2 text-sm font-black [overflow-wrap:anywhere] sm:text-base"
           >
-            {side1Leads && "👑 "}
             {side1Name || "فريق 1"}
           </p>
 
@@ -133,7 +132,6 @@ export function WinnerOverlay({
             dir="auto"
             className="line-clamp-2 text-sm font-black [overflow-wrap:anywhere] sm:text-base"
           >
-            {side2Leads && "👑 "}
             {side2Name || "فريق 2"}
           </p>
 
@@ -264,7 +262,6 @@ export function TransitionOverlay({ nextRound }: { nextRound: Round }) {
 
       {nextRound.category && (
         <p className="mt-3 text-base font-bold text-white/60">
-          {quizCategoryMeta[nextRound.category].emoji}{" "}
           {quizCategoryMeta[nextRound.category].title}
         </p>
       )}
@@ -287,7 +284,7 @@ export function RoundResultOverlay({
     <OverlayShell>
       <OverlayHeading
         kicker="خلصت الجولة"
-        title={isDraw ? "تعادل! 🤝" : "كفووو! 🏆"}
+        title={isDraw ? "تعادل!" : "كفووو!"}
       />
 
       <p className="arcade-winner mt-5 [overflow-wrap:anywhere]">

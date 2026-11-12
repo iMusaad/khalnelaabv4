@@ -1,16 +1,16 @@
 import type { GameType } from "@/lib/matchQueue";
 
 export const GAME_NAMES: Record<GameType, string> = {
-  word: "💬 خمن الكلمة",
-  quiz: "❓ أسئلة وأجوبة",
-  scramble: "🕵🏻‍♂️ منهو ذا؟",
-  wheel: "🎡 لف وخمن",
-  categories: "🌍 إنسان حيوان نبات جماد بلاد",
-  draw: "✏️ خمن المثل",
-  logo: "🏷️ خمن الشعار",
-  country: "🚩 وش علمك؟",
-  club: "⚽ وش ناديك؟",
-  car: "🚗 عينك عالموتر",
+  word: "خمن الكلمة",
+  quiz: "أسئلة وأجوبة",
+  scramble: "منهو ذا؟",
+  wheel: "لف وخمن",
+  categories: "إنسان حيوان نبات جماد بلاد",
+  draw: "خمن المثل",
+  logo: "خمن الشعار",
+  country: "وش علمك؟",
+  club: "وش ناديك؟",
+  car: "عينك عالموتر",
 };
 
 export function getGameName(game: GameType) {

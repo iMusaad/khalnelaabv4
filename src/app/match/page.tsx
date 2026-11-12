@@ -728,7 +728,7 @@ export default function MatchPage() {
       <TeamPickModal
         show={showRoundWinnerPicker}
         kicker="خلصت الجولة"
-        title="مين أخذها؟ 🏆"
+        title="مين أخذها؟"
         side1Name={side1}
         side2Name={side2}
         noneLabel="ولا أحد"

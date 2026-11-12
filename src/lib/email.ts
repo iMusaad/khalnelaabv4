@@ -22,7 +22,7 @@ export async function sendLicenseEmail({
   const unlockUrl = `${origin}/unlock?code=${encodeURIComponent(code)}`;
 
   const html = `<div dir="rtl" style="font-family:Tahoma,Arial,sans-serif;font-size:16px;line-height:1.8;color:#111">
-<p>هلا! شكرًا لشرائك <b>خل نلعب</b> 🎮</p>
+<p>هلا! شكرًا لشرائك <b>خل نلعب</b></p>
 <p>هذا كود التفعيل حقك، احفظه عشان تفعّل اللعبة على أي جهاز:</p>
 <p style="font-size:20px;font-weight:bold;letter-spacing:1px;direction:ltr;text-align:right">${code}</p>
 <p><a href="${unlockUrl}">فعّل اللعبة على جهاز ثاني</a></p>
@@ -39,7 +39,7 @@ export async function sendLicenseEmail({
       body: JSON.stringify({
         from: process.env.EMAIL_FROM,
         to,
-        subject: "كود تفعيل خل نلعب 🎮",
+        subject: "كود تفعيل خل نلعب",
         html,
       }),
     });

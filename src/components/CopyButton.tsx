@@ -17,7 +17,7 @@ export default function CopyButton({ text }: { text: string }) {
 
   return (
     <button type="button" onClick={copy} className="btn-secondary w-full">
-      {copied ? "تم النسخ ✓" : "📋 انسخ الكود"}
+      {copied ? "تم النسخ" : "انسخ الكود"}
     </button>
   );
 }

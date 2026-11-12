@@ -231,7 +231,7 @@ export function InlineJudge({
           onClick={() => runOnce(onCorrect)}
           className="btn-primary py-3 text-lg"
         >
-          صح ✅
+          صح
         </button>
 
         <button
@@ -239,7 +239,7 @@ export function InlineJudge({
           onClick={() => runOnce(onWrong)}
           className="btn-secondary py-3 text-lg"
         >
-          غلط ❌
+          غلط
         </button>
       </div>
     </div>

@@ -62,7 +62,7 @@ export default function BuyForm({
   if (!publishableKey) {
     return (
       <section className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-center">
-        <p className="text-lg font-black text-white">الدفع قريبًا 🎮</p>
+        <p className="text-lg font-black text-white">الدفع قريبًا</p>
         <p className="mt-1 text-sm font-bold text-white/60">
           نجهز بوابة الدفع، ارجع لنا بعد شوي.
         </p>
