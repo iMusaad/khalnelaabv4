@@ -955,11 +955,7 @@ export default function WheelGame({
             {phase === "celebrate" && (
               <div className="mt-4">
                 <div className="rounded-3xl border border-yellow-300/40 bg-yellow-400/15 px-6 py-8 shadow-2xl">
-                  <p className="text-5xl">{winnerName ? "🏆" : "🤝"}</p>
-
-                  <p className="mt-4 text-3xl font-black">
-                    {winnerName || "تعادل"}
-                  </p>
+                  <p className="text-3xl font-black">{winnerName || "تعادل"}</p>
 
                   <p className="mt-2 text-lg text-white/85">
                     {winnerName

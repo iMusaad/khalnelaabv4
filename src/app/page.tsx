@@ -85,9 +85,7 @@ export default function Home() {
               boxShadow: `0 7px 0 ${theme.buttonEdge}`,
             }}
           >
-            <span className="text-sm font-black opacity-70">
-              اللي نوصي فيه 🏆
-            </span>
+            <span className="text-sm font-black opacity-70">اللي نوصي فيه</span>
 
             <span className="mt-1 block text-3xl font-black">تحدي الجلسة</span>
 
@@ -142,7 +140,7 @@ export default function Home() {
             {STEPS.map((step, index) => (
               <li
                 key={step.title}
-                className="flex items-center gap-4 rounded-xl bg-[#221a3f] p-4 shadow-[0_5px_0_#140f29]"
+                className="flex items-center gap-4 p-2 sm:justify-center"
               >
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#ffc23d] text-2xl font-black text-[#241339] shadow-[0_3px_0_#c27700]">
                   {index + 1}

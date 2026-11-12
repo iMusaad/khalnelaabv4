@@ -118,9 +118,7 @@ export default function SessionBattleBar({
               text-[9px]
               shadow-[0_2px_0_#140f29]
             "
-          >
-            🏆
-          </div>
+          />
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { posterThumb } from "@/lib/poster";
 import PosterFlip from "@/components/PosterFlip";
+import TeamSplitter from "@/components/TeamSplitter";
 import type { Dispatch, SetStateAction } from "react";
 import PixelHero from "@/components/PixelHero";
 import { quizCategoryList, type QuizCategoryKey } from "@/data/quiz/meta";
@@ -323,6 +324,8 @@ export default function SetupGame({
                 <span className="w-12 tabular-nums">{timerSeconds} ث</span>
               </span>
             )}
+
+            <TeamSplitter team1={side1} team2={side2} />
           </div>
         </PixelHero>
       </div>
