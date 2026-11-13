@@ -11,7 +11,7 @@ import type { WinnerType } from "@/types/game";
 
 const ITEMS_PER_ROUND = 2;
 
-const ZOOM_LEVELS = [5, 2.4, 1];
+const ZOOM_LEVELS = [3.4, 1.9, 1];
 
 const STAGE_POINTS = [3, 2, 1];
 
@@ -264,7 +264,7 @@ export default function ZoomGame({
         </p>
 
         <div className="text-center">
-          <div className="relative mx-auto aspect-[2/3] w-full max-w-[300px] overflow-hidden rounded-3xl bg-black shadow-[0_6px_0_#0b0818] [@media(max-height:760px)]:max-w-[240px]">
+          <div className="relative mx-auto aspect-[15/16] w-full max-w-[380px] overflow-hidden rounded-3xl bg-black shadow-[0_6px_0_#0b0818] [@media(max-height:760px)]:max-w-[300px]">
             <img
               src={current.image}
               alt={revealed ? current.answer : ""}
