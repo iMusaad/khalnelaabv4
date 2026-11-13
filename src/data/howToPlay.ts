@@ -125,8 +125,8 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "zoom",
-    image: "/images/posters/Zoomgame.png",
-    title: "زووم",
+    image: "/images/posters/Postergame.png",
+    title: "عينك عالبوستر",
     how: [
       "تطلع صورة مقرّبة مرة للفريق اللي عليه الدور",
       "إذا ما عرفتوها، بعّدوا الصورة عشان يبان أكثر",
