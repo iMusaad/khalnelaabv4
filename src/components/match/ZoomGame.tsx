@@ -235,7 +235,7 @@ export default function ZoomGame({
 
   return (
     <GameLayout
-      title="زووم"
+      title="عينك عالبوستر"
       side1={side1Name || "فريق 1"}
       side2={side2Name || "فريق 2"}
       side1Score={side1Score}

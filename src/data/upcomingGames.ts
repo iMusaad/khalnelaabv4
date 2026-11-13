@@ -10,8 +10,8 @@ export type UpcomingGame = {
 export const UPCOMING_GAMES: UpcomingGame[] = [
   {
     id: "zoom",
-    name: "زووم",
-    image: "/images/posters/Zoomgame.png",
+    name: "عينك عالبوستر",
+    image: "/images/posters/Postergame.png",
     content: Object.entries(ZOOM_CATEGORIES).map(
       ([key, category]) =>
         `${category.title}: ${ZOOM_ITEMS.filter((item) => item.category === key).length} صورة`,

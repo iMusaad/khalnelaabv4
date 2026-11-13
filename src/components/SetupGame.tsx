@@ -99,8 +99,8 @@ const GAMES: {
   },
   {
     id: "zoom",
-    name: "زووم",
-    image: "/images/posters/Zoomgame.png",
+    name: "عينك عالبوستر",
+    image: "/images/posters/Postergame.png",
   },
 ];
 
