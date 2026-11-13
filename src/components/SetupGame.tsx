@@ -18,7 +18,8 @@ type SetupGameId =
   | "logo"
   | "country"
   | "club"
-  | "car";
+  | "car"
+  | "zoom";
 
 type SetupGameProps = {
   mode?: "session" | "quick";
@@ -44,6 +45,7 @@ const GAMES: {
   id: SetupGameId;
   name: string;
   image: string;
+  hidden?: boolean;
 }[] = [
   {
     id: "logo",
@@ -95,6 +97,12 @@ const GAMES: {
     name: "أسئلة وأجوبة",
     image: "/images/posters/Quizgame-2.png",
   },
+  {
+    id: "zoom",
+    name: "زووم",
+    image: "/images/posters/Zoomgame.png",
+    hidden: true,
+  },
 ];
 
 function getRoundOptions(gameId: string) {
@@ -137,6 +145,7 @@ const MINUTES_PER_ROUND: Record<SetupGameId, number> = {
   country: 5,
   club: 5,
   car: 4,
+  zoom: 4,
 };
 
 function estimateMinutes(
@@ -242,7 +251,7 @@ export default function SetupGame({
 
   const visibleGames = isQuickMode
     ? GAMES.filter((game) => selectedGames.includes(game.id))
-    : orderedGames;
+    : orderedGames.filter((game) => !game.hidden || game.id === pinnedGame);
 
   const minutes = estimateMinutes(
     selectedGames,
