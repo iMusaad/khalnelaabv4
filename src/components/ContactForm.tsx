@@ -99,7 +99,7 @@ export default function ContactForm() {
           type="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          placeholder="الإيميل"
+          placeholder="الإيميل (اختياري)"
           autoComplete="email"
           dir="auto"
           className={inputClass}
@@ -115,7 +115,7 @@ export default function ContactForm() {
             inputMode="tel"
             value={phone}
             onChange={(event) => setPhone(event.target.value)}
-            placeholder="رقم الجوال"
+            placeholder="رقم الجوال (اختياري)"
             autoComplete="tel-national"
             dir="ltr"
             className={`${inputClass} text-left placeholder:text-right`}

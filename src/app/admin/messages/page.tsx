@@ -1,16 +1,5 @@
-import type { Metadata } from "next";
-import AdminMessages from "@/components/AdminMessages";
-import PageShell from "@/components/PageShell";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "الرسائل",
-  robots: { index: false, follow: false },
-};
-
-export default function AdminMessagesPage() {
-  return (
-    <PageShell title="الرسائل">
-      <AdminMessages />
-    </PageShell>
-  );
+export default function AdminRedirect() {
+  redirect("/admin");
 }

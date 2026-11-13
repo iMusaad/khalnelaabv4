@@ -9,7 +9,7 @@ export type ContactMessage = {
   message: string;
 };
 
-type KvStore = {
+export type KvStore = {
   get(key: string): Promise<string | null>;
   put(
     key: string,

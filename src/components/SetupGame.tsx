@@ -4,6 +4,7 @@ import Image from "next/image";
 import { posterThumb } from "@/lib/poster";
 import PosterFlip from "@/components/PosterFlip";
 import TeamSplitter from "@/components/TeamSplitter";
+import { UPCOMING_GAME_IDS } from "@/data/upcomingGames";
 import type { Dispatch, SetStateAction } from "react";
 import PixelHero from "@/components/PixelHero";
 import { quizCategoryList, type QuizCategoryKey } from "@/data/quiz/meta";
@@ -45,7 +46,6 @@ const GAMES: {
   id: SetupGameId;
   name: string;
   image: string;
-  hidden?: boolean;
 }[] = [
   {
     id: "logo",
@@ -101,7 +101,6 @@ const GAMES: {
     id: "zoom",
     name: "زووم",
     image: "/images/posters/Zoomgame.png",
-    hidden: true,
   },
 ];
 
@@ -251,7 +250,10 @@ export default function SetupGame({
 
   const visibleGames = isQuickMode
     ? GAMES.filter((game) => selectedGames.includes(game.id))
-    : orderedGames.filter((game) => !game.hidden || game.id === pinnedGame);
+    : orderedGames.filter(
+        (game) =>
+          !UPCOMING_GAME_IDS.includes(game.id) || game.id === pinnedGame,
+      );
 
   const minutes = estimateMinutes(
     selectedGames,
