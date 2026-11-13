@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { ContactMessage } from "@/lib/messageStore";
 
 const dateFormat = new Intl.DateTimeFormat("ar-SA", {
@@ -8,78 +8,50 @@ const dateFormat = new Intl.DateTimeFormat("ar-SA", {
   timeStyle: "short",
 });
 
-export default function AdminMessages() {
-  const [password, setPassword] = useState("");
+export default function AdminMessages({ password }: { password: string }) {
   const [messages, setMessages] = useState<ContactMessage[] | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function load(deleteId?: string) {
-    setLoading(true);
-    setError("");
+  const load = useCallback(
+    async (deleteId?: string) => {
+      setLoading(true);
+      setError("");
 
-    try {
-      const response = await fetch("/api/admin/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password, deleteId }),
-      });
+      try {
+        const response = await fetch("/api/admin/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password, deleteId }),
+        });
 
-      const data = (await response.json().catch(() => null)) as {
-        messages?: ContactMessage[];
-      } | null;
+        const data = (await response.json().catch(() => null)) as {
+          messages?: ContactMessage[];
+        } | null;
 
-      if (response.ok && data?.messages) {
-        setMessages(data.messages);
-      } else if (response.status === 401) {
-        setError("كلمة المرور غلط");
-      } else {
-        setError("الرسائل غير مفعلة، تأكد من إعدادات Cloudflare");
+        if (response.ok && data?.messages) {
+          setMessages(data.messages);
+        } else {
+          setError("الرسائل غير مفعلة، تأكد من إعدادات Cloudflare");
+        }
+      } catch {
+        setError("صار خطأ، جرّب مرة ثانية");
       }
-    } catch {
-      setError("صار خطأ، جرّب مرة ثانية");
-    }
 
-    setLoading(false);
-  }
+      setLoading(false);
+    },
+    [password],
+  );
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  useEffect(() => {
     void load();
-  }
+  }, [load]);
 
   if (!messages) {
     return (
-      <form
-        onSubmit={handleSubmit}
-        className="mx-auto max-w-sm space-y-3 rounded-3xl bg-[#221a3f] p-5 shadow-[0_6px_0_#140f29]"
-      >
-        <label className="block">
-          <span className="mb-1.5 block text-sm font-black text-white/70">
-            كلمة المرور
-          </span>
-          <input
-            id="admin-password"
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            autoComplete="current-password"
-            className="h-12 w-full rounded-xl bg-[#15102b] px-4 text-base font-bold text-white outline-none ring-1 ring-white/10 focus:ring-2 focus:ring-[#ffc23d]"
-          />
-        </label>
-
-        <button
-          type="submit"
-          disabled={!password || loading}
-          className="btn-primary w-full py-3"
-        >
-          {loading ? "لحظة..." : "دخول"}
-        </button>
-
-        <p className="min-h-[20px] text-center text-sm font-bold text-[#ff7a7f]">
-          {error}
-        </p>
-      </form>
+      <p className="rounded-2xl bg-[#221a3f] p-6 text-center font-bold text-white/60">
+        {error || "لحظة..."}
+      </p>
     );
   }
 

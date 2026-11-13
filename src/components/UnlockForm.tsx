@@ -67,7 +67,7 @@ export default function UnlockForm({
               setCode(event.target.value);
               setStatus("idle");
             }}
-            placeholder="KN-XXXX-XXXX-..."
+            placeholder="اكتب الكود هنا"
             dir="ltr"
             autoCapitalize="characters"
             autoCorrect="off"
