@@ -133,6 +133,13 @@ export default function ZoomGame({
   const activeTeamName =
     activeSide === "side1" ? side1Name || "فريق 1" : side2Name || "فريق 2";
 
+  useEffect(() => {
+    if (current) {
+      const preload = new window.Image();
+      preload.src = current.full;
+    }
+  }, [current]);
+
   const isLastStage = stage >= ZOOM_LEVELS.length - 1;
 
   const stagePoints = STAGE_POINTS[stage];
@@ -264,18 +271,29 @@ export default function ZoomGame({
         </p>
 
         <div className="text-center">
-          <div className="relative mx-auto aspect-[15/16] w-full max-w-[380px] overflow-hidden rounded-3xl bg-black shadow-[0_6px_0_#0b0818] [@media(max-height:760px)]:max-w-[300px]">
-            <img
-              src={current.image}
-              alt={revealed ? current.answer : ""}
-              draggable={false}
-              className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover transition-transform duration-500 ease-[var(--ease-out)]"
-              style={{
-                transform: `scale(${zoom})`,
-                transformOrigin: `${current.focusX}% ${current.focusY}%`,
-              }}
-            />
-          </div>
+          {revealed ? (
+            <div className="relative mx-auto aspect-[700/998] w-full max-w-[280px] animate-fade-in-up overflow-hidden rounded-3xl bg-black shadow-[0_6px_0_#0b0818] [@media(max-height:900px)]:max-w-[210px] [@media(max-height:760px)]:max-w-[170px]">
+              <img
+                src={current.full}
+                alt={current.answer}
+                draggable={false}
+                className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover"
+              />
+            </div>
+          ) : (
+            <div className="relative mx-auto aspect-[15/16] w-full max-w-[380px] overflow-hidden rounded-3xl bg-black shadow-[0_6px_0_#0b0818] [@media(max-height:760px)]:max-w-[300px]">
+              <img
+                src={current.image}
+                alt=""
+                draggable={false}
+                className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover transition-transform duration-500 ease-[var(--ease-out)]"
+                style={{
+                  transform: `scale(${zoom})`,
+                  transformOrigin: `${current.focusX}% ${current.focusY}%`,
+                }}
+              />
+            </div>
+          )}
 
           {!revealed && (
             <div
