@@ -59,7 +59,7 @@ export default function Home() {
   return (
     <main className="flex min-h-[100svh] flex-col text-white">
       <PixelHero overlap={false} season={season}>
-        <h1 className="mt-3 text-balance text-3xl font-black leading-snug sm:text-[44px] sm:leading-tight sm:[@media(max-height:760px)]:mt-2 sm:[@media(max-height:760px)]:text-4xl">
+        <h1 className="mt-3 text-balance text-3xl font-black leading-snug sm:text-[44px] sm:leading-tight sm:[@media(max-height:820px)]:mt-2 sm:[@media(max-height:820px)]:text-4xl">
           {theme.headline}
         </h1>
 
@@ -111,7 +111,7 @@ export default function Home() {
           </Link>
         </div>
 
-        <div className="mx-auto mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3">
+        <div className="mx-auto mt-5 flex flex-col items-center gap-3 sm:[@media(max-height:820px)]:mt-4 sm:[@media(max-height:820px)]:gap-2">
           <Link
             href="/buy"
             prefetch={false}
@@ -141,8 +141,10 @@ export default function Home() {
           </Link>
         </div>
 
-        <section className="my-auto py-8 sm:py-6 sm:[@media(max-height:800px)]:py-2">
-          <h2 className="text-center text-2xl font-black">كيف تلعبون؟</h2>
+        <section className="my-auto py-8 sm:py-6 sm:[@media(max-height:820px)]:py-2">
+          <h2 className="text-center text-2xl font-black sm:[@media(max-height:820px)]:text-xl">
+            كيف تلعبون؟
+          </h2>
 
           <ol className="mt-4 grid gap-3 sm:mt-3 sm:grid-cols-3">
             {STEPS.map((step, index) => (
@@ -166,8 +168,8 @@ export default function Home() {
           </ol>
         </section>
 
-        <div className="relative mt-auto pt-5">
-          <SaudiMadeSticker className="mb-6 flex justify-center sm:absolute sm:bottom-5 sm:left-0 sm:mb-0 sm:scale-90" />
+        <div className="relative mt-auto pt-2">
+          <SaudiMadeSticker className="mb-4 flex justify-center sm:[@media(max-height:920px)]:absolute sm:[@media(max-height:920px)]:bottom-4 sm:[@media(max-height:920px)]:left-0 sm:[@media(max-height:920px)]:mb-0 sm:[@media(max-height:920px)]:scale-90" />
 
           <SiteFooter />
         </div>
