@@ -57,8 +57,8 @@ export default function Home() {
   }, [router]);
 
   return (
-    <main className="min-h-[100svh] text-white">
-      <PixelHero overlap={false} season={season} action={<SaudiMadeSticker />}>
+    <main className="flex min-h-[100svh] flex-col text-white">
+      <PixelHero overlap={false} season={season}>
         <h1 className="mt-3 text-balance text-3xl font-black leading-snug sm:text-[44px] sm:leading-tight sm:[@media(max-height:760px)]:mt-2 sm:[@media(max-height:760px)]:text-4xl">
           {theme.headline}
         </h1>
@@ -73,7 +73,7 @@ export default function Home() {
         )}
       </PixelHero>
 
-      <div className="mx-auto mt-5 max-w-[1100px] px-4">
+      <div className="mx-auto mt-5 flex w-full max-w-[1100px] flex-1 flex-col px-4">
         <div className="relative z-10 mx-auto grid max-w-3xl items-stretch gap-4 sm:grid-cols-5">
           <Link
             href="/match?mode=session"
@@ -156,9 +156,11 @@ export default function Home() {
           </ol>
         </section>
 
-        <SaudiMadeSticker className="mt-10 flex justify-center sm:hidden" />
+        <div className="relative mt-auto pt-5">
+          <SaudiMadeSticker className="mb-6 flex justify-center sm:absolute sm:bottom-5 sm:left-0 sm:mb-0 sm:scale-90" />
 
-        <SiteFooter />
+          <SiteFooter />
+        </div>
       </div>
     </main>
   );
