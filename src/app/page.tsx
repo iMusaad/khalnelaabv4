@@ -57,9 +57,9 @@ export default function Home() {
   }, [router]);
 
   return (
-    <main className="min-h-[100svh] text-white">
-      <PixelHero overlap={false} season={season} action={<SaudiMadeSticker />}>
-        <h1 className="mt-3 text-balance text-3xl font-black leading-snug sm:text-[44px] sm:leading-tight sm:[@media(max-height:760px)]:mt-2 sm:[@media(max-height:760px)]:text-4xl">
+    <main className="flex min-h-[100svh] flex-col text-white">
+      <PixelHero overlap={false} season={season}>
+        <h1 className="mt-3 text-balance text-3xl font-black leading-snug sm:text-[44px] sm:leading-tight sm:[@media(max-height:820px)]:mt-2 sm:[@media(max-height:820px)]:text-4xl">
           {theme.headline}
         </h1>
 
@@ -73,7 +73,7 @@ export default function Home() {
         )}
       </PixelHero>
 
-      <div className="mx-auto mt-5 max-w-[1100px] px-4">
+      <div className="mx-auto mt-5 flex w-full max-w-[1100px] flex-1 flex-col px-4">
         <div className="relative z-10 mx-auto grid max-w-3xl items-stretch gap-4 sm:grid-cols-5">
           <Link
             href="/match?mode=session"
@@ -111,28 +111,40 @@ export default function Home() {
           </Link>
         </div>
 
-        <Link
-          href="/buy"
-          prefetch={false}
-          className="mx-auto mt-5 flex w-fit flex-wrap items-baseline justify-center gap-x-2 rounded-xl px-3 py-1 text-center text-base font-black text-white/80 transition-colors hover:text-white sm:text-xl"
-        >
-          <span>كل الألعاب بـ</span>
+        <div className="mx-auto mt-5 flex flex-col items-center gap-3 sm:[@media(max-height:820px)]:mt-4 sm:[@media(max-height:820px)]:gap-2">
+          <Link
+            href="/buy"
+            prefetch={false}
+            className="flex flex-wrap items-baseline justify-center gap-x-2 text-center text-base font-black text-white/80 transition-colors hover:text-white sm:text-xl"
+          >
+            <span>كل الألعاب بـ</span>
 
-          {PRICING.onSale && (
-            <span className="text-white/40 line-through">
-              {PRICING.basePrice}
+            {PRICING.onSale && (
+              <span className="text-white/40 line-through">
+                {PRICING.basePrice}
+              </span>
+            )}
+
+            <span className="text-2xl font-black text-[#ffc23d] sm:text-3xl">
+              {getCurrentPrice()} ريال
             </span>
-          )}
 
-          <span className="text-2xl font-black text-[#ffc23d] sm:text-3xl">
-            {getCurrentPrice()} ريال
-          </span>
+            <span>تدفعونها مرة وحدة بدون اشتراك</span>
+          </Link>
 
-          <span>تدفعونها مرة وحدة بدون اشتراك</span>
-        </Link>
+          <Link
+            href="/buy"
+            prefetch={false}
+            className="btn-primary px-6 py-2.5 text-base"
+          >
+            اشترها الحين
+          </Link>
+        </div>
 
-        <section className="mt-10 sm:mt-7">
-          <h2 className="text-center text-2xl font-black">كيف تلعبون؟</h2>
+        <section className="my-auto py-8 sm:py-6 sm:[@media(max-height:820px)]:py-2">
+          <h2 className="text-center text-2xl font-black sm:[@media(max-height:820px)]:text-xl">
+            كيف تلعبون؟
+          </h2>
 
           <ol className="mt-4 grid gap-3 sm:mt-3 sm:grid-cols-3">
             {STEPS.map((step, index) => (
@@ -156,9 +168,11 @@ export default function Home() {
           </ol>
         </section>
 
-        <SaudiMadeSticker className="mt-10 flex justify-center sm:hidden" />
+        <div className="relative mt-auto pt-2">
+          <SaudiMadeSticker className="mb-4 flex justify-center sm:[@media(max-height:920px)]:absolute sm:[@media(max-height:920px)]:bottom-4 sm:[@media(max-height:920px)]:left-0 sm:[@media(max-height:920px)]:mb-0 sm:[@media(max-height:920px)]:scale-90" />
 
-        <SiteFooter />
+          <SiteFooter />
+        </div>
       </div>
     </main>
   );

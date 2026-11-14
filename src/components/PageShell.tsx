@@ -26,7 +26,9 @@ export default function PageShell({
 
         {children}
 
-        <SiteFooter />
+        <div className="mt-8">
+          <SiteFooter />
+        </div>
       </div>
     </main>
   );

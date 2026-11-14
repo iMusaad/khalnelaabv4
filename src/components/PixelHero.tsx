@@ -29,7 +29,7 @@ export default function PixelHero({
     <section
       className={`relative overflow-hidden px-4 text-center ${
         season === "founding" ? "pt-16" : "pt-6"
-      } ${overlap ? "pb-36" : compact ? "pb-14" : logo ? "pb-16" : "pb-24"}`}
+      } ${overlap ? "pb-36" : compact ? "pb-14" : logo ? "pb-16 sm:[@media(max-height:820px)]:pb-12" : "pb-24"}`}
       style={{ background: theme.heroBg, color: theme.heroText }}
     >
       <SeasonDecor season={season} />
@@ -51,7 +51,7 @@ export default function PixelHero({
           width={280}
           height={200}
           priority
-          className="relative mx-auto h-auto w-[140px] [filter:drop-shadow(3px_0_0_#241339)_drop-shadow(-3px_0_0_#241339)_drop-shadow(0_3px_0_#241339)_drop-shadow(0_-3px_0_#241339)_drop-shadow(0_6px_0_#241339)] sm:w-[150px] sm:[@media(max-height:760px)]:w-[118px]"
+          className="relative mx-auto h-auto w-[140px] [filter:drop-shadow(3px_0_0_#241339)_drop-shadow(-3px_0_0_#241339)_drop-shadow(0_3px_0_#241339)_drop-shadow(0_-3px_0_#241339)_drop-shadow(0_6px_0_#241339)] sm:w-[150px] sm:[@media(max-height:820px)]:w-[110px]"
         />
       )}
 
