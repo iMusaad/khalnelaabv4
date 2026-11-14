@@ -29,15 +29,15 @@ export default function PixelHero({
     <section
       className={`relative overflow-hidden px-4 text-center ${
         season === "founding" ? "pt-16" : "pt-6"
-      } ${overlap ? "pb-36" : compact ? "pb-14" : logo ? "pb-28" : "pb-24"}`}
+      } ${overlap ? "pb-36" : compact ? "pb-14" : logo ? "pb-16" : "pb-24"}`}
       style={{ background: theme.heroBg, color: theme.heroText }}
     >
       <SeasonDecor season={season} />
 
       {action && (
         <div
-          className={`relative z-10 mb-4 flex justify-center sm:absolute sm:left-4 sm:mb-0 ${
-            season === "founding" ? "sm:top-14" : "sm:top-4"
+          className={`relative z-10 hidden sm:absolute sm:left-6 sm:flex ${
+            season === "founding" ? "sm:top-14" : "sm:top-6"
           }`}
         >
           {action}
@@ -51,7 +51,7 @@ export default function PixelHero({
           width={280}
           height={200}
           priority
-          className="relative mx-auto h-auto w-[170px] [filter:drop-shadow(3px_0_0_#241339)_drop-shadow(-3px_0_0_#241339)_drop-shadow(0_3px_0_#241339)_drop-shadow(0_-3px_0_#241339)_drop-shadow(0_6px_0_#241339)] sm:w-[200px]"
+          className="relative mx-auto h-auto w-[140px] [filter:drop-shadow(3px_0_0_#241339)_drop-shadow(-3px_0_0_#241339)_drop-shadow(0_3px_0_#241339)_drop-shadow(0_-3px_0_#241339)_drop-shadow(0_6px_0_#241339)] sm:w-[150px] sm:[@media(max-height:760px)]:w-[118px]"
         />
       )}
 
@@ -75,9 +75,10 @@ export default function PixelHero({
             key={index}
             className="flex-1 bg-[#130e28]"
             style={{
-              height: compact
-                ? `${10 + height * 10}px`
-                : `${16 + height * 20}px`,
+              height:
+                compact || logo
+                  ? `${10 + height * 12}px`
+                  : `${16 + height * 20}px`,
             }}
           />
         ))}
