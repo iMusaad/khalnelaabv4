@@ -58,8 +58,8 @@ export default function Home() {
 
   return (
     <main className="min-h-[100svh] text-white">
-      <PixelHero overlap={false} season={season}>
-        <h1 className="mt-4 text-balance text-3xl font-black leading-snug sm:text-5xl sm:leading-tight">
+      <PixelHero overlap={false} season={season} action={<SaudiMadeSticker />}>
+        <h1 className="mt-3 text-balance text-3xl font-black leading-snug sm:text-[44px] sm:leading-tight sm:[@media(max-height:760px)]:mt-2 sm:[@media(max-height:760px)]:text-4xl">
           {theme.headline}
         </h1>
 
@@ -73,12 +73,12 @@ export default function Home() {
         )}
       </PixelHero>
 
-      <div className="mx-auto mt-6 max-w-[1100px] px-4">
+      <div className="mx-auto mt-5 max-w-[1100px] px-4">
         <div className="relative z-10 mx-auto grid max-w-3xl items-stretch gap-4 sm:grid-cols-5">
           <Link
             href="/match?mode=session"
             prefetch={false}
-            className="block rounded-2xl p-6 text-right transition-transform sm:col-span-3 hover:-translate-y-1 active:translate-y-0.5 sm:p-7"
+            className="block rounded-2xl p-5 text-right transition-transform sm:col-span-3 hover:-translate-y-1 active:translate-y-0.5 sm:p-6"
             style={{
               background: theme.buttonBg,
               color: theme.buttonText,
@@ -89,7 +89,7 @@ export default function Home() {
 
             <span className="mt-1 block text-3xl font-black">تحدي الجلسة</span>
 
-            <span className="mt-2 block text-base font-bold leading-7 opacity-80">
+            <span className="mt-1 block text-base font-bold leading-7 opacity-80">
               كم لعبة ورا بعض، تنجمع نقاطكم، وبالأخير فريق واحد يفوز
             </span>
           </Link>
@@ -114,7 +114,7 @@ export default function Home() {
         <Link
           href="/buy"
           prefetch={false}
-          className="mx-auto mt-6 flex w-fit flex-wrap items-baseline justify-center gap-x-2 rounded-xl px-3 py-2 text-center text-sm font-bold text-white/70 transition-colors hover:text-white sm:text-base"
+          className="mx-auto mt-5 flex w-fit flex-wrap items-baseline justify-center gap-x-2 rounded-xl px-3 py-1 text-center text-base font-black text-white/80 transition-colors hover:text-white sm:text-xl"
         >
           <span>كل الألعاب بـ</span>
 
@@ -124,25 +124,23 @@ export default function Home() {
             </span>
           )}
 
-          <span className="text-lg font-black text-[#ffc23d] sm:text-xl">
+          <span className="text-2xl font-black text-[#ffc23d] sm:text-3xl">
             {getCurrentPrice()} ريال
           </span>
 
           <span>تدفعونها مرة وحدة بدون اشتراك</span>
         </Link>
 
-        <section className="mt-16">
-          <h2 className="text-center text-2xl font-black sm:text-3xl">
-            كيف تلعبون؟
-          </h2>
+        <section className="mt-10 sm:mt-7">
+          <h2 className="text-center text-2xl font-black">كيف تلعبون؟</h2>
 
-          <ol className="mt-6 grid gap-3 sm:grid-cols-3">
+          <ol className="mt-4 grid gap-3 sm:mt-3 sm:grid-cols-3">
             {STEPS.map((step, index) => (
               <li
                 key={step.title}
                 className="flex items-center gap-4 p-2 sm:justify-center"
               >
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-[#ffc23d] text-2xl font-black text-[#241339] shadow-[0_3px_0_#c27700]">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[#ffc23d] text-xl font-black text-[#241339] shadow-[0_3px_0_#c27700]">
                   {index + 1}
                 </span>
 
@@ -158,7 +156,7 @@ export default function Home() {
           </ol>
         </section>
 
-        <SaudiMadeSticker />
+        <SaudiMadeSticker className="mt-10 flex justify-center sm:hidden" />
 
         <SiteFooter />
       </div>
