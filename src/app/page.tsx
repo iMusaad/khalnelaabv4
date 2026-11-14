@@ -111,27 +111,37 @@ export default function Home() {
           </Link>
         </div>
 
-        <Link
-          href="/buy"
-          prefetch={false}
-          className="mx-auto mt-5 flex w-fit flex-wrap items-baseline justify-center gap-x-2 rounded-xl px-3 py-1 text-center text-base font-black text-white/80 transition-colors hover:text-white sm:text-xl"
-        >
-          <span>كل الألعاب بـ</span>
+        <div className="mx-auto mt-5 flex flex-wrap items-center justify-center gap-x-4 gap-y-3">
+          <Link
+            href="/buy"
+            prefetch={false}
+            className="flex flex-wrap items-baseline justify-center gap-x-2 text-center text-base font-black text-white/80 transition-colors hover:text-white sm:text-xl"
+          >
+            <span>كل الألعاب بـ</span>
 
-          {PRICING.onSale && (
-            <span className="text-white/40 line-through">
-              {PRICING.basePrice}
+            {PRICING.onSale && (
+              <span className="text-white/40 line-through">
+                {PRICING.basePrice}
+              </span>
+            )}
+
+            <span className="text-2xl font-black text-[#ffc23d] sm:text-3xl">
+              {getCurrentPrice()} ريال
             </span>
-          )}
 
-          <span className="text-2xl font-black text-[#ffc23d] sm:text-3xl">
-            {getCurrentPrice()} ريال
-          </span>
+            <span>تدفعونها مرة وحدة بدون اشتراك</span>
+          </Link>
 
-          <span>تدفعونها مرة وحدة بدون اشتراك</span>
-        </Link>
+          <Link
+            href="/buy"
+            prefetch={false}
+            className="btn-primary px-6 py-2.5 text-base"
+          >
+            اشترها الحين
+          </Link>
+        </div>
 
-        <section className="mt-10 sm:mt-7">
+        <section className="my-auto py-8 sm:py-6 sm:[@media(max-height:800px)]:py-2">
           <h2 className="text-center text-2xl font-black">كيف تلعبون؟</h2>
 
           <ol className="mt-4 grid gap-3 sm:mt-3 sm:grid-cols-3">
