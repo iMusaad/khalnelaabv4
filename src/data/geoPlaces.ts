@@ -107,4 +107,27 @@ export const GEO_PLACES: GeoPlace[] = [
     source:
       "https://commons.wikimedia.org/wiki/File:Shubra_Palace,_1905,_al-Taif,_Saudi_Arabia_(6).jpg",
   },
+  {
+    id: "ukhdood",
+    place: "الأخدود",
+    region: "نجران",
+    image: "/images/geo/ukhdood.jpg",
+    lat: 17.4773,
+    lon: 44.1794,
+    author: "Mohammad Umair Yaqub",
+    license: "CC BY-SA 4.0",
+    source: "https://commons.wikimedia.org/wiki/File:AlUkhdood_Village_01.jpg",
+  },
+  {
+    id: "buraidah",
+    place: "سوق التمور",
+    region: "بريدة",
+    image: "/images/geo/buraidah.jpg",
+    lat: 26.3515,
+    lon: 43.9612,
+    author: "Kskhh",
+    license: "CC BY 4.0",
+    source:
+      "https://commons.wikimedia.org/wiki/File:King_Fahad_Road_in_Buraydah.jpg",
+  },
 ];
