@@ -60,6 +60,18 @@ export const GEO_PLACES: GeoPlace[] = [
       "https://commons.wikimedia.org/wiki/File:Traditional_dagger_market_in_Najran,_Saudi_Arabia_(1).jpg",
   },
   {
+    id: "kingdom-centre",
+    place: "برج المملكة",
+    region: "الرياض",
+    image: "/images/geo/kingdom-centre.jpg",
+    lat: 24.7113,
+    lon: 46.6743,
+    author: "Wajahat Mahmood from Perth, Australia",
+    license: "CC BY-SA 2.0",
+    source:
+      "https://commons.wikimedia.org/wiki/File:Kingdom_Centre,_Riyadh_(6129688934).jpg",
+  },
+  {
     id: "wahbah-crater",
     place: "فوهة الوعبة",
     region: "منطقة مكة المكرمة",
@@ -106,5 +118,17 @@ export const GEO_PLACES: GeoPlace[] = [
     license: "CC BY 2.0",
     source:
       "https://commons.wikimedia.org/wiki/File:Shubra_Palace,_1905,_al-Taif,_Saudi_Arabia_(6).jpg",
+  },
+  {
+    id: "jeddah-fountain",
+    place: "نافورة الملك فهد",
+    region: "جدة",
+    image: "/images/geo/jeddah-fountain.jpg",
+    lat: 21.5186,
+    lon: 39.1528,
+    author: "Tahir mq",
+    license: "CC BY-SA 4.0",
+    source:
+      "https://commons.wikimedia.org/wiki/File:King_Fahd%27s_Fountain_2.jpg",
   },
 ];
