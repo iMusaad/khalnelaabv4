@@ -129,7 +129,7 @@ export default function Home() {
               {getCurrentPrice()} ريال
             </span>
 
-            <span>تدفعونها مرة وحدة بدون اشتراك</span>
+            <span>تصير لكم للأبد بدون اشتراك</span>
           </Link>
 
           <Link
