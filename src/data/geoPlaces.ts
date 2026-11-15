@@ -132,7 +132,7 @@ export const GEO_PLACES: GeoPlace[] = [
   },
   {
     id: "buraidah",
-    place: "سوق التمور",
+    place: "طريق الملك فهد",
     region: "بريدة",
     image: "/images/geo/buraidah.jpg",
     lat: 26.3515,
