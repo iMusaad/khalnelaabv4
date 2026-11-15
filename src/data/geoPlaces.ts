@@ -84,6 +84,18 @@ export const GEO_PLACES: GeoPlace[] = [
       "https://commons.wikimedia.org/wiki/File:Old_Jeddah_(Al_Balad)_architecture_3_Feb_2022.jpg",
   },
   {
+    id: "rijal-almaa",
+    place: "قرية رجال ألمع",
+    region: "عسير",
+    image: "/images/geo/rijal-almaa.jpg",
+    lat: 18.184,
+    lon: 42.2522,
+    author: "Saudi Press Agency (SPA)",
+    license: "CC BY-SA 4.0",
+    source:
+      "https://commons.wikimedia.org/wiki/File:Rijal_Almaa,_Aseer,_Saudi_Arabia_(2020).jpg",
+  },
+  {
     id: "elephant-rock",
     place: "جبل الفيل",
     region: "العلا",
@@ -129,5 +141,52 @@ export const GEO_PLACES: GeoPlace[] = [
     license: "CC BY 4.0",
     source:
       "https://commons.wikimedia.org/wiki/File:King_Fahad_Road_in_Buraydah.jpg",
+  },
+  {
+    id: "taif-hada",
+    place: "الهدا",
+    region: "الطائف",
+    image: "/images/geo/taif-hada.jpg",
+    lat: 21.3661,
+    lon: 40.2629,
+    author: "Richard Mortel",
+    license: "CC BY 2.0",
+    source:
+      "https://commons.wikimedia.org/wiki/File:Al-Hada,_near_al-Taif,_Saudi_Arabia_(2).jpg",
+  },
+  {
+    id: "tabuk-castle",
+    place: "قلعة تبوك",
+    region: "تبوك",
+    image: "/images/geo/tabuk-castle.jpg",
+    lat: 28.3838,
+    lon: 36.5662,
+    author: "Heritage Commission",
+    license: "CC BY-SA 4.0",
+    source:
+      "https://commons.wikimedia.org/wiki/File:%D9%82%D9%84%D8%B9%D8%A9_%D8%AA%D8%A8%D9%88%D9%83.jpg",
+  },
+  {
+    id: "hegra",
+    place: "الحجر (مدائن صالح)",
+    region: "العلا",
+    image: "/images/geo/hegra.jpg",
+    lat: 26.7917,
+    lon: 37.9536,
+    author: "Following Hadrian",
+    license: "CC BY-SA 2.0",
+    source:
+      "https://commons.wikimedia.org/wiki/File:27,_Hegra_(Mada%27in_Salih),_Saudi_Arabia_-_53535097234.jpg",
+  },
+  {
+    id: "uhud",
+    place: "جبل أحد",
+    region: "المدينة المنورة",
+    image: "/images/geo/uhud.jpg",
+    lat: 24.5,
+    lon: 39.6167,
+    author: "Adiput (talk)",
+    license: "Public domain",
+    source: "https://commons.wikimedia.org/wiki/File:Mount_Uhud.JPG",
   },
 ];
