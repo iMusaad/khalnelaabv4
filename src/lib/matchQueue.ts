@@ -12,7 +12,8 @@ export type GameType =
   | "country"
   | "club"
   | "car"
-  | "zoom";
+  | "zoom"
+  | "geo";
 
 export type Round = {
   game: GameType;
@@ -31,6 +32,7 @@ export const VALID_GAMES: GameType[] = [
   "club",
   "car",
   "zoom",
+  "geo",
 ];
 
 export const DEFAULT_ROUNDS: Record<GameType, number> = {
@@ -45,6 +47,7 @@ export const DEFAULT_ROUNDS: Record<GameType, number> = {
   club: 1,
   car: 1,
   zoom: 1,
+  geo: 1,
 };
 
 export function isGameType(value: string | null): value is GameType {

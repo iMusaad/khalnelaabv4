@@ -135,6 +135,17 @@ export const HOW_TO_PLAY: HowToPlay[] = [
   },
 
   {
+    id: "geo",
+    image: "/images/posters/Geogame.png",
+    title: "وين هذا؟",
+    how: [
+      "تطلع صورة لمكان بالسعودية",
+      "حطوا الدبوس على الخريطة وين تتوقعون المكان",
+      "كل ما قربتوا أكثر، أخذتوا نقاط أكثر، لين 5 نقاط",
+    ],
+  },
+
+  {
     id: "country",
     image: "/images/posters/Countries-2.png",
     title: "وش علمك؟",

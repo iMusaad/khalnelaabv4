@@ -20,7 +20,8 @@ type SetupGameId =
   | "country"
   | "club"
   | "car"
-  | "zoom";
+  | "zoom"
+  | "geo";
 
 type SetupGameProps = {
   mode?: "session" | "quick";
@@ -102,6 +103,11 @@ const GAMES: {
     name: "عينك عالبوستر",
     image: "/images/posters/Postergame.png",
   },
+  {
+    id: "geo",
+    name: "وين هذا؟",
+    image: "/images/posters/Geogame.png",
+  },
 ];
 
 function getRoundOptions(gameId: string) {
@@ -145,6 +151,7 @@ const MINUTES_PER_ROUND: Record<SetupGameId, number> = {
   club: 5,
   car: 4,
   zoom: 4,
+  geo: 5,
 };
 
 function estimateMinutes(
