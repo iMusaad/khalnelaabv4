@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState, type MouseEvent } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 
 import GameLayout from "@/components/match/GameLayout";
-import { GEO_MAP } from "@/data/geoMap";
+import { GEO_CITIES, GEO_MAP } from "@/data/geoMap";
 import { GEO_PLACES, type GeoPlace } from "@/data/geoPlaces";
 import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
@@ -11,21 +11,11 @@ import type { WinnerType } from "@/types/game";
 
 const PLACES_PER_ROUND = 4;
 
-const SCORE_STEPS = [
-  { km: 50, points: 5 },
-  { km: 150, points: 4 },
-  { km: 300, points: 3 },
-  { km: 500, points: 2 },
-  { km: 800, points: 1 },
-];
-
-const LANDMARKS = [
-  { name: "الرياض", lat: 24.71, lon: 46.68 },
-  { name: "جدة", lat: 21.49, lon: 39.19 },
-  { name: "الدمام", lat: 26.43, lon: 50.1 },
-];
+const TEAM_COLORS = { side1: "#ff5a5f", side2: "#2f9bff" } as const;
 
 type TeamSide = "side1" | "side2";
+
+type Phase = "first" | "second" | "revealed";
 
 type Point = { lat: number; lon: number };
 
@@ -34,10 +24,15 @@ const placeDeck = createDeck(GEO_PLACES);
 type GeoRoundState = {
   rounds: GeoPlace[];
   index: number;
-  guess: Point | null;
-  revealed: boolean;
+  phase: Phase;
+  guesses: Record<TeamSide, Point | null>;
   side1Score: number;
   side2Score: number;
+};
+
+const EMPTY_GUESSES: Record<TeamSide, Point | null> = {
+  side1: null,
+  side2: null,
 };
 
 function toMap({ lat, lon }: Point) {
@@ -65,18 +60,6 @@ function distanceKm(a: Point, b: Point) {
   return 6371 * 2 * Math.asin(Math.sqrt(h));
 }
 
-function pointsFor(km: number) {
-  return SCORE_STEPS.find((step) => km <= step.km)?.points ?? 0;
-}
-
-function pointsLabel(points: number) {
-  if (points === 0) return "ولا نقطة";
-  if (points === 1) return "نقطة";
-  if (points === 2) return "نقطتين";
-
-  return `${points} نقاط`;
-}
-
 export default function GeoGame({
   side1Name,
   side2Name,
@@ -94,9 +77,9 @@ export default function GeoGame({
 
   const [index, setIndex] = useState(0);
 
-  const [guess, setGuess] = useState<Point | null>(null);
+  const [phase, setPhase] = useState<Phase>("first");
 
-  const [revealed, setRevealed] = useState(false);
+  const [guesses, setGuesses] = useState(EMPTY_GUESSES);
 
   const [side1Score, setSide1Score] = useState(0);
 
@@ -109,11 +92,11 @@ export default function GeoGame({
 
     const saved = readRoundState<GeoRoundState>("geo", roundKey);
 
-    if (saved && saved.rounds.length > 0) {
+    if (saved && saved.rounds.length > 0 && saved.guesses) {
       setRounds(saved.rounds);
       setIndex(saved.index);
-      setGuess(saved.guess);
-      setRevealed(saved.revealed);
+      setPhase(saved.phase);
+      setGuesses(saved.guesses);
       setSide1Score(saved.side1Score);
       setSide2Score(saved.side2Score);
       return;
@@ -121,8 +104,8 @@ export default function GeoGame({
 
     setRounds(placeDeck.draw(PLACES_PER_ROUND));
     setIndex(0);
-    setGuess(null);
-    setRevealed(false);
+    setPhase("first");
+    setGuesses(EMPTY_GUESSES);
     setSide1Score(0);
     setSide2Score(0);
   }, [roundKey]);
@@ -135,52 +118,59 @@ export default function GeoGame({
     writeRoundState<GeoRoundState>("geo", roundKey, {
       rounds,
       index,
-      guess,
-      revealed,
+      phase,
+      guesses,
       side1Score,
       side2Score,
     });
-  }, [
-    loaded,
-    roundKey,
-    rounds,
-    index,
-    guess,
-    revealed,
-    side1Score,
-    side2Score,
-  ]);
+  }, [loaded, roundKey, rounds, index, phase, guesses, side1Score, side2Score]);
 
   const current = rounds[index];
 
-  const activeSide: TeamSide = useMemo(
-    () => (index % 2 === 0 ? "side1" : "side2"),
-    [index],
-  );
+  const firstSide: TeamSide = index % 2 === 0 ? "side1" : "side2";
+  const secondSide: TeamSide = firstSide === "side1" ? "side2" : "side1";
+  const activeSide: TeamSide = phase === "second" ? secondSide : firstSide;
 
-  const activeTeamName =
-    activeSide === "side1" ? side1Name || "فريق 1" : side2Name || "فريق 2";
+  const names: Record<TeamSide, string> = {
+    side1: side1Name || "فريق 1",
+    side2: side2Name || "فريق 2",
+  };
 
-  const km = current && guess ? distanceKm(guess, current) : null;
+  const distances =
+    phase === "revealed" && current && guesses.side1 && guesses.side2
+      ? {
+          side1: distanceKm(guesses.side1, current),
+          side2: distanceKm(guesses.side2, current),
+        }
+      : null;
 
-  const earned = km === null ? 0 : pointsFor(km);
+  const photoWinner: WinnerType | null = distances
+    ? Math.abs(distances.side1 - distances.side2) < 1
+      ? "none"
+      : distances.side1 < distances.side2
+        ? "side1"
+        : "side2"
+    : null;
 
   function placePin(event: MouseEvent<SVGSVGElement>) {
-    if (revealed) {
+    if (phase === "revealed") {
       return;
     }
 
-    const svg = event.currentTarget;
-    const rect = svg.getBoundingClientRect();
+    const rect = event.currentTarget.getBoundingClientRect();
     const x = ((event.clientX - rect.left) / rect.width) * GEO_MAP.width;
     const y = ((event.clientY - rect.top) / rect.height) * GEO_MAP.height;
 
-    setGuess(fromMap(x, y));
+    setGuesses((previous) => ({ ...previous, [activeSide]: fromMap(x, y) }));
+  }
+
+  function confirmPin() {
+    setPhase(phase === "first" ? "second" : "revealed");
   }
 
   function next() {
-    const next1 = side1Score + (activeSide === "side1" ? earned : 0);
-    const next2 = side2Score + (activeSide === "side2" ? earned : 0);
+    const next1 = side1Score + (photoWinner === "side1" ? 1 : 0);
+    const next2 = side2Score + (photoWinner === "side2" ? 1 : 0);
 
     setSide1Score(next1);
     setSide2Score(next2);
@@ -191,8 +181,8 @@ export default function GeoGame({
     }
 
     setIndex((value) => value + 1);
-    setGuess(null);
-    setRevealed(false);
+    setPhase("first");
+    setGuesses(EMPTY_GUESSES);
   }
 
   if (!current) {
@@ -213,32 +203,47 @@ export default function GeoGame({
     );
   }
 
-  const guessPoint = guess ? toMap(guess) : null;
   const answerPoint = toMap(current);
+
+  const visiblePins = (["side1", "side2"] as TeamSide[]).filter(
+    (side) => guesses[side] && (phase === "revealed" || side === activeSide),
+  );
 
   return (
     <GameLayout
       title="وين هذا؟"
-      side1={side1Name || "فريق 1"}
-      side2={side2Name || "فريق 2"}
+      side1={names.side1}
+      side2={names.side2}
       side1Score={side1Score}
       side2Score={side2Score}
-      turn={activeTeamName}
-      turnSide={activeSide}
+      turn={phase === "revealed" ? names[firstSide] : names[activeSide]}
+      turnSide={phase === "revealed" ? firstSide : activeSide}
       currentRound={currentRound}
       game="geo"
     >
       <div className="flex flex-col gap-3">
         <p className="text-center text-sm font-bold text-white/50">
           الصورة {index + 1} من {rounds.length}
-          {!revealed && " · حطوا الدبوس على الخريطة"}
+          {phase !== "revealed" && (
+            <>
+              {" · "}
+              <span
+                className="font-black"
+                style={{ color: TEAM_COLORS[activeSide] }}
+              >
+                {names[activeSide]}
+              </span>{" "}
+              حطوا دبوسكم
+              {phase === "second" && " (دبوس الفريق الأول مخفي)"}
+            </>
+          )}
         </p>
 
         <div className="mx-auto grid w-full max-w-4xl items-start gap-3 md:grid-cols-2">
           <figure className="overflow-hidden rounded-3xl bg-black shadow-[0_6px_0_#0b0818]">
             <img
               src={current.image}
-              alt={revealed ? current.place : ""}
+              alt={phase === "revealed" ? current.place : ""}
               draggable={false}
               className="aspect-[4/3] w-full select-none object-cover"
             />
@@ -249,8 +254,11 @@ export default function GeoGame({
               viewBox={`0 0 ${GEO_MAP.width} ${GEO_MAP.height}`}
               onClick={placePin}
               role="img"
+              direction="ltr"
               aria-label="خريطة السعودية، اضغطوا لتحطون الدبوس"
-              className={`block h-auto w-full ${revealed ? "" : "cursor-crosshair"}`}
+              className={`block h-auto w-full ${
+                phase === "revealed" ? "" : "cursor-crosshair"
+              }`}
             >
               <path
                 d={GEO_MAP.path}
@@ -260,7 +268,7 @@ export default function GeoGame({
                 strokeLinejoin="round"
               />
 
-              {LANDMARKS.map((city) => {
+              {GEO_CITIES.map((city) => {
                 const point = toMap(city);
 
                 return (
@@ -268,16 +276,16 @@ export default function GeoGame({
                     <circle
                       cx={point.x}
                       cy={point.y}
-                      r={7}
-                      fill="rgba(255,255,255,0.45)"
+                      r={5}
+                      fill="rgba(255,255,255,0.5)"
                     />
                     <text
-                      x={point.x}
-                      y={point.y - 16}
-                      textAnchor="middle"
-                      fontSize={30}
+                      x={point.x + city.dx}
+                      y={point.y + city.dy}
+                      textAnchor={city.anchor}
+                      fontSize={22}
                       fontWeight={800}
-                      fill="rgba(255,255,255,0.45)"
+                      fill="rgba(255,255,255,0.5)"
                     >
                       {city.name}
                     </text>
@@ -285,19 +293,25 @@ export default function GeoGame({
                 );
               })}
 
-              {revealed && guessPoint && (
-                <line
-                  x1={guessPoint.x}
-                  y1={guessPoint.y}
-                  x2={answerPoint.x}
-                  y2={answerPoint.y}
-                  stroke="#ffc23d"
-                  strokeWidth={4}
-                  strokeDasharray="12 10"
-                />
-              )}
+              {phase === "revealed" &&
+                visiblePins.map((side) => {
+                  const point = toMap(guesses[side] as Point);
 
-              {revealed && (
+                  return (
+                    <line
+                      key={`line-${side}`}
+                      x1={point.x}
+                      y1={point.y}
+                      x2={answerPoint.x}
+                      y2={answerPoint.y}
+                      stroke={TEAM_COLORS[side]}
+                      strokeWidth={4}
+                      strokeDasharray="12 10"
+                    />
+                  );
+                })}
+
+              {phase === "revealed" && (
                 <circle
                   cx={answerPoint.x}
                   cy={answerPoint.y}
@@ -308,41 +322,57 @@ export default function GeoGame({
                 />
               )}
 
-              {guessPoint && (
-                <circle
-                  cx={guessPoint.x}
-                  cy={guessPoint.y}
-                  r={16}
-                  fill={activeSide === "side1" ? "#ff5a5f" : "#2f9bff"}
-                  stroke="#ffffff"
-                  strokeWidth={5}
-                />
-              )}
+              {visiblePins.map((side) => {
+                const point = toMap(guesses[side] as Point);
+
+                return (
+                  <circle
+                    key={`pin-${side}`}
+                    cx={point.x}
+                    cy={point.y}
+                    r={16}
+                    fill={TEAM_COLORS[side]}
+                    stroke="#ffffff"
+                    strokeWidth={5}
+                  />
+                );
+              })}
             </svg>
           </div>
         </div>
 
-        {revealed && km !== null && (
+        {distances && (
           <div className="animate-fade-in-up text-center">
             <p className="text-2xl font-black text-white sm:text-3xl">
               {current.place}
             </p>
 
             <p className="mt-1 text-sm font-bold text-white/60">
-              {current.region} · بعدتوا {Math.round(km)} كم ·{" "}
-              <span className="font-black text-[#ffc23d]">
-                {pointsLabel(earned)}
-              </span>
+              {current.region}
+            </p>
+
+            <div className="mt-2 flex flex-wrap justify-center gap-x-5 gap-y-1 text-sm font-black">
+              {(["side1", "side2"] as TeamSide[]).map((side) => (
+                <span key={side} style={{ color: TEAM_COLORS[side] }}>
+                  {names[side]}: {Math.round(distances[side])} كم
+                </span>
+              ))}
+            </div>
+
+            <p className="mt-2 text-lg font-black text-[#ffc23d]">
+              {photoWinner === "none"
+                ? "تعادل!"
+                : `${names[photoWinner as TeamSide]} أقرب وياخذ النقطة`}
             </p>
           </div>
         )}
 
         <div className="flex justify-center">
-          {!revealed ? (
+          {phase !== "revealed" ? (
             <button
               type="button"
-              onClick={() => setRevealed(true)}
-              disabled={!guess}
+              onClick={confirmPin}
+              disabled={!guesses[activeSide]}
               className="btn-primary min-w-[180px] disabled:opacity-50"
             >
               ثبّتوا الدبوس
