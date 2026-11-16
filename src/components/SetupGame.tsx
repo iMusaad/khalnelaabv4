@@ -76,7 +76,7 @@ const GAMES: {
   {
     id: "geo",
     name: "ثبّت الموقع",
-    image: "/images/posters/Geogame-2.png",
+    image: "/images/posters/Geogame-3.png",
   },
   {
     id: "categories",

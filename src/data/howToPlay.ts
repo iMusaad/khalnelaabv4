@@ -136,7 +136,7 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "geo",
-    image: "/images/posters/Geogame-2.png",
+    image: "/images/posters/Geogame-3.png",
     title: "ثبّت الموقع",
     how: [
       "تطلع صورة لمكان بالسعودية",
