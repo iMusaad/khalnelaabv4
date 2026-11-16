@@ -44,8 +44,8 @@ export const ALL_HOME_GAMES: HomeGame[] = [
   },
   {
     id: "geo",
-    image: "/images/posters/Geogame.png",
-    title: "وين هذا؟",
+    image: "/images/posters/Geogame-3.png",
+    title: "ثبّت الموقع",
     text: "صورة لمكان بالسعودية، حطوا الدبوس على الخريطة",
   },
   {

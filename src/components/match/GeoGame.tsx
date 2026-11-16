@@ -211,7 +211,7 @@ export default function GeoGame({
 
   return (
     <GameLayout
-      title="وين هذا؟"
+      title="ثبّت الموقع"
       side1={names.side1}
       side2={names.side2}
       side1Score={side1Score}
