@@ -10,12 +10,6 @@ export type UpcomingGame = {
 
 export const UPCOMING_GAMES: UpcomingGame[] = [
   {
-    id: "categories",
-    name: "إنسان حيوان نبات جماد بلاد",
-    image: "/images/posters/Categoriesgame-2.png",
-    content: ["مخفية حالياً"],
-  },
-  {
     id: "zoom",
     name: "عينك عالبوستر",
     image: "/images/posters/Postergame.png",

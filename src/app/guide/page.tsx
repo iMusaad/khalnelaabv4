@@ -5,12 +5,7 @@ import { posterThumb } from "@/lib/poster";
 import Link from "next/link";
 import { useState } from "react";
 import HomeIcon from "@/components/HomeIcon";
-import { HOW_TO_PLAY } from "@/data/howToPlay";
-import { UPCOMING_GAME_IDS } from "@/data/upcomingGames";
-
-const games = HOW_TO_PLAY.filter(
-  (game) => !UPCOMING_GAME_IDS.includes(game.id),
-);
+import { HOW_TO_PLAY as games } from "@/data/howToPlay";
 
 export default function GuidePage() {
   const [flippedCard, setFlippedCard] = useState<number | null>(null);
