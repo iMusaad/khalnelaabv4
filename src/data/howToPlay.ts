@@ -136,8 +136,8 @@ export const HOW_TO_PLAY: HowToPlay[] = [
 
   {
     id: "geo",
-    image: "/images/posters/Geogame.png",
-    title: "وين هذا؟",
+    image: "/images/posters/Geogame-2.png",
+    title: "ثبّت الموقع",
     how: [
       "تطلع صورة لمكان بالسعودية",
       "حطوا الدبوس على الخريطة وين تتوقعون المكان",
