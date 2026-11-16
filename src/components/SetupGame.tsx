@@ -74,6 +74,11 @@ const GAMES: {
     image: "/images/posters/Countries-2.png",
   },
   {
+    id: "geo",
+    name: "وين هذا؟",
+    image: "/images/posters/Geogame.png",
+  },
+  {
     id: "categories",
     name: "إنسان حيوان نبات جماد بلاد",
     image: "/images/posters/Categoriesgame-2.png",
@@ -102,11 +107,6 @@ const GAMES: {
     id: "zoom",
     name: "عينك عالبوستر",
     image: "/images/posters/Postergame.png",
-  },
-  {
-    id: "geo",
-    name: "وين هذا؟",
-    image: "/images/posters/Geogame.png",
   },
 ];
 

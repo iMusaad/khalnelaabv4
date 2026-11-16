@@ -33,7 +33,7 @@ export default function QuickPage() {
             <div
               key={game.id}
               className={
-                index === HOME_GAMES.length - 1
+                HOME_GAMES.length % 3 === 1 && index === HOME_GAMES.length - 1
                   ? "col-start-2 sm:col-start-auto"
                   : ""
               }
