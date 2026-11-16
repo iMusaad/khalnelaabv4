@@ -1,3 +1,5 @@
+import { UPCOMING_GAME_IDS } from "@/data/upcomingGames";
+
 export type HomeGame = {
   id: string;
   title: string;
@@ -6,7 +8,7 @@ export type HomeGame = {
   image: string;
 };
 
-export const HOME_GAMES: HomeGame[] = [
+export const ALL_HOME_GAMES: HomeGame[] = [
   {
     id: "logo",
     image: "/images/posters/Logogame-2.png",
@@ -71,3 +73,7 @@ export const HOME_GAMES: HomeGame[] = [
     text: "من الفئات اللي تختارونها",
   },
 ];
+
+export const HOME_GAMES = ALL_HOME_GAMES.filter(
+  (game) => !UPCOMING_GAME_IDS.includes(game.id),
+);
