@@ -3,7 +3,7 @@
 import { useEffect, useState, type MouseEvent } from "react";
 
 import GameLayout from "@/components/match/GameLayout";
-import { GEO_CITIES, GEO_MAP } from "@/data/geoMap";
+import { GEO_CITIES, GEO_MAP, GEO_REGIONS } from "@/data/geoMap";
 import { GEO_PLACES, type GeoPlace } from "@/data/geoPlaces";
 import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
@@ -239,7 +239,7 @@ export default function GeoGame({
           )}
         </p>
 
-        <div className="mx-auto grid w-full max-w-4xl items-start gap-3 md:grid-cols-2">
+        <div className="mx-auto grid w-full max-w-6xl items-center gap-3 md:grid-cols-[2fr_3fr]">
           <figure className="overflow-hidden rounded-3xl bg-black shadow-[0_6px_0_#0b0818]">
             <img
               src={current.image}
@@ -260,12 +260,24 @@ export default function GeoGame({
                 phase === "revealed" ? "" : "cursor-crosshair"
               }`}
             >
+              {GEO_REGIONS.map((region, regionIndex) => (
+                <path
+                  key={region.name}
+                  d={region.path}
+                  fill={regionIndex % 2 === 0 ? "#2b2252" : "#33295f"}
+                  stroke="#6b5fa6"
+                  strokeWidth={2}
+                  strokeLinejoin="round"
+                />
+              ))}
+
               <path
                 d={GEO_MAP.path}
-                fill="#2b2252"
-                stroke="#6b5fa6"
-                strokeWidth={3}
+                fill="none"
+                stroke="#8a7fc4"
+                strokeWidth={4}
                 strokeLinejoin="round"
+                className="pointer-events-none"
               />
 
               {GEO_CITIES.map((city) => {
