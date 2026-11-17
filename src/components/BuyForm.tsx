@@ -58,7 +58,7 @@ export default function BuyForm({
         ? {
             apple_pay: {
               country: "SA",
-              label: "خل نلعب",
+              label: "Khal Nelab",
               validate_merchant_url:
                 "https://api.moyasar.com/v1/applepay/initiate",
             },
