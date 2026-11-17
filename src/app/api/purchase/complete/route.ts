@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { claimDevice, setDeviceCookie } from "@/lib/devices";
 import { sendLicenseEmail } from "@/lib/email";
 import { LICENSE_COOKIE, LICENSE_COOKIE_OPTIONS } from "@/lib/licenseCookie";
 import { isValidPaymentId } from "@/lib/payment";
@@ -6,6 +7,7 @@ import {
   canConfirmPayments,
   findPaidPayment,
   licenseForPayment,
+  licenseIdForPayment,
 } from "@/lib/purchase";
 import { getSiteOrigin } from "@/lib/siteUrl";
 
@@ -43,9 +45,16 @@ export async function GET(request: NextRequest) {
   }
 
   const code = await licenseForPayment(payment.id);
+  const licenseId = await licenseIdForPayment(payment.id);
 
-  if (!code) {
+  if (!code || !licenseId) {
     return redirectTo(request, "/buy?error=config");
+  }
+
+  const device = await claimDevice(request, licenseId);
+
+  if (!device.allowed) {
+    return redirectTo(request, "/unlock?error=devices");
   }
 
   const email = payment.metadata?.email;
@@ -60,6 +69,7 @@ export async function GET(request: NextRequest) {
 
   const response = redirectTo(request, "/buy/success");
   response.cookies.set(LICENSE_COOKIE, code, LICENSE_COOKIE_OPTIONS);
+  setDeviceCookie(response, device.deviceId);
 
   return response;
 }

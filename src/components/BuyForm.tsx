@@ -23,11 +23,13 @@ export default function BuyForm({
   publishableKey,
   amount,
   emailEnabled,
+  applePay = false,
   next,
 }: {
   publishableKey: string;
   amount: number;
   emailEnabled: boolean;
+  applePay?: boolean;
   next: string;
 }) {
   const [email, setEmail] = useState("");
@@ -51,16 +53,21 @@ export default function BuyForm({
       description: "خل نلعب - اللعبة كاملة",
       publishable_api_key: publishableKey,
       callback_url: `${origin}/api/purchase/complete`,
-      methods: ["creditcard", "applepay"],
-      apple_pay: {
-        country: "SA",
-        label: "خل نلعب",
-        validate_merchant_url: "https://api.moyasar.com/v1/applepay/initiate",
-      },
+      methods: applePay ? ["creditcard", "applepay"] : ["creditcard"],
+      ...(applePay
+        ? {
+            apple_pay: {
+              country: "SA",
+              label: "خل نلعب",
+              validate_merchant_url:
+                "https://api.moyasar.com/v1/applepay/initiate",
+            },
+          }
+        : {}),
       language: "ar",
       metadata: trimmedEmail ? { email: trimmedEmail } : {},
     });
-  }, [step, scriptReady, amount, publishableKey, email]);
+  }, [step, scriptReady, amount, publishableKey, email, applePay]);
 
   if (!publishableKey) {
     return (
@@ -189,7 +196,9 @@ export default function BuyForm({
                   لحظة نجهز الدفع...
                 </p>
               )}
-              <div className="mysr-form" dir="ltr" />
+              <div className="rounded-2xl bg-white p-4 sm:p-5">
+                <div className="mysr-form" dir="ltr" />
+              </div>
             </>
           )}
 

@@ -1,5 +1,5 @@
 import { getMessageStore } from "@/lib/messageStore";
-import { createLicenseCode, derivePurchaseId } from "@/lib/license";
+import { createLicenseCode, derivePurchaseId, toHex } from "@/lib/license";
 import {
   fetchMoyasarPayment,
   isPaidPurchase,
@@ -37,6 +37,12 @@ export async function licenseForPayment(paymentId: string) {
     id: await derivePurchaseId(secret, paymentId),
     secret,
   });
+}
+
+export async function licenseIdForPayment(paymentId: string) {
+  const secret = process.env.LICENSE_SECRET;
+
+  return secret ? toHex(await derivePurchaseId(secret, paymentId)) : null;
 }
 
 export function canConfirmPayments() {

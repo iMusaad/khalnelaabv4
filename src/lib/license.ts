@@ -14,7 +14,8 @@ export type LicenseSecrets = {
 };
 
 export type LicenseCheck =
-  { valid: true; type: LicenseType; expiresAt: Date | null } | { valid: false };
+  | { valid: true; type: LicenseType; id: string; expiresAt: Date | null }
+  | { valid: false };
 
 const TYPE_BYTE: Record<LicenseType, number> = {
   purchase: 1,
@@ -71,6 +72,12 @@ function fromBase32(text: string) {
   }
 
   return new Uint8Array(output);
+}
+
+export function toHex(bytes: Uint8Array) {
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join(
+    "",
+  );
 }
 
 export function normalizeCode(input: string) {
@@ -214,7 +221,12 @@ export async function verifyLicenseCode(
     return { valid: false };
   }
 
-  return { valid: true, type, expiresAt };
+  return {
+    valid: true,
+    type,
+    id: toHex(payload.slice(1, 1 + ID_BYTES)),
+    expiresAt,
+  };
 }
 
 export function getLicenseSecrets(): LicenseSecrets {
