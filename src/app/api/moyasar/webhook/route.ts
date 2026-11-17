@@ -26,21 +26,33 @@ export async function POST(request: NextRequest) {
   const isPaymentEvent =
     body?.type === "payment_paid" && typeof body.data?.id === "string";
 
-  if (!isPaymentEvent && raw) {
+  const isVerification = body?.type === "webhook_verification";
+
+  if (!isPaymentEvent && !isVerification) {
+    return NextResponse.json({ ok: true });
+  }
+
+  if (isVerification) {
     const store = await getMessageStore();
 
     const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
+
+    const safeBody = JSON.stringify(
+      { ...body, secret_token: undefined },
+      null,
+      1,
+    );
 
     if (store && !(await isRateLimited(store, `hook:${ip}`))) {
       await store.put(
         "hook:last",
         JSON.stringify({
           at: new Date().toISOString(),
-          body: raw.slice(0, 2000),
+          body: safeBody.slice(0, 2000),
         }),
         { expirationTtl: 60 * 60 * 24 * 7 },
       );
-      await notifyOwner(store, `إشعار من ميسر:\n\n${raw.slice(0, 1500)}`);
+      await notifyOwner(store, `إشعار من ميسر:\n\n${safeBody.slice(0, 1500)}`);
     }
 
     return NextResponse.json({ ok: true });
