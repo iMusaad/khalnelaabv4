@@ -7,6 +7,7 @@ import { GEO_CITIES, GEO_MAP, GEO_REGIONS } from "@/data/geoMap";
 import { GEO_PLACES, type GeoPlace } from "@/data/geoPlaces";
 import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
+import { TRIAL_LIMITS } from "@/lib/trial";
 import type { WinnerType } from "@/types/game";
 
 const PLACES_PER_ROUND = 4;
@@ -20,6 +21,8 @@ type Phase = "first" | "second" | "revealed";
 type Point = { lat: number; lon: number };
 
 const placeDeck = createDeck(GEO_PLACES);
+
+const trialPlaceDeck = createDeck(GEO_PLACES.slice(0, TRIAL_LIMITS.geo));
 
 type GeoRoundState = {
   rounds: GeoPlace[];
@@ -66,12 +69,14 @@ export default function GeoGame({
   onRoundEnd,
   roundKey,
   currentRound = 1,
+  trial = false,
 }: {
   side1Name: string;
   side2Name: string;
   onRoundEnd: (winner?: WinnerType) => void;
   roundKey: number;
   currentRound?: number;
+  trial?: boolean;
 }) {
   const [rounds, setRounds] = useState<GeoPlace[]>([]);
 
@@ -102,13 +107,13 @@ export default function GeoGame({
       return;
     }
 
-    setRounds(placeDeck.draw(PLACES_PER_ROUND));
+    setRounds((trial ? trialPlaceDeck : placeDeck).draw(PLACES_PER_ROUND));
     setIndex(0);
     setPhase("first");
     setGuesses(EMPTY_GUESSES);
     setSide1Score(0);
     setSide2Score(0);
-  }, [roundKey]);
+  }, [roundKey, trial]);
 
   useEffect(() => {
     if (!loaded || rounds.length === 0) {

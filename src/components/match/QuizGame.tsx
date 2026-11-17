@@ -7,6 +7,7 @@ import { quizQuestions, quizCategoryMeta } from "@/data/quiz";
 import type { QuizCategoryKey, QuizQuestion } from "@/data/quiz";
 import { createDeck, type Deck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
+import { TRIAL_LIMITS } from "@/lib/trial";
 import type { WinnerType } from "@/types/game";
 
 const TOTAL_QUESTIONS = 6;
@@ -28,13 +29,20 @@ type TeamSide = "side1" | "side2";
 
 const quizDecks = new Map<QuizCategoryKey, Deck<QuizQuestion>>();
 
-function drawQuizQuestions(category: QuizCategoryKey) {
-  let deck = quizDecks.get(category);
+const trialQuizDecks = new Map<QuizCategoryKey, Deck<QuizQuestion>>();
+
+function drawQuizQuestions(category: QuizCategoryKey, trial: boolean) {
+  const decks = trial ? trialQuizDecks : quizDecks;
+  let deck = decks.get(category);
 
   if (!deck) {
-    deck = createDeck(quizQuestions[category] ?? []);
+    const questions = quizQuestions[category] ?? [];
 
-    quizDecks.set(category, deck);
+    deck = createDeck(
+      trial ? questions.slice(0, TRIAL_LIMITS.quiz) : questions,
+    );
+
+    decks.set(category, deck);
   }
 
   return deck.draw(TOTAL_QUESTIONS);
@@ -49,7 +57,9 @@ export default function QuizGame({
   currentRound = 1,
   timerEnabled = false,
   timerSeconds = 30,
+  trial = false,
 }: {
+  trial?: boolean;
   side1Name: string;
   side2Name: string;
 
@@ -108,7 +118,7 @@ export default function QuizGame({
       return;
     }
 
-    setQuestions(drawQuizQuestions(category));
+    setQuestions(drawQuizQuestions(category, trial));
 
     setIndex(0);
 
@@ -121,7 +131,7 @@ export default function QuizGame({
 
     setSide1HintUsed(false);
     setSide2HintUsed(false);
-  }, [category, roundKey, timerSeconds]);
+  }, [category, roundKey, timerSeconds, trial]);
 
   useEffect(() => {
     if (!loaded || questions.length === 0) {

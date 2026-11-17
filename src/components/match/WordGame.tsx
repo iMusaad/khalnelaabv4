@@ -14,6 +14,7 @@ import {
   type CellState,
 } from "@/lib/wordRules";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
+import { TRIAL_LIMITS } from "@/lib/trial";
 import type { WinnerType } from "@/types/game";
 
 type TeamSide = "side1" | "side2";
@@ -52,9 +53,11 @@ type WordRoundState = {
   side2RevealUsed?: boolean;
 };
 
-const wordDeck = createDeck(
-  WORDS.filter((word) => isPlayableWord(word.answer)),
-);
+const playableWords = WORDS.filter((word) => isPlayableWord(word.answer));
+
+const wordDeck = createDeck(playableWords);
+
+const trialWordDeck = createDeck(playableWords.slice(0, TRIAL_LIMITS.word));
 
 export default function WordGame({
   onRoundEnd,
@@ -66,7 +69,9 @@ export default function WordGame({
   currentRound = 1,
   timerEnabled = false,
   timerSeconds = 30,
+  trial = false,
 }: {
+  trial?: boolean;
   onRoundEnd: (winner?: WinnerType) => void;
   roundKey: number;
   side1Name?: string;
@@ -190,7 +195,7 @@ export default function WordGame({
       return;
     }
 
-    const [randomWord] = wordDeck.draw(1);
+    const [randomWord] = (trial ? trialWordDeck : wordDeck).draw(1);
 
     if (!randomWord) {
       setAnswer("");

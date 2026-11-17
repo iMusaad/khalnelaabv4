@@ -1,9 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { posterThumb } from "@/lib/poster";
 import PosterFlip from "@/components/PosterFlip";
 import TeamSplitter from "@/components/TeamSplitter";
+import LockIcon from "@/components/LockIcon";
+import { FREE_QUIZ_CATEGORIES, isFreeGame } from "@/lib/trial";
 import { UPCOMING_GAME_IDS } from "@/data/upcomingGames";
 import type { Dispatch, SetStateAction } from "react";
 import PixelHero from "@/components/PixelHero";
@@ -41,6 +44,7 @@ type SetupGameProps = {
   timerSeconds: number;
   setTimerSeconds: (value: number) => void;
   onStart: () => void;
+  trial?: boolean;
 };
 
 const GAMES: {
@@ -187,7 +191,10 @@ export default function SetupGame({
   timerSeconds,
   setTimerSeconds,
   onStart,
+  trial = false,
 }: SetupGameProps) {
+  const router = useRouter();
+
   const isQuickMode = mode === "quick";
 
   const needsQuizCategory =
@@ -202,8 +209,19 @@ export default function SetupGame({
         ? "اختاروا فئة للأسئلة"
         : "";
 
+  function goBuy() {
+    router.push(
+      `/buy?next=${encodeURIComponent(window.location.pathname + window.location.search)}`,
+    );
+  }
+
   function toggleGame(id: SetupGameId) {
     if (isQuickMode) {
+      return;
+    }
+
+    if (trial && !isFreeGame(id)) {
+      goBuy();
       return;
     }
 
@@ -234,6 +252,11 @@ export default function SetupGame({
   }
 
   function toggleCategory(category: QuizCategoryKey) {
+    if (trial && !FREE_QUIZ_CATEGORIES.includes(category)) {
+      goBuy();
+      return;
+    }
+
     setQuizCategories((previous) =>
       previous.includes(category)
         ? previous.filter((current) => current !== category)
@@ -377,6 +400,8 @@ export default function SetupGame({
                 !active &&
                 selectedGames.length >= MAX_SESSION_GAMES;
 
+              const paywalled = trial && !isFreeGame(game.id);
+
               return (
                 <div
                   key={game.id}
@@ -392,7 +417,7 @@ export default function SetupGame({
                     <button
                       type="button"
                       onClick={() => toggleGame(game.id)}
-                      disabled={isQuickMode || locked}
+                      disabled={isQuickMode || (locked && !paywalled)}
                       aria-pressed={isQuickMode ? undefined : active}
                       aria-label={game.name}
                       className={`relative block h-full w-full overflow-hidden rounded-2xl outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${active ? "outline-[#ffc23d]" : "outline-transparent"} ${
@@ -411,6 +436,14 @@ export default function SetupGame({
                         priority
                         className="object-cover"
                       />
+
+                      {paywalled && (
+                        <span className="absolute inset-0 z-10 flex flex-col items-center justify-end bg-[#130e28]/55 pb-3">
+                          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ffc23d] text-[#241339] shadow-[0_3px_0_#c27700]">
+                            <LockIcon />
+                          </span>
+                        </span>
+                      )}
 
                       {!isQuickMode && active && (
                         <span
@@ -458,6 +491,10 @@ export default function SetupGame({
                               category.key,
                             );
 
+                            const categoryLocked =
+                              trial &&
+                              !FREE_QUIZ_CATEGORIES.includes(category.key);
+
                             return (
                               <button
                                 key={category.key}
@@ -471,6 +508,11 @@ export default function SetupGame({
                                 }`}
                               >
                                 {category.title}
+                                {categoryLocked && (
+                                  <span className="ms-1 inline-block align-middle opacity-70">
+                                    <LockIcon small />
+                                  </span>
+                                )}
                               </button>
                             );
                           })}
