@@ -1,8 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { sendLicenseEmail } from "@/lib/email";
-import { createLicenseCode, derivePurchaseId } from "@/lib/license";
 import { LICENSE_COOKIE, LICENSE_COOKIE_OPTIONS } from "@/lib/licenseCookie";
-import { fetchMoyasarPayment, isPaidPurchase } from "@/lib/payment";
+import { isValidPaymentId } from "@/lib/payment";
+import {
+  canConfirmPayments,
+  findPaidPayment,
+  licenseForPayment,
+} from "@/lib/purchase";
 import { getSiteOrigin } from "@/lib/siteUrl";
 
 export const dynamic = "force-dynamic";
@@ -13,30 +17,40 @@ function redirectTo(request: NextRequest, path: string) {
 
 export async function GET(request: NextRequest) {
   const paymentId = request.nextUrl.searchParams.get("id") ?? "";
+  const status = request.nextUrl.searchParams.get("status");
   const from = request.nextUrl.searchParams.get("from");
-  const failedPath =
-    from === "restore" ? "/unlock?error=payment" : "/buy?error=payment";
-  const secret = process.env.LICENSE_SECRET;
+  const restore = from === "restore";
+  const failedPath = restore ? "/unlock?error=payment" : "/buy?error=payment";
 
-  if (!secret) {
+  if (!process.env.LICENSE_SECRET || !canConfirmPayments()) {
     return redirectTo(request, "/buy?error=config");
   }
 
-  const payment = await fetchMoyasarPayment(paymentId);
-
-  if (!payment || !isPaidPurchase(payment)) {
+  if (!isValidPaymentId(paymentId) || (status && status !== "paid")) {
     return redirectTo(request, failedPath);
   }
 
-  const code = await createLicenseCode({
-    type: "purchase",
-    id: await derivePurchaseId(secret, payment.id),
-    secret,
-  });
+  const payment = await findPaidPayment(paymentId);
+
+  if (!payment) {
+    const params = new URLSearchParams({ id: paymentId });
+
+    if (restore) {
+      params.set("from", "restore");
+    }
+
+    return redirectTo(request, `/buy/pending?${params}`);
+  }
+
+  const code = await licenseForPayment(payment.id);
+
+  if (!code) {
+    return redirectTo(request, "/buy?error=config");
+  }
 
   const email = payment.metadata?.email;
 
-  if (email && from !== "restore") {
+  if (email && !restore && !process.env.MOYASAR_WEBHOOK_SECRET) {
     await sendLicenseEmail({
       to: email,
       code,

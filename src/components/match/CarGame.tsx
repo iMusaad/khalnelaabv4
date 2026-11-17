@@ -9,7 +9,7 @@ import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
 import type { WinnerType } from "@/types/game";
 
-const CARS_PER_ROUND = 2;
+const CARS_PER_ROUND = 4;
 
 const ZOOM_LEVELS = [4, 2.2, 1];
 
