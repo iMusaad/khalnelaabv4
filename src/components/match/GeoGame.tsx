@@ -10,7 +10,7 @@ import { readRoundState, writeRoundState } from "@/lib/roundState";
 import { TRIAL_LIMITS } from "@/lib/trial";
 import type { WinnerType } from "@/types/game";
 
-const PLACES_PER_ROUND = 4;
+const PLACES_PER_ROUND = 3;
 
 const TEAM_COLORS = { side1: "#ff5a5f", side2: "#2f9bff" } as const;
 
