@@ -25,35 +25,25 @@ const ERRORS: Record<string, string> = {
 
 const FEATURES = [
   {
-    title: "بلا حد",
-    text: "العبوها كل ما اجتمعتوا",
-    className: "bg-[#2f9bff] text-white shadow-[0_6px_0_#1662b8]",
-    order: 0,
-  },
-  {
     title: "مرة وحدة",
     text: "بدون اشتراك شهري",
     className: "bg-[#ff5a5f] text-white shadow-[0_6px_0_#b8323a]",
-    order: 4,
+    order: 1,
   },
   {
     title: "الجديد مجانًا",
     text: "أي لعبة نضيفها توصلك",
     className: "bg-[#3ddc84] text-[#0d3b22] shadow-[0_6px_0_#1f9a57]",
-    order: 8,
+    order: 10,
   },
 ];
 
 type Tile =
   | { kind: "feature"; feature: (typeof FEATURES)[number] }
-  | { kind: "poster"; game: (typeof HOME_GAMES)[number]; index: number };
+  | { kind: "poster"; game: (typeof HOME_GAMES)[number] };
 
 function bentoTiles(): Tile[] {
-  const tiles: Tile[] = HOME_GAMES.map((game, index) => ({
-    kind: "poster",
-    game,
-    index,
-  }));
+  const tiles: Tile[] = HOME_GAMES.map((game) => ({ kind: "poster", game }));
 
   [...FEATURES]
     .sort((x, y) => y.order - x.order)
@@ -110,27 +100,25 @@ export default async function BuyPage({
       </PixelHero>
 
       <div className="mx-auto mt-6 grid max-w-5xl gap-5 px-4 pb-6 md:grid-cols-[1.5fr_1fr] md:items-start">
-        <ul className="grid grid-flow-dense grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3">
+        <ul className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3">
           {bentoTiles().map((tile) =>
             tile.kind === "feature" ? (
               <li
                 key={tile.feature.title}
-                className={`col-span-3 flex flex-col justify-center rounded-2xl p-4 text-right sm:col-span-2 sm:p-5 ${tile.feature.className}`}
+                className={`flex aspect-[4/5] flex-col justify-center rounded-2xl p-3 text-center sm:p-4 ${tile.feature.className}`}
               >
-                <span className="block text-xl font-black sm:text-2xl">
+                <span className="block text-lg font-black leading-tight sm:text-2xl">
                   {tile.feature.title}
                 </span>
 
-                <span className="mt-1 block text-sm font-bold opacity-85 sm:text-base">
+                <span className="mt-1.5 block text-xs font-bold leading-snug opacity-85 sm:text-sm">
                   {tile.feature.text}
                 </span>
               </li>
             ) : (
               <li
                 key={tile.game.id}
-                className={`relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#221a3f] shadow-[0_5px_0_#0b0818] ${
-                  tile.index >= 9 ? "max-sm:hidden" : ""
-                }`}
+                className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#221a3f] shadow-[0_5px_0_#0b0818]"
               >
                 <Image
                   src={posterThumb(tile.game.image)}
