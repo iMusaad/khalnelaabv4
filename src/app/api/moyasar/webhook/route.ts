@@ -31,6 +31,14 @@ export async function POST(request: NextRequest) {
     const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
 
     if (store && !(await isRateLimited(store, `hook:${ip}`))) {
+      await store.put(
+        "hook:last",
+        JSON.stringify({
+          at: new Date().toISOString(),
+          body: raw.slice(0, 2000),
+        }),
+        { expirationTtl: 60 * 60 * 24 * 7 },
+      );
       await notifyOwner(store, `إشعار من ميسر:\n\n${raw.slice(0, 1500)}`);
     }
 
