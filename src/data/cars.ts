@@ -560,4 +560,40 @@ export const CARS: CarItem[] = [
     license: "CC BY 2.0",
     source: "https://commons.wikimedia.org/wiki/File:MG_GT_in_China.jpg",
   },
+  {
+    id: "camry-rear",
+    brand: "تويوتا",
+    model: "كامري",
+    image: "/images/cars/camry-rear.jpg",
+    focusX: 78,
+    focusY: 40,
+    author: "S5A-0043",
+    license: "CC BY 2.0",
+    source:
+      "https://commons.wikimedia.org/wiki/File:(USA-Massachusetts)_Private_Toyota_Camry_NJ-Z22UKZ_rear_2024-06-06.jpg",
+  },
+  {
+    id: "tahoe-rear",
+    brand: "شفروليه",
+    model: "تاهو",
+    image: "/images/cars/tahoe-rear.jpg",
+    focusX: 80,
+    focusY: 78,
+    author: "MercurySable99",
+    license: "CC BY-SA 4.0",
+    source:
+      "https://commons.wikimedia.org/wiki/File:2003_Chevrolet_Tahoe_LT,_rear_right,_06-15-2025.jpg",
+  },
+  {
+    id: "accord-rear",
+    brand: "هوندا",
+    model: "أكورد",
+    image: "/images/cars/accord-rear.jpg",
+    focusX: 38,
+    focusY: 45,
+    author: "TTTNIS",
+    license: "CC0",
+    source:
+      "https://commons.wikimedia.org/wiki/File:Honda_Accord_CV3_e-HEV_EX_rear.jpg",
+  },
 ];
