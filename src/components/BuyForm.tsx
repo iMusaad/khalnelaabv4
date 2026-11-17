@@ -83,7 +83,7 @@ export default function BuyForm({
           {emailEnabled && (
             <label className="block text-right">
               <span className="text-sm font-black text-white/80">
-                تبي نرسل لك الكود على إيميلك؟ (اختياري)
+                إيميلك (اختياري)
               </span>
 
               <input
@@ -97,7 +97,8 @@ export default function BuyForm({
               />
 
               <span className="mt-1 block text-xs font-bold text-white/45">
-                نستخدمه بس لإرسال الكود، وما نحتفظ فيه.
+                نرسل لك الكود عليه، ولو ضاع منك ترجعه بإيميلك من صفحة «عندي
+                كود».
               </span>
             </label>
           )}
