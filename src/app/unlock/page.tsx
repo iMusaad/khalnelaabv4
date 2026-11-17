@@ -21,7 +21,6 @@ export default async function UnlockPage({
       <UnlockForm
         initialCode={code ?? ""}
         next={safeNextPath(next)}
-        paymentError={error === "payment"}
         devicesError={error === "devices"}
         emailEnabled={isEmailEnabled()}
       />

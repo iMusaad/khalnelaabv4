@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { adminConfigured, adminPasswordMatches } from "@/lib/adminAuth";
 import { resetDevices } from "@/lib/devices";
-import { paymentsForEmail } from "@/lib/emailIndex";
+import { paymentsForEmail, unlinkEmail } from "@/lib/emailIndex";
 import { getLicenseSecrets, verifyLicenseCode } from "@/lib/license";
 import { getMessageStore, type KvStore } from "@/lib/messageStore";
 import { licenseIdForPayment } from "@/lib/purchase";
@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
   const body = (await request.json().catch(() => null)) as {
     password?: unknown;
     query?: unknown;
+    action?: unknown;
   } | null;
 
   const password = typeof body?.password === "string" ? body.password : "";
@@ -56,6 +57,20 @@ export async function POST(request: NextRequest) {
 
   const query =
     typeof body?.query === "string" ? body.query.trim().slice(0, 200) : "";
+  if (body?.action === "forget-email") {
+    const secret = process.env.LICENSE_SECRET;
+
+    if (!secret || !query.includes("@")) {
+      return NextResponse.json({ ok: true, found: false });
+    }
+
+    const found = (await paymentsForEmail(store, query, secret)).length > 0;
+
+    await unlinkEmail(store, query, secret);
+
+    return NextResponse.json({ ok: true, found, forgotten: true });
+  }
+
   const ids = query ? await licenseIdsFor(store, query) : [];
 
   if (ids.length === 0) {

@@ -224,11 +224,12 @@ function UnlockLinks({ next }: { next?: string }) {
   const query = next && next !== "/" ? `?next=${encodeURIComponent(next)}` : "";
 
   return (
-    <p className="mt-3 text-center text-sm font-bold text-white/60">
-      اشتريت قبل أو عندك كود؟{" "}
-      <Link href={`/unlock${query}`} className="text-cyan-200 underline">
-        فعّل من هنا
+    <div className="mt-4 border-t border-white/10 pt-4 text-center">
+      <p className="text-sm font-bold text-white/60">اشتريتها قبل؟</p>
+
+      <Link href={`/unlock${query}`} className="btn-secondary mt-2 w-full">
+        فعّلها على هذا الجهاز بالكود أو بإيميلك
       </Link>
-    </p>
+    </div>
   );
 }
