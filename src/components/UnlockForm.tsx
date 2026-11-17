@@ -8,19 +8,16 @@ import { MAX_DEVICES } from "@/lib/deviceLimit";
 export default function UnlockForm({
   initialCode,
   next,
-  paymentError,
   devicesError = false,
   emailEnabled = false,
 }: {
   initialCode: string;
   next: string;
-  paymentError: boolean;
   devicesError?: boolean;
   emailEnabled?: boolean;
 }) {
   const router = useRouter();
   const [code, setCode] = useState(initialCode);
-  const [paymentId, setPaymentId] = useState("");
   const [recoverEmail, setRecoverEmail] = useState("");
   const [recoverStatus, setRecoverStatus] = useState<
     "idle" | "sending" | "sent" | "error"
@@ -204,60 +201,6 @@ export default function UnlockForm({
           </button>
         </form>
       )}
-
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-
-          if (paymentId.trim()) {
-            window.location.assign(
-              new URL(
-                `/api/purchase/complete?from=restore&id=${encodeURIComponent(paymentId.trim())}`,
-                window.location.origin,
-              ),
-            );
-          }
-        }}
-        className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 sm:p-5"
-      >
-        <p className="text-base font-black text-white">
-          {emailEnabled ? "عندك رقم العملية؟" : "ضيعت الكود؟"}
-        </p>
-        <p className="mt-1 text-sm font-bold text-white/60">
-          اكتب رقم العملية اللي وصلك في إيصال الدفع، ونطلع لك الكود من جديد.
-        </p>
-
-        <input
-          value={paymentId}
-          onChange={(event) => setPaymentId(event.target.value)}
-          placeholder="رقم العملية"
-          dir="ltr"
-          autoCapitalize="none"
-          autoCorrect="off"
-          autoComplete="off"
-          enterKeyHint="go"
-          spellCheck={false}
-          maxLength={64}
-          className="mt-3 h-12 w-full rounded-xl border border-white/15 bg-black/25 px-4 text-center text-base font-bold text-white outline-none placeholder:text-white/30 focus:border-cyan-300/60"
-        />
-
-        {paymentError && (
-          <p
-            role="alert"
-            className="mt-2 text-center text-sm font-bold text-red-200"
-          >
-            ما لقينا عملية دفع ناجحة بهذا الرقم.
-          </p>
-        )}
-
-        <button
-          type="submit"
-          disabled={!paymentId.trim()}
-          className="btn-secondary mt-3 w-full"
-        >
-          استرجع الكود
-        </button>
-      </form>
 
       <p className="text-center text-sm font-bold text-white/60">
         ما اشتريت للحين؟{" "}

@@ -3,6 +3,7 @@ import { claimDevice, setDeviceCookie } from "@/lib/devices";
 import { LICENSE_COOKIE, LICENSE_COOKIE_OPTIONS } from "@/lib/licenseCookie";
 import { isValidPaymentId } from "@/lib/payment";
 import {
+  displayCodeForPayment,
   findPaidPayment,
   licenseForPayment,
   licenseIdForPayment,
@@ -35,6 +36,10 @@ export async function POST(request: NextRequest) {
   }
 
   const device = await claimDevice(request, licenseId);
+
+  if (device.allowed) {
+    await displayCodeForPayment(payment.id);
+  }
 
   if (!device.allowed) {
     return NextResponse.json({ ok: false, reason: "devices" }, { status: 403 });

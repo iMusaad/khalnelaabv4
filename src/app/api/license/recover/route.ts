@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isEmailEnabled, isValidEmail, sendLicenseEmail } from "@/lib/email";
 import { paymentsForEmail } from "@/lib/emailIndex";
 import { getMessageStore, isRateLimited } from "@/lib/messageStore";
-import { licenseForPayment } from "@/lib/purchase";
+import { displayCodeForPayment } from "@/lib/purchase";
 import { getSiteOrigin } from "@/lib/siteUrl";
 
 export const dynamic = "force-dynamic";
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
   }
 
   const [paymentId] = await paymentsForEmail(store, email, secret);
-  const code = paymentId ? await licenseForPayment(paymentId) : null;
+  const code = paymentId ? await displayCodeForPayment(paymentId) : null;
 
   if (code) {
     await sendLicenseEmail({

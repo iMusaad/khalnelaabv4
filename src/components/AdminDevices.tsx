@@ -7,6 +7,39 @@ export default function AdminDevices({ password }: { password: string }) {
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
 
+  async function forgetEmail() {
+    setLoading(true);
+    setResult("");
+
+    try {
+      const response = await fetch("/api/admin/devices", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          password,
+          query: query.trim(),
+          action: "forget-email",
+        }),
+      });
+
+      const data = (await response.json().catch(() => null)) as {
+        found?: boolean;
+      } | null;
+
+      setResult(
+        !response.ok || !data
+          ? "ما قدرنا نمسح الحين، جرّب بعد شوي."
+          : data.found
+            ? "انمسحت بصمة الإيميل. الكود يبقى شغّال، بس ما يقدر يسترجعه بالإيميل."
+            : "ما لقينا شراء بهذا الإيميل.",
+      );
+    } catch {
+      setResult("ما قدرنا نمسح الحين، جرّب بعد شوي.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -80,6 +113,17 @@ export default function AdminDevices({ password }: { password: string }) {
       >
         {loading ? "لحظة..." : "صفّر الأجهزة"}
       </button>
+
+      {query.includes("@") && (
+        <button
+          type="button"
+          onClick={() => void forgetEmail()}
+          disabled={loading}
+          className="w-full text-center text-sm font-black text-[#ff7a7f] underline"
+        >
+          امسح بصمة هذا الإيميل
+        </button>
+      )}
 
       {result && (
         <p className="text-center text-sm font-bold text-white/75">{result}</p>
