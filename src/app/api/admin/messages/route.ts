@@ -33,5 +33,11 @@ export async function POST(request: NextRequest) {
     await deleteMessage(store, body.deleteId);
   }
 
-  return NextResponse.json({ ok: true, messages: await listMessages(store) });
+  const lastHook = await store.get("hook:last");
+
+  return NextResponse.json({
+    ok: true,
+    messages: await listMessages(store),
+    lastHook: lastHook ? JSON.parse(lastHook) : null,
+  });
 }
