@@ -5,6 +5,7 @@ import { LICENSE_COOKIE, LICENSE_COOKIE_OPTIONS } from "@/lib/licenseCookie";
 import { isValidPaymentId } from "@/lib/payment";
 import {
   canConfirmPayments,
+  displayCodeForPayment,
   findPaidPayment,
   licenseForPayment,
   licenseIdForPayment,
@@ -58,11 +59,12 @@ export async function GET(request: NextRequest) {
   }
 
   const email = payment.metadata?.email;
+  const displayCode = await displayCodeForPayment(payment.id);
 
-  if (email && !restore && !process.env.MOYASAR_WEBHOOK_SECRET) {
+  if (email && displayCode && !restore && !process.env.MOYASAR_WEBHOOK_SECRET) {
     await sendLicenseEmail({
       to: email,
-      code,
+      code: displayCode,
       origin: getSiteOrigin(request.nextUrl.origin),
     });
   }

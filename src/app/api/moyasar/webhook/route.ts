@@ -4,7 +4,7 @@ import { linkPaymentToEmail } from "@/lib/emailIndex";
 import { getMessageStore, isRateLimited } from "@/lib/messageStore";
 import { isPaidPurchase, type MoyasarPayment } from "@/lib/payment";
 import { savePayment, webhookSecretMatches } from "@/lib/paymentStore";
-import { licenseForPayment } from "@/lib/purchase";
+import { displayCodeForPayment } from "@/lib/purchase";
 import { notifyOwner } from "@/lib/telegram";
 import { getSiteOrigin } from "@/lib/siteUrl";
 
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
   if (email && isValidEmail(email) && licenseSecret) {
     await linkPaymentToEmail(store, email, payment.id, licenseSecret);
   }
-  const code = email ? await licenseForPayment(payment.id) : null;
+  const code = await displayCodeForPayment(payment.id);
 
   if (email && code) {
     await sendLicenseEmail({

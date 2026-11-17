@@ -6,6 +6,7 @@ import {
   type MoyasarPayment,
 } from "@/lib/payment";
 import { getStoredPayment } from "@/lib/paymentStore";
+import { ensureShortCode } from "@/lib/shortCode";
 
 export async function findPaidPayment(
   id: string,
@@ -43,6 +44,17 @@ export async function licenseIdForPayment(paymentId: string) {
   const secret = process.env.LICENSE_SECRET;
 
   return secret ? toHex(await derivePurchaseId(secret, paymentId)) : null;
+}
+
+export async function displayCodeForPayment(paymentId: string) {
+  const store = await getMessageStore();
+  const licenseId = await licenseIdForPayment(paymentId);
+
+  if (store && licenseId) {
+    return ensureShortCode(store, paymentId, licenseId);
+  }
+
+  return licenseForPayment(paymentId);
 }
 
 export function canConfirmPayments() {

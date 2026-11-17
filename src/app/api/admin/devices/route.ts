@@ -5,6 +5,7 @@ import { paymentsForEmail } from "@/lib/emailIndex";
 import { getLicenseSecrets, verifyLicenseCode } from "@/lib/license";
 import { getMessageStore, type KvStore } from "@/lib/messageStore";
 import { licenseIdForPayment } from "@/lib/purchase";
+import { paymentForShortCode } from "@/lib/shortCode";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,14 @@ async function licenseIdsFor(store: KvStore, input: string) {
     const ids = await Promise.all(payments.map(licenseIdForPayment));
 
     return ids.filter((id): id is string => Boolean(id));
+  }
+
+  const shortPayment = await paymentForShortCode(store, input);
+
+  if (shortPayment) {
+    const id = await licenseIdForPayment(shortPayment);
+
+    return id ? [id] : [];
   }
 
   const check = await verifyLicenseCode(input, getLicenseSecrets());
