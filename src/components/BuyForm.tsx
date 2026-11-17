@@ -71,10 +71,10 @@ export default function BuyForm({
 
   if (!publishableKey) {
     return (
-      <section className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-center">
-        <p className="text-lg font-black text-white">الدفع قريبًا</p>
+      <section className="rounded-3xl bg-[#221a3f] p-5 text-center shadow-[0_6px_0_#140f29]">
+        <p className="text-lg font-black text-white">قريبًا</p>
         <p className="mt-1 text-sm font-bold text-white/60">
-          نجهز بوابة الدفع، ارجع لنا بعد شوي.
+          نجهز الشراء، ارجع لنا بعد شوي.
         </p>
         <UnlockLinks next={next} />
       </section>
@@ -82,7 +82,7 @@ export default function BuyForm({
   }
 
   return (
-    <section className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-4 sm:p-5">
+    <section className="rounded-3xl bg-[#221a3f] p-4 shadow-[0_6px_0_#140f29] sm:p-5">
       {step === "details" ? (
         <form
           onSubmit={(event) => {
@@ -152,7 +152,7 @@ export default function BuyForm({
             type="submit"
             className="btn-primary mt-4 w-full py-3 text-lg"
           >
-            متابعة للدفع
+            كمّل
           </button>
         </form>
       ) : (
@@ -187,28 +187,20 @@ export default function BuyForm({
 
           {scriptFailed ? (
             <p className="text-center text-sm font-bold text-red-100">
-              ما قدرنا نحمّل نموذج الدفع. تأكد من الاتصال وحدّث الصفحة.
+              ما قدرنا نفتح خيارات الشراء. تأكد من الاتصال وحدّث الصفحة.
             </p>
           ) : (
             <>
               {!scriptReady && (
                 <p className="text-center text-sm font-bold text-white/60">
-                  لحظة نجهز الدفع...
+                  لحظة...
                 </p>
               )}
-              <div className="rounded-2xl bg-white p-4 sm:p-5">
+              <div className="rounded-2xl border-[3px] border-[#130e28] bg-[#fff8e8] px-3 py-4 shadow-[0_5px_0_#130e28] sm:px-5">
                 <div className="mysr-form" dir="ltr" />
               </div>
             </>
           )}
-
-          <button
-            type="button"
-            onClick={() => setStep("details")}
-            className="btn-secondary mt-3 w-full"
-          >
-            رجوع
-          </button>
         </>
       )}
 
