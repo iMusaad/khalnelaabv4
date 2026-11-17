@@ -35,16 +35,8 @@ export function suggestion(email: string) {
   return fixed ? `${trimmed.slice(0, at)}@${fixed}` : null;
 }
 
-export function emailProblem(email: string, confirmEmail: string) {
-  const first = email.trim().toLowerCase();
-
-  if (!EMAIL_PATTERN.test(first)) {
-    return "اكتب إيميل صحيح.";
-  }
-
-  if (first !== confirmEmail.trim().toLowerCase()) {
-    return "الإيميلين مو نفس بعض.";
-  }
-
-  return "";
+export function emailProblem(email: string) {
+  return EMAIL_PATTERN.test(email.trim().toLowerCase())
+    ? ""
+    : "اكتب إيميل صحيح.";
 }

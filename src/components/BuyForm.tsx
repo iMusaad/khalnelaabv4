@@ -31,7 +31,6 @@ export default function BuyForm({
   next: string;
 }) {
   const [email, setEmail] = useState("");
-  const [confirmEmail, setConfirmEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [step, setStep] = useState<"details" | "pay">("details");
   const [scriptReady, setScriptReady] = useState(false);
@@ -83,7 +82,7 @@ export default function BuyForm({
             event.preventDefault();
 
             if (emailEnabled) {
-              const problem = emailProblem(email, confirmEmail);
+              const problem = emailProblem(email);
 
               if (problem) {
                 setEmailError(problem);
@@ -116,35 +115,12 @@ export default function BuyForm({
                 />
               </label>
 
-              <label className="block">
-                <span className="text-sm font-black text-white/80">
-                  أكّد إيميلك
-                </span>
-
-                <input
-                  type="email"
-                  required
-                  value={confirmEmail}
-                  onChange={(event) => {
-                    setConfirmEmail(event.target.value);
-                    setEmailError("");
-                  }}
-                  onPaste={(event) => event.preventDefault()}
-                  placeholder="name@example.com"
-                  dir="ltr"
-                  autoComplete="off"
-                  maxLength={200}
-                  className={inputClass}
-                />
-              </label>
-
               {suggestion(email) && !emailError && (
                 <button
                   type="button"
                   onClick={() => {
                     const fixed = suggestion(email) as string;
                     setEmail(fixed);
-                    setConfirmEmail("");
                   }}
                   className="block w-full text-center text-sm font-bold text-[#ffc23d]"
                 >
@@ -174,6 +150,25 @@ export default function BuyForm({
         </form>
       ) : (
         <>
+          {emailEnabled && (
+            <div className="mb-4 flex items-center justify-between gap-3 rounded-xl bg-black/25 px-4 py-3">
+              <p className="min-w-0 text-sm font-bold text-white/70">
+                بنرسل الكود على{" "}
+                <span dir="ltr" className="break-all font-black text-white">
+                  {email.trim()}
+                </span>
+              </p>
+
+              <button
+                type="button"
+                onClick={() => setStep("details")}
+                className="shrink-0 text-sm font-black text-cyan-200 underline"
+              >
+                تعديل
+              </button>
+            </div>
+          )}
+
           <link rel="stylesheet" href={`${MOYASAR_CDN}/moyasar.css`} />
 
           <Script

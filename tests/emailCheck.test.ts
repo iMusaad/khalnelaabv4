@@ -2,13 +2,13 @@ import { describe, expect, it } from "vitest";
 import { emailProblem, suggestion } from "@/lib/emailCheck";
 
 describe("buy form email checks", () => {
-  it("accepts matching emails regardless of case and spaces", () => {
-    expect(emailProblem("Ahmad@Gmail.com ", " ahmad@gmail.com")).toBe("");
+  it("accepts a valid email with spaces around it", () => {
+    expect(emailProblem(" Ahmad@Gmail.com ")).toBe("");
   });
 
-  it("rejects invalid or mismatched emails", () => {
-    expect(emailProblem("ahmad", "ahmad")).not.toBe("");
-    expect(emailProblem("a@b.co", "a@b.com")).not.toBe("");
+  it("rejects an invalid email", () => {
+    expect(emailProblem("ahmad")).not.toBe("");
+    expect(emailProblem("a@b")).not.toBe("");
   });
 
   it("suggests fixes for common domain typos", () => {
