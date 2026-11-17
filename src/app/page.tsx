@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PixelHero from "@/components/PixelHero";
+import RiyalSign from "@/components/RiyalSign";
 import SaudiMadeSticker from "@/components/SaudiMadeSticker";
 import SiteFooter from "@/components/SiteFooter";
 import { HOME_GAMES } from "@/data/homeGames";
@@ -126,7 +127,7 @@ export default function Home() {
             )}
 
             <span className="text-2xl font-black text-[#ffc23d] sm:text-3xl">
-              {getCurrentPrice()} ريال
+              {getCurrentPrice()} <RiyalSign />
             </span>
 
             <span>تصير لكم للأبد بدون اشتراك</span>
