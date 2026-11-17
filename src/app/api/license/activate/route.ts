@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { claimDevice, setDeviceCookie } from "@/lib/devices";
 import { normalizeGiftCode, redeemGift } from "@/lib/giftStore";
 import {
   createLicenseCode,
@@ -56,6 +57,7 @@ export async function POST(request: NextRequest) {
 
   let code = input.trim().toUpperCase();
   let expiresAt: Date | null = null;
+  let deviceId: string | null = null;
 
   const gift = await redeemShortGift(input);
 
@@ -70,6 +72,19 @@ export async function POST(request: NextRequest) {
     }
 
     expiresAt = check.expiresAt;
+
+    if (check.type === "purchase") {
+      const device = await claimDevice(request, check.id);
+
+      if (!device.allowed) {
+        return NextResponse.json(
+          { ok: false, reason: "devices" },
+          { status: 403 },
+        );
+      }
+
+      deviceId = device.deviceId;
+    }
   }
 
   const response = NextResponse.json({ ok: true });
@@ -84,6 +99,10 @@ export async function POST(request: NextRequest) {
         }
       : {}),
   });
+
+  if (deviceId) {
+    setDeviceCookie(response, deviceId);
+  }
 
   return response;
 }

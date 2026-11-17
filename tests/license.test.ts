@@ -22,6 +22,7 @@ describe("license codes", () => {
     expect(await verifyLicenseCode(code, secrets)).toEqual({
       valid: true,
       type: "purchase",
+      id: expect.any(String),
       expiresAt: null,
     });
   });

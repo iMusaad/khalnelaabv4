@@ -32,10 +32,16 @@ export default function PendingPayment({
 
         const data = (await response.json().catch(() => null)) as {
           ok?: boolean;
+          reason?: string;
         } | null;
 
         if (data?.ok) {
           window.location.replace("/buy/success");
+          return;
+        }
+
+        if (data?.reason === "devices") {
+          window.location.replace("/unlock?error=devices");
           return;
         }
 

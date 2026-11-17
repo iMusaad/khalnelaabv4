@@ -3,16 +3,19 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { MAX_DEVICES } from "@/lib/deviceLimit";
 
 export default function UnlockForm({
   initialCode,
   next,
   paymentError,
+  devicesError = false,
   emailEnabled = false,
 }: {
   initialCode: string;
   next: string;
   paymentError: boolean;
+  devicesError?: boolean;
   emailEnabled?: boolean;
 }) {
   const router = useRouter();
@@ -38,7 +41,9 @@ export default function UnlockForm({
       setRecoverStatus("error");
     }
   }
-  const [status, setStatus] = useState<"idle" | "checking" | "invalid">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "checking" | "invalid" | "devices"
+  >(devicesError ? "devices" : "idle");
   const autoTried = useRef(false);
 
   async function activate(value: string) {
@@ -57,6 +62,15 @@ export default function UnlockForm({
 
       if (response.ok) {
         router.replace(next);
+        return;
+      }
+
+      const data = (await response.json().catch(() => null)) as {
+        reason?: string;
+      } | null;
+
+      if (data?.reason === "devices") {
+        setStatus("devices");
         return;
       }
     } catch {}
@@ -107,6 +121,19 @@ export default function UnlockForm({
             className="mt-2 text-center text-sm font-bold text-red-200"
           >
             الكود غير صحيح أو انتهت صلاحيته. تأكد منه وجرّب مرة ثانية.
+          </p>
+        )}
+
+        {status === "devices" && (
+          <p
+            role="alert"
+            className="mt-2 text-center text-sm font-bold text-red-200"
+          >
+            هذا الكود مفعّل على {MAX_DEVICES} أجهزة، وهذا الحد. لو غيّرت جهازك{" "}
+            <Link href="/contact" className="underline">
+              تواصل معنا
+            </Link>{" "}
+            ونرتبها لك.
           </p>
         )}
 

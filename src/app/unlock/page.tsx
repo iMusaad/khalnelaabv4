@@ -22,6 +22,7 @@ export default async function UnlockPage({
         initialCode={code ?? ""}
         next={safeNextPath(next)}
         paymentError={error === "payment"}
+        devicesError={error === "devices"}
         emailEnabled={isEmailEnabled()}
       />
     </PageShell>

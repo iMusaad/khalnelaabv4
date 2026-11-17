@@ -79,6 +79,7 @@ export default async function BuyPage({
         publishableKey={process.env.MOYASAR_PUBLISHABLE_KEY ?? ""}
         amount={toHalalas(price)}
         emailEnabled={isEmailEnabled()}
+        applePay={process.env.APPLE_PAY_ENABLED === "true"}
         next={safeNextPath(next)}
       />
     </PageShell>
