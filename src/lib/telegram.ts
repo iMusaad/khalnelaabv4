@@ -85,3 +85,25 @@ export async function notifyNewMessage(
     });
   } catch {}
 }
+
+export async function notifyOwner(store: KvStore, text: string) {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+
+  if (!token) {
+    return;
+  }
+
+  try {
+    const chatId = await findChatId(store, token);
+
+    if (!chatId) {
+      return;
+    }
+
+    await telegram(token, "sendMessage", {
+      chat_id: chatId,
+      text: text.slice(0, 4000),
+      disable_web_page_preview: true,
+    });
+  } catch {}
+}

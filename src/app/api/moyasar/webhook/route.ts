@@ -1,19 +1,41 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { sendLicenseEmail } from "@/lib/email";
-import { getMessageStore } from "@/lib/messageStore";
+import { getMessageStore, isRateLimited } from "@/lib/messageStore";
 import { isPaidPurchase, type MoyasarPayment } from "@/lib/payment";
 import { savePayment, webhookSecretMatches } from "@/lib/paymentStore";
 import { licenseForPayment } from "@/lib/purchase";
+import { notifyOwner } from "@/lib/telegram";
 import { getSiteOrigin } from "@/lib/siteUrl";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
-  const body = (await request.json().catch(() => null)) as {
+  const raw = (await request.text().catch(() => "")).slice(0, 4000);
+
+  let body: {
     type?: unknown;
     secret_token?: unknown;
     data?: MoyasarPayment;
-  } | null;
+  } | null = null;
+
+  try {
+    body = JSON.parse(raw);
+  } catch {}
+
+  const isPaymentEvent =
+    body?.type === "payment_paid" && typeof body.data?.id === "string";
+
+  if (!isPaymentEvent && raw) {
+    const store = await getMessageStore();
+
+    const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
+
+    if (store && !(await isRateLimited(store, `hook:${ip}`))) {
+      await notifyOwner(store, `إشعار من ميسر:\n\n${raw.slice(0, 1500)}`);
+    }
+
+    return NextResponse.json({ ok: true });
+  }
 
   if (!webhookSecretMatches(body?.secret_token)) {
     return NextResponse.json({ ok: false }, { status: 401 });
@@ -21,7 +43,7 @@ export async function POST(request: NextRequest) {
 
   const payment = body?.data;
 
-  if (body?.type !== "payment_paid" || !payment || !isPaidPurchase(payment)) {
+  if (!payment || !isPaidPurchase(payment)) {
     return NextResponse.json({ ok: true });
   }
 
