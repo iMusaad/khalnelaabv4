@@ -27,13 +27,13 @@ const FEATURES = [
   {
     title: "مرة وحدة",
     text: "بدون اشتراك شهري",
-    className: "bg-[#ff5a5f] text-white shadow-[0_6px_0_#b8323a]",
+    className: "bg-[#2f9bff] text-white shadow-[0_6px_0_#1662b8]",
     order: 1,
   },
   {
     title: "الجديد مجانًا",
     text: "أي لعبة نضيفها توصلك",
-    className: "bg-[#3ddc84] text-[#0d3b22] shadow-[0_6px_0_#1f9a57]",
+    className: "bg-[#ffc23d] text-[#241339] shadow-[0_6px_0_#c27700]",
     order: 10,
   },
 ];
