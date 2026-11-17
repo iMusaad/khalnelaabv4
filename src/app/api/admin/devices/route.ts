@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
   const password = typeof body?.password === "string" ? body.password : "";
 
-  if (!(await adminPasswordMatches(password))) {
+  if (!(await adminPasswordMatches(password, request))) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
 
