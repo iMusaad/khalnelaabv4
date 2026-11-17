@@ -142,6 +142,15 @@ export default function MatchPage() {
 
   const [mode, setMode] = useState<ModeType>("session");
 
+  const [trial, setTrial] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/license/status")
+      .then((response) => response.json())
+      .then((data: { paid?: boolean }) => setTrial(data?.paid === false))
+      .catch(() => {});
+  }, []);
+
   const [phase, setPhase] = useState<PhaseType>("setup");
 
   const [countdown, setCountdown] = useState(3);
@@ -652,6 +661,7 @@ export default function MatchPage() {
           <WordGame
             key={index}
             {...commonGameProps}
+            trial={trial}
             side1Score={side1Score}
             side2Score={side2Score}
           />
@@ -662,6 +672,7 @@ export default function MatchPage() {
           <QuizGame
             key={index}
             {...commonGameProps}
+            trial={trial}
             category={current.category}
           />
         );
@@ -712,7 +723,7 @@ export default function MatchPage() {
         return <ZoomGame key={index} {...commonGameProps} />;
 
       case "geo":
-        return <GeoGame key={index} {...commonGameProps} />;
+        return <GeoGame key={index} {...commonGameProps} trial={trial} />;
     }
   }
 
@@ -777,6 +788,7 @@ export default function MatchPage() {
           setTimerEnabled={setTimerEnabled}
           timerSeconds={timerSeconds}
           setTimerSeconds={setTimerSeconds}
+          trial={trial}
           onStart={start}
         />
       ) : (
