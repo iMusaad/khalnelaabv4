@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { sendLicenseEmail } from "@/lib/email";
+import { isValidEmail, sendLicenseEmail } from "@/lib/email";
+import { linkPaymentToEmail } from "@/lib/emailIndex";
 import { getMessageStore, isRateLimited } from "@/lib/messageStore";
 import { isPaidPurchase, type MoyasarPayment } from "@/lib/payment";
 import { savePayment, webhookSecretMatches } from "@/lib/paymentStore";
@@ -64,6 +65,11 @@ export async function POST(request: NextRequest) {
   await savePayment(store, payment);
 
   const email = payment.metadata?.email;
+  const licenseSecret = process.env.LICENSE_SECRET;
+
+  if (email && isValidEmail(email) && licenseSecret) {
+    await linkPaymentToEmail(store, email, payment.id, licenseSecret);
+  }
   const code = email ? await licenseForPayment(payment.id) : null;
 
   if (email && code) {
