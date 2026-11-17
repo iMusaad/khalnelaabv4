@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import BuyForm from "@/components/BuyForm";
 import HomeIcon from "@/components/HomeIcon";
 import PixelHero from "@/components/PixelHero";
 import RiyalSign from "@/components/RiyalSign";
 import SiteFooter from "@/components/SiteFooter";
+import { HOME_GAMES } from "@/data/homeGames";
 import { isEmailEnabled } from "@/lib/email";
 import { safeNextPath } from "@/lib/licenseCookie";
+import { posterThumb } from "@/lib/poster";
 import { PRICING, getCurrentPrice, toHalalas } from "@/lib/pricing";
 
 export const metadata: Metadata = {
@@ -22,28 +25,47 @@ const ERRORS: Record<string, string> = {
 
 const FEATURES = [
   {
-    title: "كل الألعاب",
-    text: "ألعاب جماعية متنوعة تشعل الجلسة",
-    className: "bg-[#ffc23d] text-[#241339] shadow-[0_6px_0_#c27700]",
-    wide: true,
-  },
-  {
     title: "بلا حد",
     text: "العبوها كل ما اجتمعتوا",
     className: "bg-[#2f9bff] text-white shadow-[0_6px_0_#1662b8]",
+    order: 0,
   },
   {
     title: "مرة وحدة",
     text: "بدون اشتراك شهري",
     className: "bg-[#ff5a5f] text-white shadow-[0_6px_0_#b8323a]",
+    order: 4,
   },
   {
     title: "الجديد مجانًا",
-    text: "أي لعبة نضيفها توصلك بدون زيادة",
+    text: "أي لعبة نضيفها توصلك",
     className: "bg-[#3ddc84] text-[#0d3b22] shadow-[0_6px_0_#1f9a57]",
-    wide: true,
+    order: 8,
   },
 ];
+
+type Tile =
+  | { kind: "feature"; feature: (typeof FEATURES)[number] }
+  | { kind: "poster"; game: (typeof HOME_GAMES)[number]; index: number };
+
+function bentoTiles(): Tile[] {
+  const tiles: Tile[] = HOME_GAMES.map((game, index) => ({
+    kind: "poster",
+    game,
+    index,
+  }));
+
+  [...FEATURES]
+    .sort((x, y) => y.order - x.order)
+    .forEach((feature) => {
+      tiles.splice(Math.min(feature.order, tiles.length), 0, {
+        kind: "feature",
+        feature,
+      });
+    });
+
+  return tiles;
+}
 
 export default async function BuyPage({
   searchParams,
@@ -87,27 +109,43 @@ export default async function BuyPage({
         )}
       </PixelHero>
 
-      <div className="mx-auto mt-6 grid max-w-5xl gap-5 px-4 pb-6 md:grid-cols-[1fr_1.1fr] md:items-start">
-        <ul className="grid grid-cols-2 gap-3">
-          {FEATURES.map((feature) => (
-            <li
-              key={feature.title}
-              className={`rounded-2xl p-4 text-right sm:p-5 ${feature.className} ${
-                feature.wide ? "col-span-2" : ""
-              }`}
-            >
-              <span className="block text-xl font-black sm:text-2xl">
-                {feature.title}
-              </span>
+      <div className="mx-auto mt-6 grid max-w-5xl gap-5 px-4 pb-6 md:grid-cols-[1.5fr_1fr] md:items-start">
+        <ul className="grid grid-flow-dense grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3">
+          {bentoTiles().map((tile) =>
+            tile.kind === "feature" ? (
+              <li
+                key={tile.feature.title}
+                className={`col-span-3 flex flex-col justify-center rounded-2xl p-4 text-right sm:col-span-2 sm:p-5 ${tile.feature.className}`}
+              >
+                <span className="block text-xl font-black sm:text-2xl">
+                  {tile.feature.title}
+                </span>
 
-              <span className="mt-1 block text-sm font-bold opacity-80 sm:text-base">
-                {feature.text}
-              </span>
-            </li>
-          ))}
+                <span className="mt-1 block text-sm font-bold opacity-85 sm:text-base">
+                  {tile.feature.text}
+                </span>
+              </li>
+            ) : (
+              <li
+                key={tile.game.id}
+                className={`relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#221a3f] shadow-[0_5px_0_#0b0818] ${
+                  tile.index >= 9 ? "max-sm:hidden" : ""
+                }`}
+              >
+                <Image
+                  src={posterThumb(tile.game.image)}
+                  alt={tile.game.title}
+                  fill
+                  unoptimized
+                  sizes="(min-width: 768px) 160px, 33vw"
+                  className="object-cover"
+                />
+              </li>
+            ),
+          )}
         </ul>
 
-        <div>
+        <div className="md:sticky md:top-4">
           {error && ERRORS[error] && (
             <p
               role="alert"
