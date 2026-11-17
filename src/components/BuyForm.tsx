@@ -4,6 +4,8 @@ import Link from "next/link";
 import Script from "next/script";
 import { useEffect, useState } from "react";
 
+import { emailProblem, suggestion } from "@/lib/emailCheck";
+
 const MOYASAR_VERSION = "1.14.0";
 const MOYASAR_CDN = `https://cdn.moyasar.com/mpf/${MOYASAR_VERSION}`;
 
@@ -29,6 +31,8 @@ export default function BuyForm({
   next: string;
 }) {
   const [email, setEmail] = useState("");
+  const [confirmEmail, setConfirmEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [step, setStep] = useState<"details" | "pay">("details");
   const [scriptReady, setScriptReady] = useState(false);
   const [scriptFailed, setScriptFailed] = useState(false);
@@ -77,30 +81,88 @@ export default function BuyForm({
         <form
           onSubmit={(event) => {
             event.preventDefault();
+
+            if (emailEnabled) {
+              const problem = emailProblem(email, confirmEmail);
+
+              if (problem) {
+                setEmailError(problem);
+                return;
+              }
+            }
+
+            setEmailError("");
             setStep("pay");
           }}
         >
           {emailEnabled && (
-            <label className="block text-right">
-              <span className="text-sm font-black text-white/80">
-                إيميلك (اختياري)
-              </span>
+            <div className="space-y-3 text-right">
+              <label className="block">
+                <span className="text-sm font-black text-white/80">إيميلك</span>
 
-              <input
-                type="email"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder="name@example.com"
-                dir="ltr"
-                maxLength={200}
-                className="mt-2 h-12 w-full rounded-xl border border-white/15 bg-black/25 px-4 text-center text-base font-bold text-white outline-none placeholder:text-white/30 focus:border-cyan-300/60"
-              />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(event) => {
+                    setEmail(event.target.value);
+                    setEmailError("");
+                  }}
+                  placeholder="name@example.com"
+                  dir="ltr"
+                  autoComplete="email"
+                  maxLength={200}
+                  className={inputClass}
+                />
+              </label>
 
-              <span className="mt-1 block text-xs font-bold text-white/45">
+              <label className="block">
+                <span className="text-sm font-black text-white/80">
+                  أكّد إيميلك
+                </span>
+
+                <input
+                  type="email"
+                  required
+                  value={confirmEmail}
+                  onChange={(event) => {
+                    setConfirmEmail(event.target.value);
+                    setEmailError("");
+                  }}
+                  onPaste={(event) => event.preventDefault()}
+                  placeholder="name@example.com"
+                  dir="ltr"
+                  autoComplete="off"
+                  maxLength={200}
+                  className={inputClass}
+                />
+              </label>
+
+              {suggestion(email) && !emailError && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const fixed = suggestion(email) as string;
+                    setEmail(fixed);
+                    setConfirmEmail("");
+                  }}
+                  className="block w-full text-center text-sm font-bold text-[#ffc23d]"
+                >
+                  تقصد <span dir="ltr">{suggestion(email)}</span>؟
+                </button>
+              )}
+
+              {emailError && (
+                <p className="text-center text-sm font-bold text-red-200">
+                  {emailError}
+                </p>
+              )}
+
+              <span className="block text-xs font-bold text-white/45">
                 نرسل لك الكود عليه، ولو ضاع منك ترجعه بإيميلك من صفحة «عندي
                 كود».
               </span>
-            </label>
+            </div>
           )}
 
           <button
@@ -158,6 +220,9 @@ export default function BuyForm({
     </section>
   );
 }
+
+const inputClass =
+  "mt-2 h-12 w-full rounded-xl border border-white/15 bg-black/25 px-4 text-center text-base font-bold text-white outline-none placeholder:text-white/30 focus:border-cyan-300/60";
 
 function UnlockLinks({ next }: { next?: string }) {
   const query = next && next !== "/" ? `?next=${encodeURIComponent(next)}` : "";
