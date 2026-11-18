@@ -11,6 +11,7 @@ import { UPCOMING_GAME_IDS } from "@/data/upcomingGames";
 import type { Dispatch, SetStateAction } from "react";
 import PixelHero from "@/components/PixelHero";
 import { quizCategoryList, type QuizCategoryKey } from "@/data/quiz/meta";
+import { getDefaultRounds } from "@/lib/matchQueue";
 
 type SetupGameId =
   | "word"
@@ -35,8 +36,6 @@ type SetupGameProps = {
   selectedGames: SetupGameId[];
   pinnedGame?: SetupGameId | null;
   setSelectedGames: Dispatch<SetStateAction<SetupGameId[]>>;
-  gameRounds: Record<string, number>;
-  setGameRounds: Dispatch<SetStateAction<Record<string, number>>>;
   quizCategories: QuizCategoryKey[];
   setQuizCategories: Dispatch<SetStateAction<QuizCategoryKey[]>>;
   timerEnabled: boolean;
@@ -114,33 +113,6 @@ const GAMES: {
   },
 ];
 
-function getRoundOptions(gameId: string) {
-  switch (gameId) {
-    case "quiz":
-      return [];
-
-    case "word":
-      return [2, 4, 6];
-
-    default:
-      return [1, 2, 3];
-  }
-}
-
-function getDefaultRounds(gameId: string) {
-  switch (gameId) {
-    case "quiz":
-      return 6;
-
-    case "word":
-    case "scramble":
-      return 2;
-
-    default:
-      return 1;
-  }
-}
-
 const MAX_SESSION_GAMES = 5;
 
 const MINUTES_PER_ROUND: Record<SetupGameId, number> = {
@@ -158,14 +130,10 @@ const MINUTES_PER_ROUND: Record<SetupGameId, number> = {
   geo: 5,
 };
 
-function estimateMinutes(
-  games: SetupGameId[],
-  rounds: Record<string, number>,
-  quizCategoryCount: number,
-) {
+function estimateMinutes(games: SetupGameId[], quizCategoryCount: number) {
   const total = games.reduce((sum, game) => {
     const count =
-      game === "quiz" ? Math.max(1, quizCategoryCount) : rounds[game] || 1;
+      game === "quiz" ? Math.max(1, quizCategoryCount) : getDefaultRounds(game);
 
     return sum + count * MINUTES_PER_ROUND[game];
   }, 0);
@@ -182,8 +150,6 @@ export default function SetupGame({
   selectedGames,
   pinnedGame = null,
   setSelectedGames,
-  gameRounds,
-  setGameRounds,
   quizCategories,
   setQuizCategories,
   timerEnabled,
@@ -240,15 +206,6 @@ export default function SetupGame({
         ? previous
         : [...previous, id],
     );
-
-    setGameRounds((previous) =>
-      previous[id]
-        ? previous
-        : {
-            ...previous,
-            [id]: getDefaultRounds(id),
-          },
-    );
   }
 
   function toggleCategory(category: QuizCategoryKey) {
@@ -262,13 +219,6 @@ export default function SetupGame({
         ? previous.filter((current) => current !== category)
         : [...previous, category],
     );
-  }
-
-  function selectRounds(gameId: SetupGameId, round: number) {
-    setGameRounds((previous) => ({
-      ...previous,
-      [gameId]: round,
-    }));
   }
 
   const orderedGames = pinnedGame
@@ -285,11 +235,7 @@ export default function SetupGame({
           !UPCOMING_GAME_IDS.includes(game.id) || game.id === pinnedGame,
       );
 
-  const minutes = estimateMinutes(
-    selectedGames,
-    gameRounds,
-    quizCategories.length,
-  );
+  const minutes = estimateMinutes(selectedGames, quizCategories.length);
 
   return (
     <div className="text-white">
@@ -457,34 +403,7 @@ export default function SetupGame({
                   </PosterFlip>
                   {active && (
                     <div className="mt-2">
-                      {game.id !== "quiz" ? (
-                        <div
-                          className="flex rounded-xl bg-[#221a3f] p-1"
-                          role="group"
-                          aria-label={`عدد جولات ${game.name}`}
-                        >
-                          {getRoundOptions(game.id).map((round) => {
-                            const selected = gameRounds[game.id] === round;
-
-                            return (
-                              <button
-                                key={round}
-                                type="button"
-                                aria-pressed={selected}
-                                aria-label={`${round} جولات`}
-                                onClick={() => selectRounds(game.id, round)}
-                                className={`flex h-7 flex-1 items-center justify-center rounded-lg text-sm font-black transition-colors duration-150 ${
-                                  selected
-                                    ? "bg-white text-[#1d1238]"
-                                    : "text-white/60 hover:text-white"
-                                }`}
-                              >
-                                {round}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      ) : (
+                      {game.id === "quiz" && (
                         <div className="grid grid-cols-2 gap-1 rounded-xl bg-[#221a3f] p-1">
                           {quizCategoryList.map((category) => {
                             const selected = quizCategories.includes(

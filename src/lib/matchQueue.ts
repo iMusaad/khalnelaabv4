@@ -65,15 +65,8 @@ export function getDefaultRounds(game: GameType) {
   return DEFAULT_ROUNDS[game];
 }
 
-export function getRoundCount(
-  game: GameType,
-  gameRounds: Record<string, number>,
-) {
-  const value = Math.floor(Number(gameRounds[game]));
-
-  return Number.isFinite(value) && value > 0
-    ? Math.min(value, 10)
-    : getDefaultRounds(game);
+export function getRoundCount(game: GameType) {
+  return getDefaultRounds(game);
 }
 
 export function buildRoundQueue(
@@ -94,7 +87,7 @@ export function buildRoundQueue(
       return;
     }
 
-    const count = getRoundCount(game, gameRounds);
+    const count = getRoundCount(game);
 
     for (let i = 0; i < count; i += 1) {
       queue.push({
