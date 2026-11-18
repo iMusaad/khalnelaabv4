@@ -95,6 +95,24 @@ export default function GeoGame({
 
   const [loaded, setLoaded] = useState(false);
 
+  const [zoomed, setZoomed] = useState(false);
+
+  useEffect(() => {
+    if (!zoomed) {
+      return;
+    }
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setZoomed(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKey);
+
+    return () => window.removeEventListener("keydown", onKey);
+  }, [zoomed]);
+
   useEffect(() => {
     setLoaded(true);
 
@@ -248,14 +266,43 @@ export default function GeoGame({
         </p>
 
         <div className="mx-auto grid w-full max-w-6xl items-center gap-3 md:grid-cols-[2fr_3fr]">
-          <figure className="overflow-hidden rounded-3xl bg-black shadow-[0_6px_0_#0b0818]">
-            <img
-              src={current.image}
-              alt={phase === "revealed" ? current.place : ""}
-              draggable={false}
-              className="aspect-[4/3] w-full select-none object-cover"
-            />
-          </figure>
+          <div>
+            <figure className="overflow-hidden rounded-3xl bg-black shadow-[0_6px_0_#0b0818]">
+              <button
+                type="button"
+                onClick={() => setZoomed(true)}
+                aria-label="كبّر الصورة"
+                className="block w-full cursor-zoom-in"
+              >
+                <img
+                  src={current.image}
+                  alt={phase === "revealed" ? current.place : ""}
+                  draggable={false}
+                  className="aspect-[4/3] w-full select-none object-cover"
+                />
+              </button>
+            </figure>
+
+            <button
+              type="button"
+              onClick={() => setZoomed(true)}
+              className="btn-secondary mx-auto mt-3 flex items-center gap-2 px-5 py-2 text-sm"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2.5}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+              </svg>
+              كبّر الصورة
+            </button>
+          </div>
 
           <div className="rounded-3xl bg-[#221a3f] p-2 shadow-[0_6px_0_#140f29]">
             <svg
@@ -411,6 +458,31 @@ export default function GeoGame({
         <p className="text-center text-[11px] font-bold text-white/30">
           الصورة: {current.author} · {current.license}
         </p>
+
+        {zoomed && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="الصورة بالشاشة كاملة"
+            onClick={() => setZoomed(false)}
+            className="fixed inset-0 z-[80] flex cursor-zoom-out items-center justify-center bg-black/95 p-2 sm:p-6"
+          >
+            <img
+              src={current.image}
+              alt={phase === "revealed" ? current.place : ""}
+              draggable={false}
+              className="max-h-full max-w-full select-none rounded-2xl object-contain"
+            />
+
+            <button
+              type="button"
+              onClick={() => setZoomed(false)}
+              className="btn-primary absolute bottom-5 left-1/2 -translate-x-1/2 px-8 py-2.5"
+            >
+              رجوع
+            </button>
+          </div>
+        )}
       </div>
     </GameLayout>
   );
