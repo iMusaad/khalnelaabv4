@@ -11,7 +11,15 @@ import type { RoundPoints, WinnerType } from "@/types/game";
 
 const LOGOS_PER_ROUND = 2;
 
-const ZOOM_LEVELS = [7, 4.5, 3, 2];
+const DEFAULT_START_ZOOM = 7;
+
+const ZOOM_STEPS = [1, 0.64, 0.42, 0.28];
+
+const ZOOM_LEVELS = ZOOM_STEPS;
+
+function zoomLevels(start: number) {
+  return ZOOM_STEPS.map((step) => Math.max(1.8, start * step));
+}
 
 const STAGE_POINTS = [4, 3, 2, 1];
 
@@ -23,7 +31,8 @@ type LogoRound = LogoItem & { focusX: number; focusY: number };
 
 function withFocus(logo: LogoItem): LogoRound {
   const spots = logo.spots.length > 0 ? logo.spots : [[50, 50]];
-  const [focusX, focusY] = spots[Math.floor(Math.random() * spots.length)];
+  const [focusX, focusY] =
+    logo.fixedSpot ?? spots[Math.floor(Math.random() * spots.length)];
 
   return { ...logo, focusX, focusY };
 }
@@ -237,7 +246,9 @@ export default function LogoGame({
         ? "text-yellow-300"
         : "text-white/70";
 
-  const zoom = revealed ? 1 : ZOOM_LEVELS[stage];
+  const zoom = revealed
+    ? 1
+    : zoomLevels(current.startZoom ?? DEFAULT_START_ZOOM)[stage];
 
   return (
     <GameLayout
