@@ -2,10 +2,11 @@ import { getMessageStore } from "@/lib/messageStore";
 import { createLicenseCode, derivePurchaseId, toHex } from "@/lib/license";
 import {
   fetchMoyasarPayment,
-  isPaidPurchase,
+  isPaidPurchaseWithReferral,
   type MoyasarPayment,
 } from "@/lib/payment";
 import { getStoredPayment } from "@/lib/paymentStore";
+import { recordReferralSale } from "@/lib/referral";
 import { ensureShortCode } from "@/lib/shortCode";
 
 export async function findPaidPayment(
@@ -16,14 +17,22 @@ export async function findPaidPayment(
   if (store) {
     const stored = await getStoredPayment(store, id);
 
-    if (stored && isPaidPurchase(stored)) {
+    if (stored && (await isPaidPurchaseWithReferral(stored, store))) {
       return stored;
     }
   }
 
   const fetched = await fetchMoyasarPayment(id);
 
-  return fetched && isPaidPurchase(fetched) ? fetched : null;
+  if (!fetched || !(await isPaidPurchaseWithReferral(fetched, store))) {
+    return null;
+  }
+
+  if (store && fetched.metadata?.ref) {
+    await recordReferralSale(store, fetched.id, fetched.metadata.ref);
+  }
+
+  return fetched;
 }
 
 export async function licenseForPayment(paymentId: string) {

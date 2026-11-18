@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { getMessageStore } from "@/lib/messageStore";
+import { REF_COOKIE, getReferral } from "@/lib/referral";
 import Image from "next/image";
 import Link from "next/link";
 import BuyForm from "@/components/BuyForm";
@@ -73,10 +76,14 @@ function bentoTiles(): Tile[] {
 export default async function BuyPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; next?: string }>;
+  searchParams: Promise<{ error?: string; next?: string; ref?: string }>;
 }) {
-  const { error, next } = await searchParams;
+  const { error, next, ref } = await searchParams;
   const price = getCurrentPrice();
+  const store = await getMessageStore();
+  const referral = store
+    ? await getReferral(store, ref ?? (await cookies()).get(REF_COOKIE)?.value)
+    : null;
 
   return (
     <main className="relative min-h-[100dvh] overflow-x-clip text-white">
@@ -184,6 +191,11 @@ export default async function BuyPage({
           )}
 
           <BuyForm
+            initialRef={
+              referral
+                ? { code: referral.code, discount: referral.discount }
+                : null
+            }
             publishableKey={process.env.MOYASAR_PUBLISHABLE_KEY ?? ""}
             amount={toHalalas(price)}
             emailEnabled={isEmailEnabled()}

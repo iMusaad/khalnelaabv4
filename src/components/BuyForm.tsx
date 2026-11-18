@@ -4,6 +4,7 @@ import Link from "next/link";
 import Script from "next/script";
 import { useEffect, useState } from "react";
 
+import RiyalSign from "@/components/RiyalSign";
 import { emailProblem, suggestion } from "@/lib/emailCheck";
 
 const MOYASAR_VERSION = "1.14.0";
@@ -25,9 +26,11 @@ export default function BuyForm({
   emailEnabled,
   applePay = false,
   next,
+  initialRef = null,
 }: {
   publishableKey: string;
   amount: number;
+  initialRef?: { code: string; discount: number } | null;
   emailEnabled: boolean;
   applePay?: boolean;
   next: string;
@@ -37,6 +40,45 @@ export default function BuyForm({
   const [step, setStep] = useState<"details" | "pay">("details");
   const [scriptReady, setScriptReady] = useState(false);
   const [scriptFailed, setScriptFailed] = useState(false);
+  const [referral, setReferral] = useState(initialRef);
+  const [refInput, setRefInput] = useState("");
+  const [refOpen, setRefOpen] = useState(false);
+  const [refStatus, setRefStatus] = useState<"idle" | "checking" | "invalid">(
+    "idle",
+  );
+
+  const finalAmount = Math.max(100, amount - (referral?.discount ?? 0) * 100);
+
+  async function applyRef() {
+    if (!refInput.trim() || refStatus === "checking") {
+      return;
+    }
+
+    setRefStatus("checking");
+
+    try {
+      const response = await fetch("/api/referral/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: refInput.trim() }),
+      });
+
+      const data = (await response.json().catch(() => null)) as {
+        ok?: boolean;
+        code?: string;
+        discount?: number;
+      } | null;
+
+      if (data?.ok && data.code) {
+        setReferral({ code: data.code, discount: data.discount ?? 0 });
+        setRefOpen(false);
+        setRefStatus("idle");
+        return;
+      }
+    } catch {}
+
+    setRefStatus("invalid");
+  }
 
   useEffect(() => {
     if (step !== "pay" || !scriptReady || !window.Moyasar) {
@@ -48,7 +90,7 @@ export default function BuyForm({
 
     window.Moyasar.init({
       element: ".mysr-form",
-      amount,
+      amount: finalAmount,
       currency: "SAR",
       description: "خل نلعب - اللعبة كاملة",
       publishable_api_key: publishableKey,
@@ -65,9 +107,20 @@ export default function BuyForm({
           }
         : {}),
       language: "ar",
-      metadata: trimmedEmail ? { email: trimmedEmail } : {},
+      metadata: {
+        ...(trimmedEmail ? { email: trimmedEmail } : {}),
+        ...(referral ? { ref: referral.code } : {}),
+      },
     });
-  }, [step, scriptReady, amount, publishableKey, email, applePay]);
+  }, [
+    step,
+    scriptReady,
+    finalAmount,
+    publishableKey,
+    email,
+    applePay,
+    referral,
+  ]);
 
   if (!publishableKey) {
     return (
@@ -147,6 +200,66 @@ export default function BuyForm({
               </span>
             </div>
           )}
+
+          <div className="mt-4 text-center">
+            {referral ? (
+              <p className="rounded-xl bg-black/25 px-3 py-2 text-sm font-bold text-white/80">
+                كود{" "}
+                <span dir="ltr" className="font-black text-[#ffc23d]">
+                  {referral.code}
+                </span>
+                {referral.discount > 0 && (
+                  <>
+                    {" "}
+                    · السعر بعد الخصم{" "}
+                    <span className="font-black text-white">
+                      {finalAmount / 100}
+                    </span>{" "}
+                    <RiyalSign />
+                  </>
+                )}
+              </p>
+            ) : refOpen ? (
+              <div className="flex gap-2">
+                <input
+                  value={refInput}
+                  onChange={(event) => {
+                    setRefInput(event.target.value);
+                    setRefStatus("idle");
+                  }}
+                  placeholder="الكود"
+                  dir="ltr"
+                  autoCapitalize="characters"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  maxLength={20}
+                  className="h-11 min-w-0 flex-1 rounded-xl border border-white/15 bg-black/25 px-3 text-center text-base font-black uppercase text-white outline-none placeholder:text-white/30 focus:border-cyan-300/60"
+                />
+                <button
+                  type="button"
+                  onClick={() => void applyRef()}
+                  disabled={!refInput.trim() || refStatus === "checking"}
+                  className="btn-secondary shrink-0 px-4"
+                >
+                  {refStatus === "checking" ? "لحظة..." : "طبّق"}
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setRefOpen(true)}
+                className="text-sm font-bold text-cyan-200 underline"
+              >
+                عندك كود خصم؟
+              </button>
+            )}
+
+            {refStatus === "invalid" && (
+              <p className="mt-2 text-sm font-bold text-red-200">
+                الكود غير صحيح.
+              </p>
+            )}
+          </div>
 
           <button
             type="submit"
