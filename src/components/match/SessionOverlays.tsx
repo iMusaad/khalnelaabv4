@@ -8,8 +8,14 @@ function getGameStats(roundStats: RoundStat[]) {
   return roundStats.reduce<GameStat[]>((result, stat) => {
     const existing = result.find((item) => item.game === stat.game);
 
+    const points1 = stat.side1Points ?? (stat.winner === "side1" ? 1 : 0);
+
+    const points2 = stat.side2Points ?? (stat.winner === "side2" ? 1 : 0);
+
     if (existing) {
       existing.total += 1;
+      existing.side1Points += points1;
+      existing.side2Points += points2;
 
       if (stat.winner === "side1") {
         existing.side1Wins += 1;
@@ -30,6 +36,8 @@ function getGameStats(roundStats: RoundStat[]) {
       game: stat.game,
       side1Wins: stat.winner === "side1" ? 1 : 0,
       side2Wins: stat.winner === "side2" ? 1 : 0,
+      side1Points: points1,
+      side2Points: points2,
       draws: stat.winner === "none" ? 1 : 0,
       total: 1,
     });
@@ -142,14 +150,20 @@ export function WinnerOverlay({
       </div>
 
       <p className="mt-3 text-sm font-bold text-white/45">
-        {getRoundsLabel(roundStats.length)}
-        {totalDraws > 0 && ` • تعادل ${totalDraws}`}
+        {mode === "session"
+          ? gameStats.length === 1
+            ? "لعبة وحدة"
+            : gameStats.length === 2
+              ? "لعبتين"
+              : `${gameStats.length} ألعاب`
+          : getRoundsLabel(roundStats.length)}
+        {mode !== "session" && totalDraws > 0 && ` • تعادل ${totalDraws}`}
       </p>
 
-      {mode === "session" && gameStats.length > 1 && (
+      {mode === "session" && gameStats.length > 0 && (
         <div className="mt-5 border-t border-white/10 pt-4 text-right">
           <p className="mb-3 text-base font-black text-white/80">
-            نتايج الألعاب
+            نقاط كل لعبة
           </p>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -172,24 +186,24 @@ export function WinnerOverlay({
                 <div className="flex shrink-0 items-center gap-1.5" dir="rtl">
                   <span
                     className={`flex h-9 min-w-[38px] items-center justify-center rounded-xl border px-2 text-lg font-black ${
-                      stat.side1Wins > stat.side2Wins
+                      stat.side1Points > stat.side2Points
                         ? "border-transparent bg-[#ff5a5f] text-white"
                         : "border-transparent bg-[#221a3f] text-white/60"
                     }`}
                   >
-                    {stat.side1Wins}
+                    {stat.side1Points}
                   </span>
 
                   <span className="text-white/25">-</span>
 
                   <span
                     className={`flex h-9 min-w-[38px] items-center justify-center rounded-xl border px-2 text-lg font-black ${
-                      stat.side2Wins > stat.side1Wins
+                      stat.side2Points > stat.side1Points
                         ? "border-transparent bg-[#2f9bff] text-white"
                         : "border-transparent bg-[#221a3f] text-white/60"
                     }`}
                   >
-                    {stat.side2Wins}
+                    {stat.side2Points}
                   </span>
                 </div>
               </div>
@@ -273,23 +287,38 @@ export function RoundResultOverlay({
   show,
   winnerName,
   isDraw,
+  side1Name,
+  side2Name,
+  gained,
 }: {
   show: boolean;
   winnerName: string;
   isDraw: boolean;
+  side1Name: string;
+  side2Name: string;
+  gained: { side1: number; side2: number };
 }) {
   if (!show) return null;
 
   return (
     <OverlayShell>
       <OverlayHeading
-        kicker="خلصت الجولة"
+        kicker="خلصت اللعبة"
         title={isDraw ? "تعادل!" : "كفووو!"}
       />
 
       <p className="arcade-winner mt-5 [overflow-wrap:anywhere]">
-        {isDraw ? "محد أخذ نقطة الجولة" : `الجولة لـ ${winnerName}`}
+        {isDraw ? "تعادلتوا بهاللعبة" : `اللعبة لـ ${winnerName}`}
       </p>
+
+      <div className="mt-4 flex justify-center gap-6 text-lg font-black">
+        <span className="text-[#ff5a5f]">
+          {side1Name} <span dir="ltr">+{gained.side1}</span>
+        </span>
+        <span className="text-[#2f9bff]">
+          {side2Name} <span dir="ltr">+{gained.side2}</span>
+        </span>
+      </div>
     </OverlayShell>
   );
 }
