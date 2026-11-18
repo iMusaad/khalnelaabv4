@@ -8,7 +8,7 @@ import TeamSplitter from "@/components/TeamSplitter";
 import LockIcon from "@/components/LockIcon";
 import { FREE_QUIZ_CATEGORIES, isFreeGame } from "@/lib/trial";
 import { UPCOMING_GAME_IDS } from "@/data/upcomingGames";
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import PixelHero from "@/components/PixelHero";
 import { quizCategoryList, type QuizCategoryKey } from "@/data/quiz/meta";
 import { QUIZ_COLORS, QUIZ_LABELS } from "@/data/quizCards";
@@ -318,6 +318,156 @@ export default function SetupGame({
         ? "اختاروا فئة للأسئلة"
         : "";
 
+  const ZOOM_GROUP: SetupGameId[] = ["car", "logo", "geo", "zoom"];
+
+  const quizCards = visibleCards.filter((card) => card.category);
+
+  const zoomCards = visibleCards.filter(
+    (card) => !card.category && ZOOM_GROUP.includes(card.game),
+  );
+
+  const otherCards = visibleCards.filter(
+    (card) => !card.category && !ZOOM_GROUP.includes(card.game),
+  );
+
+  function renderCard(game: SetupCard) {
+    const active = isCardActive(game);
+
+    const locked =
+      !isQuickMode && !active && selectedCount >= MAX_SESSION_GAMES;
+
+    const paywalled = isCardPaywalled(game);
+
+    return (
+      <div key={game.key}>
+        <PosterFlip game={game.game}>
+          <button
+            type="button"
+            onClick={() => toggleCard(game)}
+            disabled={isQuickMode || (locked && !paywalled)}
+            aria-pressed={isQuickMode ? undefined : active}
+            aria-label={game.name}
+            className={`relative block h-full w-full overflow-hidden rounded-2xl outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${active ? "outline-[#ffc23d]" : "outline-transparent"} ${
+              isQuickMode
+                ? "cursor-default"
+                : locked
+                  ? "cursor-not-allowed opacity-35"
+                  : ""
+            }`}
+          >
+            <Image
+              src={posterThumb(game.image)}
+              alt=""
+              fill
+              unoptimized
+              priority
+              className="object-cover"
+            />
+
+            {game.category && (
+              <span
+                className="absolute inset-x-0 bottom-0 z-[5] px-1 pb-2 pt-1.5 text-center text-base font-black text-white sm:text-lg"
+                style={{ background: QUIZ_COLORS[game.category] }}
+              >
+                {QUIZ_LABELS[game.category]}
+              </span>
+            )}
+
+            {paywalled && (
+              <span className="absolute inset-0 z-10 flex flex-col items-center justify-end bg-[#130e28]/55 pb-3">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ffc23d] text-[#241339] shadow-[0_3px_0_#c27700]">
+                  <LockIcon />
+                </span>
+              </span>
+            )}
+
+            {!isQuickMode && active && (
+              <span
+                aria-hidden="true"
+                className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-[#ffc23d] text-sm font-black text-[#1d1238]"
+              >
+                ✓
+              </span>
+            )}
+          </button>
+        </PosterFlip>
+      </div>
+    );
+  }
+
+  function renderQuizTile(game: SetupCard) {
+    const category = game.category as QuizCategoryKey;
+    const active = isCardActive(game);
+    const locked = !active && selectedCount >= MAX_SESSION_GAMES;
+    const paywalled = isCardPaywalled(game);
+
+    return (
+      <button
+        key={game.key}
+        type="button"
+        onClick={() => toggleCard(game)}
+        disabled={locked && !paywalled}
+        aria-pressed={active}
+        aria-label={game.name}
+        className={`relative flex aspect-[4/5] flex-col items-center justify-center gap-1 overflow-hidden rounded-2xl px-1 text-center text-white outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${
+          active ? "outline-[#ffc23d]" : "outline-transparent"
+        } ${locked ? "cursor-not-allowed opacity-35" : ""}`}
+        style={{ background: QUIZ_COLORS[category] }}
+      >
+        <span className="text-xs font-black opacity-75 sm:text-sm">أسئلة</span>
+        <span className="text-lg font-black leading-tight sm:text-2xl">
+          {QUIZ_LABELS[category]}
+        </span>
+
+        {paywalled && (
+          <span className="absolute inset-0 z-10 flex items-end justify-center bg-[#130e28]/55 pb-3">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ffc23d] text-[#241339] shadow-[0_3px_0_#c27700]">
+              <LockIcon small />
+            </span>
+          </span>
+        )}
+
+        {active && (
+          <span
+            aria-hidden="true"
+            className="absolute right-1.5 top-1.5 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-[#ffc23d] text-xs font-black text-[#1d1238]"
+          >
+            ✓
+          </span>
+        )}
+      </button>
+    );
+  }
+
+  function section(
+    title: string,
+    subtitle: string,
+    dot: string,
+    content: ReactNode,
+    wide = false,
+  ) {
+    return (
+      <section
+        className={`rounded-3xl bg-[#1b1535] p-3 shadow-[0_6px_0_#0e0a1f] sm:p-4 ${
+          wide ? "lg:col-span-2" : ""
+        }`}
+      >
+        <h2 className="mb-3 flex items-center gap-2 text-lg font-black sm:text-xl">
+          <span
+            aria-hidden="true"
+            className="h-3 w-3 rounded-full"
+            style={{ background: dot }}
+          />
+          {title}
+          <span className="text-xs font-bold text-white/50 sm:text-sm">
+            {subtitle}
+          </span>
+        </h2>
+        {content}
+      </section>
+    );
+  }
+
   return (
     <div className="text-white">
       <div className="-mx-3 -mt-16 sm:-mx-6 sm:-mt-6">
@@ -400,100 +550,53 @@ export default function SetupGame({
 
       <div
         className={`mx-auto mt-3 grid w-full gap-3 ${
-          isQuickMode
-            ? "max-w-[420px]"
-            : "max-w-[700px] [@media(min-height:860px)]:max-w-[820px] [@media(min-height:960px)]:max-w-[900px] [@media(max-height:820px)]:max-w-[620px]"
+          isQuickMode ? "max-w-[420px]" : "max-w-[1160px]"
         }`}
       >
-        <div>
-          {!isQuickMode && (
-            <p className="mb-2 text-left text-sm font-bold text-white/45">
-              {selectedCount}/{requiredGames}
-            </p>
-          )}
-
-          <div
-            className={`grid items-start gap-3 ${
-              isQuickMode
-                ? "mx-auto max-w-[200px] grid-cols-1"
-                : "grid-cols-3 sm:grid-cols-5"
-            }`}
-          >
-            {visibleCards.map((game, gameIndex) => {
-              const active = isCardActive(game);
-
-              const locked =
-                !isQuickMode && !active && selectedCount >= MAX_SESSION_GAMES;
-
-              const paywalled = isCardPaywalled(game);
-
-              return (
-                <div
-                  key={game.key}
-                  className={
-                    !isQuickMode &&
-                    visibleCards.length % 3 === 1 &&
-                    gameIndex === visibleCards.length - 1
-                      ? "col-start-2 sm:col-start-auto"
-                      : ""
-                  }
-                >
-                  <PosterFlip game={game.game}>
-                    <button
-                      type="button"
-                      onClick={() => toggleCard(game)}
-                      disabled={isQuickMode || (locked && !paywalled)}
-                      aria-pressed={isQuickMode ? undefined : active}
-                      aria-label={game.name}
-                      className={`relative block h-full w-full overflow-hidden rounded-2xl outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${active ? "outline-[#ffc23d]" : "outline-transparent"} ${
-                        isQuickMode
-                          ? "cursor-default"
-                          : locked
-                            ? "cursor-not-allowed opacity-35"
-                            : ""
-                      }`}
-                    >
-                      <Image
-                        src={posterThumb(game.image)}
-                        alt=""
-                        fill
-                        unoptimized
-                        priority
-                        className="object-cover"
-                      />
-
-                      {game.category && (
-                        <span
-                          className="absolute inset-x-0 bottom-0 z-[5] px-1 pb-2 pt-1.5 text-center text-base font-black text-white sm:text-lg"
-                          style={{ background: QUIZ_COLORS[game.category] }}
-                        >
-                          {QUIZ_LABELS[game.category]}
-                        </span>
-                      )}
-
-                      {paywalled && (
-                        <span className="absolute inset-0 z-10 flex flex-col items-center justify-end bg-[#130e28]/55 pb-3">
-                          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ffc23d] text-[#241339] shadow-[0_3px_0_#c27700]">
-                            <LockIcon />
-                          </span>
-                        </span>
-                      )}
-
-                      {!isQuickMode && active && (
-                        <span
-                          aria-hidden="true"
-                          className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-[#ffc23d] text-sm font-black text-[#1d1238]"
-                        >
-                          ✓
-                        </span>
-                      )}
-                    </button>
-                  </PosterFlip>
-                </div>
-              );
-            })}
+        {isQuickMode ? (
+          <div className="mx-auto grid w-full max-w-[200px] grid-cols-1 items-start gap-3">
+            {visibleCards.map(renderCard)}
           </div>
-        </div>
+        ) : (
+          <div>
+            <p className="mb-3 text-center text-sm font-black text-[#ffc23d]">
+              اخترتوا {selectedCount} من {requiredGames}
+            </p>
+
+            <div className="grid gap-4 lg:grid-cols-[1fr_1.05fr]">
+              {quizCards.length > 0 &&
+                section(
+                  "أسئلة",
+                  "سؤال وأربع خيارات",
+                  "#ff5a5f",
+                  <div className="grid grid-cols-4 gap-2.5">
+                    {quizCards.map(renderQuizTile)}
+                  </div>,
+                )}
+
+              {zoomCards.length > 0 &&
+                section(
+                  "زوم",
+                  "صورة مقرّبة، تعرفونها؟",
+                  "#2f9bff",
+                  <div className="grid grid-cols-3 items-start gap-2.5">
+                    {zoomCards.map(renderCard)}
+                  </div>,
+                )}
+
+              {otherCards.length > 0 &&
+                section(
+                  "ألعاب ثانية",
+                  "كلمات ونقاش",
+                  "#3ddc84",
+                  <div className="grid grid-cols-3 items-start gap-2.5 sm:grid-cols-6">
+                    {otherCards.map(renderCard)}
+                  </div>,
+                  true,
+                )}
+            </div>
+          </div>
+        )}
 
         <div className="mx-auto mt-1 w-full max-w-[280px]">
           <button

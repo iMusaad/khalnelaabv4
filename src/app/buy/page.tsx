@@ -6,6 +6,7 @@ import HomeIcon from "@/components/HomeIcon";
 import PixelHero from "@/components/PixelHero";
 import RiyalSign from "@/components/RiyalSign";
 import SiteFooter from "@/components/SiteFooter";
+import { quizCategoryList } from "@/data/quiz/meta";
 import {
   GAME_COUNT,
   PLAYABLE_CARDS,
@@ -47,8 +48,12 @@ type Tile =
   | { kind: "feature"; feature: (typeof FEATURES)[number] }
   | { kind: "poster"; game: (typeof PLAYABLE_CARDS)[number] };
 
+const QUIZ_FIRST = quizCategoryList[0].key;
+
 function bentoTiles(): Tile[] {
-  const tiles: Tile[] = PLAYABLE_CARDS.map((game) => ({
+  const tiles: Tile[] = PLAYABLE_CARDS.filter(
+    (game) => !game.category || game.category === QUIZ_FIRST,
+  ).map((game) => ({
     kind: "poster",
     game,
   }));
@@ -110,7 +115,7 @@ export default async function BuyPage({
       </PixelHero>
 
       <div className="mx-auto mt-6 grid max-w-5xl gap-5 px-4 pb-6 md:grid-cols-[1.5fr_1fr] md:items-start">
-        <ul className="grid grid-cols-3 gap-2.5 sm:grid-cols-5 sm:gap-3">
+        <ul className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3">
           {bentoTiles().map((tile) =>
             tile.kind === "feature" ? (
               <li
@@ -125,6 +130,31 @@ export default async function BuyPage({
                   {tile.feature.text}
                 </span>
               </li>
+            ) : tile.game.category ? (
+              <li
+                key="quiz"
+                className="flex aspect-[4/5] flex-col justify-center gap-2 overflow-hidden rounded-2xl bg-[#221a3f] p-2 text-center shadow-[0_5px_0_#0b0818] sm:p-2.5"
+              >
+                <span className="text-sm font-black leading-tight text-white sm:text-base">
+                  أسئلة وأجوبة
+                </span>
+
+                <span className="text-xs font-bold text-[#ffc23d]">
+                  {quizCategoryList.length} فئات
+                </span>
+
+                <span className="grid grid-cols-2 gap-1">
+                  {quizCategoryList.map((category) => (
+                    <span
+                      key={category.key}
+                      className="rounded-lg px-0.5 py-1.5 text-[10px] font-black text-white sm:text-xs"
+                      style={{ background: QUIZ_COLORS[category.key] }}
+                    >
+                      {QUIZ_LABELS[category.key]}
+                    </span>
+                  ))}
+                </span>
+              </li>
             ) : (
               <li
                 key={tile.game.key}
@@ -135,18 +165,9 @@ export default async function BuyPage({
                   alt={tile.game.title}
                   fill
                   unoptimized
-                  sizes="(min-width: 768px) 140px, 33vw"
+                  sizes="(min-width: 768px) 160px, 33vw"
                   className="object-cover"
                 />
-
-                {tile.game.category && (
-                  <span
-                    className="absolute inset-x-0 bottom-0 px-1 pb-1.5 pt-1 text-center text-sm font-black text-white sm:text-base"
-                    style={{ background: QUIZ_COLORS[tile.game.category] }}
-                  >
-                    {QUIZ_LABELS[tile.game.category]}
-                  </span>
-                )}
               </li>
             ),
           )}
