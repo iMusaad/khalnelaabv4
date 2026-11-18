@@ -403,6 +403,8 @@ export default function MatchPage() {
         game: current.game,
         round: index + 1,
         winner: finalWinner,
+        side1Points: gained.side1,
+        side2Points: gained.side2,
       },
     ];
 
