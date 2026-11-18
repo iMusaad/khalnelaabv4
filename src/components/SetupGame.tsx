@@ -326,8 +326,17 @@ export default function SetupGame({
     (card) => !card.category && ZOOM_GROUP.includes(card.game),
   );
 
+  const GUESS_GROUP: SetupGameId[] = ["scramble", "club", "country"];
+
+  const guessCards = visibleCards.filter(
+    (card) => !card.category && GUESS_GROUP.includes(card.game),
+  );
+
   const otherCards = visibleCards.filter(
-    (card) => !card.category && !ZOOM_GROUP.includes(card.game),
+    (card) =>
+      !card.category &&
+      !ZOOM_GROUP.includes(card.game) &&
+      !GUESS_GROUP.includes(card.game),
   );
 
   function renderCard(game: SetupCard) {
@@ -540,15 +549,24 @@ export default function SetupGame({
                   </div>,
                 )}
 
+              {guessCards.length > 0 &&
+                section(
+                  "نعم أو لا",
+                  "اسألوا لين تعرفونه",
+                  "#ffc23d",
+                  <div className="grid grid-cols-3 items-start gap-2.5">
+                    {guessCards.map(renderCard)}
+                  </div>,
+                )}
+
               {otherCards.length > 0 &&
                 section(
-                  "ألعاب ثانية",
-                  "كلمات ونقاش",
+                  "كلمات",
+                  "حروف وأمثال",
                   "#3ddc84",
-                  <div className="grid grid-cols-3 items-start gap-2.5 sm:grid-cols-6">
+                  <div className="grid grid-cols-3 items-start gap-2.5">
                     {otherCards.map(renderCard)}
                   </div>,
-                  true,
                 )}
             </div>
           </div>
