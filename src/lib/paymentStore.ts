@@ -15,6 +15,9 @@ export async function savePayment(store: KvStore, payment: MoyasarPayment) {
       status: payment.status,
       amount: payment.amount,
       currency: payment.currency,
+      ...(payment.metadata?.ref
+        ? { metadata: { ref: payment.metadata.ref } }
+        : {}),
     }),
   );
 }

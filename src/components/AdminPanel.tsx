@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import AdminDevices from "@/components/AdminDevices";
 import AdminGifts from "@/components/AdminGifts";
 import AdminMessages from "@/components/AdminMessages";
+import AdminReferrals from "@/components/AdminReferrals";
 import AdminUpcoming from "@/components/AdminUpcoming";
 
 const STORAGE_KEY = "khal-admin";
@@ -11,6 +12,7 @@ const STORAGE_KEY = "khal-admin";
 const TABS = [
   { id: "messages", label: "الرسائل" },
   { id: "gifts", label: "الأكواد" },
+  { id: "referrals", label: "المسوّقين" },
   { id: "upcoming", label: "ألعاب ما نزلت" },
 ] as const;
 
@@ -164,6 +166,7 @@ export default function AdminPanel() {
           <AdminDevices password={password} />
         </div>
       )}
+      {tab === "referrals" && <AdminReferrals password={password} />}
       {tab === "upcoming" && <AdminUpcoming />}
     </div>
   );

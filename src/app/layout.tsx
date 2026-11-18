@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { SITE } from "@/data/site";
 import "./globals.css";
+import RefCapture from "@/components/RefCapture";
 import { GAME_COUNT } from "@/data/quizCards";
 
 const somar = localFont({
@@ -58,7 +59,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl" className={somar.variable}>
-      <body>{children}</body>
+      <body>
+        <RefCapture />
+        {children}
+      </body>
     </html>
   );
 }

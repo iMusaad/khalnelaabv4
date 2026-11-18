@@ -2,7 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isValidEmail, sendLicenseEmail } from "@/lib/email";
 import { linkPaymentToEmail } from "@/lib/emailIndex";
 import { getMessageStore, isRateLimited } from "@/lib/messageStore";
-import { isPaidPurchase, type MoyasarPayment } from "@/lib/payment";
+import { isPaidPurchaseWithReferral, type MoyasarPayment } from "@/lib/payment";
+import { recordReferralSale } from "@/lib/referral";
 import { savePayment, webhookSecretMatches } from "@/lib/paymentStore";
 import { displayCodeForPayment } from "@/lib/purchase";
 import { notifyOwner } from "@/lib/telegram";
@@ -64,7 +65,7 @@ export async function POST(request: NextRequest) {
 
   const payment = body?.data;
 
-  if (!payment || !isPaidPurchase(payment)) {
+  if (!payment) {
     return NextResponse.json({ ok: true });
   }
 
@@ -74,7 +75,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false }, { status: 503 });
   }
 
+  if (!(await isPaidPurchaseWithReferral(payment, store))) {
+    return NextResponse.json({ ok: true });
+  }
+
   await savePayment(store, payment);
+
+  if (payment.metadata?.ref) {
+    await recordReferralSale(store, payment.id, payment.metadata.ref);
+  }
 
   const email = payment.metadata?.email;
   const licenseSecret = process.env.LICENSE_SECRET;
