@@ -28,6 +28,7 @@ export function expandQuizCards(games: HomeGame[]): PlayableCard[] {
           key: `quiz-${category.key}`,
           category: category.key,
           title: `أسئلة ${QUIZ_LABELS[category.key]}`,
+          image: `/images/posters/Quiz-${category.key}.png`,
         }))
       : [{ ...game, key: game.id }],
   );
