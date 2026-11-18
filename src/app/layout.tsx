@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { SITE } from "@/data/site";
 import "./globals.css";
+import { GAME_COUNT } from "@/data/quizCards";
 
 const somar = localFont({
   src: [
@@ -22,8 +23,7 @@ const somar = localFont({
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || SITE.url;
 
-const description =
-  "ألعاب جماعية للجلسات: فريقين، ألعاب متنوعة، وفريق واحد يفوز.";
+const description = `${GAME_COUNT} لعبة جماعية للجلسات: فريقين على جهاز واحد، وفريق واحد يفوز.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

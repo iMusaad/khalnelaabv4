@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PixelHero from "@/components/PixelHero";
 import RiyalSign from "@/components/RiyalSign";
+import { GAME_COUNT } from "@/data/quizCards";
 import SaudiMadeSticker from "@/components/SaudiMadeSticker";
 import SiteFooter from "@/components/SiteFooter";
 import { HOME_GAMES } from "@/data/homeGames";
@@ -118,7 +119,7 @@ export default function Home() {
             prefetch={false}
             className="flex flex-wrap items-baseline justify-center gap-x-2 text-center text-base font-black text-white/80 transition-colors hover:text-white sm:text-xl"
           >
-            <span>كل الألعاب بـ</span>
+            <span>{GAME_COUNT} لعبة بـ</span>
 
             {PRICING.onSale && (
               <span className="text-white/40 line-through">

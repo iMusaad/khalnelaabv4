@@ -6,7 +6,13 @@ import HomeIcon from "@/components/HomeIcon";
 import PixelHero from "@/components/PixelHero";
 import RiyalSign from "@/components/RiyalSign";
 import SiteFooter from "@/components/SiteFooter";
-import { HOME_GAMES } from "@/data/homeGames";
+import { quizCategoryList } from "@/data/quiz/meta";
+import {
+  GAME_COUNT,
+  PLAYABLE_CARDS,
+  QUIZ_COLORS,
+  QUIZ_LABELS,
+} from "@/data/quizCards";
 import { isEmailEnabled } from "@/lib/email";
 import { safeNextPath } from "@/lib/licenseCookie";
 import { posterThumb } from "@/lib/poster";
@@ -40,10 +46,17 @@ const FEATURES = [
 
 type Tile =
   | { kind: "feature"; feature: (typeof FEATURES)[number] }
-  | { kind: "poster"; game: (typeof HOME_GAMES)[number] };
+  | { kind: "poster"; game: (typeof PLAYABLE_CARDS)[number] };
+
+const QUIZ_FIRST = quizCategoryList[0].key;
 
 function bentoTiles(): Tile[] {
-  const tiles: Tile[] = HOME_GAMES.map((game) => ({ kind: "poster", game }));
+  const tiles: Tile[] = PLAYABLE_CARDS.filter(
+    (game) => !game.category || game.category === QUIZ_FIRST,
+  ).map((game) => ({
+    kind: "poster",
+    game,
+  }));
 
   [...FEATURES]
     .sort((x, y) => y.order - x.order)
@@ -75,7 +88,9 @@ export default async function BuyPage({
         الرئيسية
       </Link>
       <PixelHero overlap={false}>
-        <h1 className="mt-3 text-3xl font-black sm:text-4xl">خل نلعب كاملة</h1>
+        <h1 className="mt-3 text-3xl font-black sm:text-4xl">
+          {GAME_COUNT} لعبة، تصير لكم للأبد
+        </h1>
 
         <p className="mt-2 flex items-center justify-center gap-3" dir="rtl">
           <span className="text-6xl font-black leading-none sm:text-7xl">
@@ -105,19 +120,44 @@ export default async function BuyPage({
             tile.kind === "feature" ? (
               <li
                 key={tile.feature.title}
-                className={`flex aspect-[4/5] flex-col justify-center rounded-2xl p-3 text-center sm:p-4 ${tile.feature.className}`}
+                className={`flex aspect-[4/5] flex-col justify-center overflow-hidden rounded-2xl p-2 text-center sm:p-2.5 ${tile.feature.className}`}
               >
-                <span className="block text-lg font-black leading-tight sm:text-2xl">
+                <span className="block text-base font-black leading-tight sm:text-lg">
                   {tile.feature.title}
                 </span>
 
-                <span className="mt-1.5 block text-xs font-bold leading-snug opacity-85 sm:text-sm">
+                <span className="mt-1 block text-[11px] font-bold leading-snug opacity-85 sm:text-xs">
                   {tile.feature.text}
+                </span>
+              </li>
+            ) : tile.game.category ? (
+              <li
+                key="quiz"
+                className="flex aspect-[4/5] flex-col justify-center gap-2 overflow-hidden rounded-2xl bg-[#221a3f] p-2 text-center shadow-[0_5px_0_#0b0818] sm:p-2.5"
+              >
+                <span className="text-sm font-black leading-tight text-white sm:text-base">
+                  أسئلة وأجوبة
+                </span>
+
+                <span className="text-xs font-bold text-[#ffc23d]">
+                  {quizCategoryList.length} فئات
+                </span>
+
+                <span className="grid grid-cols-2 gap-1">
+                  {quizCategoryList.map((category) => (
+                    <span
+                      key={category.key}
+                      className="rounded-lg px-0.5 py-1.5 text-[10px] font-black text-white sm:text-xs"
+                      style={{ background: QUIZ_COLORS[category.key] }}
+                    >
+                      {QUIZ_LABELS[category.key]}
+                    </span>
+                  ))}
                 </span>
               </li>
             ) : (
               <li
-                key={tile.game.id}
+                key={tile.game.key}
                 className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#221a3f] shadow-[0_5px_0_#0b0818]"
               >
                 <Image
