@@ -397,7 +397,6 @@ export default function SetupGame({
 
   function section(
     title: string,
-    subtitle: string,
     dot: string,
     content: ReactNode,
     wide = false,
@@ -415,9 +414,6 @@ export default function SetupGame({
             style={{ background: dot }}
           />
           {title}
-          <span className="text-xs font-bold text-white/50 sm:text-sm">
-            {subtitle}
-          </span>
         </h2>
         {content}
       </section>
@@ -523,7 +519,6 @@ export default function SetupGame({
               {quizCards.length > 0 &&
                 section(
                   "أسئلة",
-                  "سؤال وأربع خيارات",
                   "#ff5a5f",
                   <div className="grid grid-cols-4 items-start gap-2.5">
                     {quizCards.map(renderCard)}
@@ -533,7 +528,6 @@ export default function SetupGame({
               {zoomCards.length > 0 &&
                 section(
                   "زوم",
-                  "صورة مقرّبة، تعرفونها؟",
                   "#2f9bff",
                   <div className="grid grid-cols-3 items-start gap-2.5">
                     {zoomCards.map(renderCard)}
@@ -545,7 +539,6 @@ export default function SetupGame({
               {guessCards.length > 0 &&
                 section(
                   "نعم أو لا",
-                  "اسألوا لين تعرفونه",
                   "#ffc23d",
                   <div className="grid grid-cols-3 items-start gap-2.5">
                     {guessCards.map(renderCard)}
@@ -555,7 +548,6 @@ export default function SetupGame({
               {otherCards.length > 0 &&
                 section(
                   "كلمات",
-                  "حروف وأمثال",
                   "#3ddc84",
                   <div className="grid grid-cols-3 items-start gap-2.5">
                     {otherCards.map(renderCard)}
