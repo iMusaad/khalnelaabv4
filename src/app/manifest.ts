@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
+import { GAME_COUNT } from "@/data/quizCards";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "خل نلعب",
     short_name: "خل نلعب",
-    description: "ألعاب جماعية للجلسات: فريقين، ألعاب متنوعة، وفريق واحد يفوز.",
+    description: `${GAME_COUNT} لعبة جماعية للجلسات: فريقين على جهاز واحد، وفريق واحد يفوز.`,
     start_url: "/",
     display: "standalone",
     dir: "rtl",

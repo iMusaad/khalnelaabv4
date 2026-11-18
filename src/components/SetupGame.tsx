@@ -11,6 +11,7 @@ import { UPCOMING_GAME_IDS } from "@/data/upcomingGames";
 import type { Dispatch, SetStateAction } from "react";
 import PixelHero from "@/components/PixelHero";
 import { quizCategoryList, type QuizCategoryKey } from "@/data/quiz/meta";
+import { QUIZ_COLORS, QUIZ_LABELS } from "@/data/quizCards";
 import { getDefaultRounds } from "@/lib/matchQueue";
 
 type SetupGameId =
@@ -115,6 +116,28 @@ const GAMES: {
 
 const MAX_SESSION_GAMES = 5;
 
+type SetupCard = {
+  key: string;
+  game: SetupGameId;
+  category?: QuizCategoryKey;
+  name: string;
+  image: string;
+};
+
+function toCards(games: typeof GAMES): SetupCard[] {
+  return games.flatMap<SetupCard>((game) =>
+    game.id === "quiz"
+      ? quizCategoryList.map((category) => ({
+          key: `quiz-${category.key}`,
+          game: game.id,
+          category: category.key,
+          name: `أسئلة ${QUIZ_LABELS[category.key]}`,
+          image: game.image,
+        }))
+      : [{ key: game.id, game: game.id, name: game.name, image: game.image }],
+  );
+}
+
 const MINUTES_PER_ROUND: Record<SetupGameId, number> = {
   word: 4,
   quiz: 5,
@@ -172,43 +195,78 @@ export default function SetupGame({
     );
   }
 
-  function toggleGame(id: SetupGameId) {
+  const selectedCount =
+    selectedGames.filter((game) => game !== "quiz").length +
+    (selectedGames.includes("quiz") ? quizCategories.length : 0);
+
+  function isCardActive(card: SetupCard) {
+    return card.category
+      ? selectedGames.includes("quiz") && quizCategories.includes(card.category)
+      : selectedGames.includes(card.game);
+  }
+
+  function isCardPaywalled(card: SetupCard) {
+    if (!trial) return false;
+
+    return card.category
+      ? !FREE_QUIZ_CATEGORIES.includes(card.category)
+      : !isFreeGame(card.game);
+  }
+
+  function toggleCard(card: SetupCard) {
     if (isQuickMode) {
       return;
     }
 
-    if (trial && !isFreeGame(id)) {
+    if (isCardPaywalled(card)) {
       goBuy();
       return;
     }
 
-    if (selectedGames.includes(id)) {
-      setSelectedGames((previous) => previous.filter((game) => game !== id));
+    const active = isCardActive(card);
+
+    if (!active && selectedCount >= MAX_SESSION_GAMES) {
+      return;
+    }
+
+    if (!card.category) {
+      setSelectedGames((previous) =>
+        active
+          ? previous.filter((game) => game !== card.game)
+          : previous.includes(card.game)
+            ? previous
+            : [...previous, card.game],
+      );
 
       return;
     }
 
-    if (selectedGames.length >= MAX_SESSION_GAMES) {
-      return;
-    }
+    const category = card.category;
 
-    setSelectedGames((previous) =>
-      previous.includes(id) || previous.length >= MAX_SESSION_GAMES
-        ? previous
-        : [...previous, id],
-    );
-  }
+    if (active) {
+      const remaining = quizCategories.filter((item) => item !== category);
 
-  function toggleCategory(category: QuizCategoryKey) {
-    if (trial && !FREE_QUIZ_CATEGORIES.includes(category)) {
-      goBuy();
+      setQuizCategories(remaining);
+
+      if (remaining.length === 0) {
+        setSelectedGames((previous) =>
+          previous.filter((game) => game !== "quiz"),
+        );
+      }
+
       return;
     }
 
     setQuizCategories((previous) =>
-      previous.includes(category)
-        ? previous.filter((current) => current !== category)
-        : [...previous, category],
+      selectedGames.includes("quiz")
+        ? previous.includes(category)
+          ? previous
+          : [...previous, category]
+        : [category],
+    );
+
+    setSelectedGames((previous) =>
+      previous.includes("quiz") ? previous : [...previous, "quiz"],
     );
   }
 
@@ -226,16 +284,24 @@ export default function SetupGame({
           !UPCOMING_GAME_IDS.includes(game.id) || game.id === pinnedGame,
       );
 
+  const visibleCards = toCards(visibleGames).filter(
+    (card) =>
+      !isQuickMode ||
+      !card.category ||
+      quizCategories.length === 0 ||
+      quizCategories.includes(card.category),
+  );
+
   const minutes = estimateMinutes(selectedGames, quizCategories.length);
 
   const requiredGames = isQuickMode
     ? 1
     : Math.min(
         MAX_SESSION_GAMES,
-        visibleGames.filter((game) => !trial || isFreeGame(game.id)).length,
+        visibleCards.filter((card) => !isCardPaywalled(card)).length,
       );
 
-  const missingGames = Math.max(0, requiredGames - selectedGames.length);
+  const missingGames = Math.max(0, requiredGames - selectedCount);
 
   const canStart = missingGames === 0 && !needsQuizCategory;
 
@@ -342,7 +408,7 @@ export default function SetupGame({
         <div>
           {!isQuickMode && (
             <p className="mb-2 text-left text-sm font-bold text-white/45">
-              {selectedGames.length}/{requiredGames}
+              {selectedCount}/{requiredGames}
             </p>
           )}
 
@@ -353,31 +419,29 @@ export default function SetupGame({
                 : "grid-cols-3 sm:grid-cols-5"
             }`}
           >
-            {visibleGames.map((game, gameIndex) => {
-              const active = selectedGames.includes(game.id);
+            {visibleCards.map((game, gameIndex) => {
+              const active = isCardActive(game);
 
               const locked =
-                !isQuickMode &&
-                !active &&
-                selectedGames.length >= MAX_SESSION_GAMES;
+                !isQuickMode && !active && selectedCount >= MAX_SESSION_GAMES;
 
-              const paywalled = trial && !isFreeGame(game.id);
+              const paywalled = isCardPaywalled(game);
 
               return (
                 <div
-                  key={game.id}
+                  key={game.key}
                   className={
                     !isQuickMode &&
-                    visibleGames.length % 3 === 1 &&
-                    gameIndex === visibleGames.length - 1
+                    visibleCards.length % 3 === 1 &&
+                    gameIndex === visibleCards.length - 1
                       ? "col-start-2 sm:col-start-auto"
                       : ""
                   }
                 >
-                  <PosterFlip game={game.id}>
+                  <PosterFlip game={game.game}>
                     <button
                       type="button"
-                      onClick={() => toggleGame(game.id)}
+                      onClick={() => toggleCard(game)}
                       disabled={isQuickMode || (locked && !paywalled)}
                       aria-pressed={isQuickMode ? undefined : active}
                       aria-label={game.name}
@@ -398,6 +462,15 @@ export default function SetupGame({
                         className="object-cover"
                       />
 
+                      {game.category && (
+                        <span
+                          className="absolute inset-x-0 bottom-0 z-[5] px-1 pb-2 pt-1.5 text-center text-base font-black text-white sm:text-lg"
+                          style={{ background: QUIZ_COLORS[game.category] }}
+                        >
+                          {QUIZ_LABELS[game.category]}
+                        </span>
+                      )}
+
                       {paywalled && (
                         <span className="absolute inset-0 z-10 flex flex-col items-center justify-end bg-[#130e28]/55 pb-3">
                           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ffc23d] text-[#241339] shadow-[0_3px_0_#c27700]">
@@ -416,44 +489,6 @@ export default function SetupGame({
                       )}
                     </button>
                   </PosterFlip>
-                  {active && (
-                    <div className="mt-2">
-                      {game.id === "quiz" && (
-                        <div className="grid grid-cols-2 gap-1 rounded-xl bg-[#221a3f] p-1">
-                          {quizCategoryList.map((category) => {
-                            const selected = quizCategories.includes(
-                              category.key,
-                            );
-
-                            const categoryLocked =
-                              trial &&
-                              !FREE_QUIZ_CATEGORIES.includes(category.key);
-
-                            return (
-                              <button
-                                key={category.key}
-                                type="button"
-                                aria-pressed={selected}
-                                onClick={() => toggleCategory(category.key)}
-                                className={`min-h-7 rounded-lg px-0.5 py-1 text-[10px] font-black leading-tight transition-colors duration-150 sm:text-xs ${
-                                  selected
-                                    ? "bg-white text-[#1d1238]"
-                                    : "text-white/60 hover:text-white"
-                                }`}
-                              >
-                                {category.title}
-                                {categoryLocked && (
-                                  <span className="ms-1 inline-block align-middle opacity-70">
-                                    <LockIcon small />
-                                  </span>
-                                )}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  )}
                 </div>
               );
             })}
