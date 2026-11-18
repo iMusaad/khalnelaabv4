@@ -395,50 +395,6 @@ export default function SetupGame({
     );
   }
 
-  function renderQuizTile(game: SetupCard) {
-    const category = game.category as QuizCategoryKey;
-    const active = isCardActive(game);
-    const locked = !active && selectedCount >= MAX_SESSION_GAMES;
-    const paywalled = isCardPaywalled(game);
-
-    return (
-      <button
-        key={game.key}
-        type="button"
-        onClick={() => toggleCard(game)}
-        disabled={locked && !paywalled}
-        aria-pressed={active}
-        aria-label={game.name}
-        className={`relative flex aspect-[4/5] flex-col items-center justify-center gap-1 overflow-hidden rounded-2xl px-1 text-center text-white outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${
-          active ? "outline-[#ffc23d]" : "outline-transparent"
-        } ${locked ? "cursor-not-allowed opacity-35" : ""}`}
-        style={{ background: QUIZ_COLORS[category] }}
-      >
-        <span className="text-xs font-black opacity-75 sm:text-sm">أسئلة</span>
-        <span className="text-lg font-black leading-tight sm:text-2xl">
-          {QUIZ_LABELS[category]}
-        </span>
-
-        {paywalled && (
-          <span className="absolute inset-0 z-10 flex items-end justify-center bg-[#130e28]/55 pb-3">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#ffc23d] text-[#241339] shadow-[0_3px_0_#c27700]">
-              <LockIcon small />
-            </span>
-          </span>
-        )}
-
-        {active && (
-          <span
-            aria-hidden="true"
-            className="absolute right-1.5 top-1.5 z-10 flex h-6 w-6 items-center justify-center rounded-full bg-[#ffc23d] text-xs font-black text-[#1d1238]"
-          >
-            ✓
-          </span>
-        )}
-      </button>
-    );
-  }
-
   function section(
     title: string,
     subtitle: string,
@@ -569,8 +525,8 @@ export default function SetupGame({
                   "أسئلة",
                   "سؤال وأربع خيارات",
                   "#ff5a5f",
-                  <div className="grid grid-cols-4 gap-2.5">
-                    {quizCards.map(renderQuizTile)}
+                  <div className="grid grid-cols-4 items-start gap-2.5">
+                    {quizCards.map(renderCard)}
                   </div>,
                 )}
 
