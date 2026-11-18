@@ -8,7 +8,7 @@ import type { QuizCategoryKey, QuizQuestion } from "@/data/quiz";
 import { createDeck, type Deck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
 import { TRIAL_LIMITS } from "@/lib/trial";
-import type { WinnerType } from "@/types/game";
+import type { RoundPoints, WinnerType } from "@/types/game";
 
 const TOTAL_QUESTIONS = 6;
 
@@ -64,7 +64,7 @@ export default function QuizGame({
   side1Name: string;
   side2Name: string;
 
-  onRoundEnd: (winner?: WinnerType) => void;
+  onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
 
   roundKey: number;
 
@@ -229,17 +229,10 @@ export default function QuizGame({
   }
 
   function finishQuiz(final1: number, final2: number) {
-    if (final1 > final2) {
-      onRoundEnd("side1");
-      return;
-    }
-
-    if (final2 > final1) {
-      onRoundEnd("side2");
-      return;
-    }
-
-    onRoundEnd("none");
+    onRoundEnd(final1 > final2 ? "side1" : final2 > final1 ? "side2" : "none", {
+      side1: final1,
+      side2: final2,
+    });
   }
 
   function nextQuestion(next1: number, next2: number) {

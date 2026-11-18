@@ -12,7 +12,7 @@ import {
 import { createDeck } from "@/lib/deck";
 import { getPointsWinner } from "@/lib/scoring";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
-import type { TeamTurn as Turn, WinnerType } from "@/types/game";
+import type { RoundPoints, TeamTurn as Turn, WinnerType } from "@/types/game";
 import type { WheelValue as Value } from "@/data/wheel";
 
 const puzzleDeck = createDeck(PUZZLES, "wheel");
@@ -65,7 +65,7 @@ export default function WheelGame({
 }: {
   side1Name: string;
   side2Name: string;
-  onRoundEnd: (winner?: WinnerType) => void;
+  onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
   timerEnabled?: boolean;

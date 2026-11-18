@@ -6,7 +6,7 @@ import HowToPlayButton from "@/components/match/HowToPlayButton";
 import { CATEGORY_LETTERS as letters } from "@/data/categories";
 import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
-import type { WinnerType } from "@/types/game";
+import type { RoundPoints, WinnerType } from "@/types/game";
 
 const letterDeck = createDeck(letters, "categories");
 
@@ -31,7 +31,7 @@ export default function CategoriesGame({
 }: {
   side1Name: string;
   side2Name: string;
-  onRoundEnd: (winner?: WinnerType) => void;
+  onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
   timerEnabled?: boolean;

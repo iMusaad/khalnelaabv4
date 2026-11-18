@@ -15,7 +15,7 @@ import {
 } from "@/lib/wordRules";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
 import { TRIAL_LIMITS } from "@/lib/trial";
-import type { WinnerType } from "@/types/game";
+import type { RoundPoints, WinnerType } from "@/types/game";
 
 type TeamSide = "side1" | "side2";
 
@@ -75,7 +75,7 @@ export default function WordGame({
   trial = false,
 }: {
   trial?: boolean;
-  onRoundEnd: (winner?: WinnerType) => void;
+  onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   side1Name?: string;
   side2Name?: string;

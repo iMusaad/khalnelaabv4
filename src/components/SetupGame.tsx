@@ -166,15 +166,6 @@ export default function SetupGame({
   const needsQuizCategory =
     selectedGames.includes("quiz") && quizCategories.length === 0;
 
-  const canStart = selectedGames.length > 0 && !needsQuizCategory;
-
-  const startHint =
-    selectedGames.length === 0
-      ? "اختاروا لعبة وحدة على الأقل"
-      : needsQuizCategory
-        ? "اختاروا فئة للأسئلة"
-        : "";
-
   function goBuy() {
     router.push(
       `/buy?next=${encodeURIComponent(window.location.pathname + window.location.search)}`,
@@ -236,6 +227,30 @@ export default function SetupGame({
       );
 
   const minutes = estimateMinutes(selectedGames, quizCategories.length);
+
+  const requiredGames = isQuickMode
+    ? 1
+    : Math.min(
+        MAX_SESSION_GAMES,
+        visibleGames.filter((game) => !trial || isFreeGame(game.id)).length,
+      );
+
+  const missingGames = Math.max(0, requiredGames - selectedGames.length);
+
+  const canStart = missingGames === 0 && !needsQuizCategory;
+
+  const startHint =
+    missingGames > 0
+      ? isQuickMode
+        ? "اختاروا لعبة"
+        : missingGames === 1
+          ? "باقي لعبة وحدة"
+          : missingGames === 2
+            ? "باقي لعبتين"
+            : `اختاروا ${requiredGames} ألعاب، باقي ${missingGames}`
+      : needsQuizCategory
+        ? "اختاروا فئة للأسئلة"
+        : "";
 
   return (
     <div className="text-white">
@@ -327,7 +342,7 @@ export default function SetupGame({
         <div>
           {!isQuickMode && (
             <p className="mb-2 text-left text-sm font-bold text-white/45">
-              {selectedGames.length}/{MAX_SESSION_GAMES}
+              {selectedGames.length}/{requiredGames}
             </p>
           )}
 

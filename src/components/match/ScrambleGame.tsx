@@ -7,7 +7,7 @@ import { InlineJudge } from "@/components/match/Overlays";
 import { WHO_GAME } from "@/data/scramble";
 import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
-import type { WinnerType } from "@/types/game";
+import type { RoundPoints, WinnerType } from "@/types/game";
 
 const TOTAL_ROUNDS = 1;
 
@@ -36,7 +36,7 @@ export default function ScrambleGame({
 }: {
   side1Name: string;
   side2Name: string;
-  onRoundEnd: (winner?: WinnerType) => void;
+  onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
   timerEnabled?: boolean;
@@ -152,17 +152,10 @@ export default function ScrambleGame({
   }
 
   function finishGame(final1: number, final2: number) {
-    if (final1 > final2) {
-      onRoundEnd("side1");
-      return;
-    }
-
-    if (final2 > final1) {
-      onRoundEnd("side2");
-      return;
-    }
-
-    onRoundEnd("none");
+    onRoundEnd(final1 > final2 ? "side1" : final2 > final1 ? "side2" : "none", {
+      side1: final1,
+      side2: final2,
+    });
   }
 
   function goNext(next1: number, next2: number) {

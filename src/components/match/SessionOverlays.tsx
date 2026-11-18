@@ -273,23 +273,38 @@ export function RoundResultOverlay({
   show,
   winnerName,
   isDraw,
+  side1Name,
+  side2Name,
+  gained,
 }: {
   show: boolean;
   winnerName: string;
   isDraw: boolean;
+  side1Name: string;
+  side2Name: string;
+  gained: { side1: number; side2: number };
 }) {
   if (!show) return null;
 
   return (
     <OverlayShell>
       <OverlayHeading
-        kicker="خلصت الجولة"
+        kicker="خلصت اللعبة"
         title={isDraw ? "تعادل!" : "كفووو!"}
       />
 
       <p className="arcade-winner mt-5 [overflow-wrap:anywhere]">
-        {isDraw ? "محد أخذ نقطة الجولة" : `الجولة لـ ${winnerName}`}
+        {isDraw ? "تعادلتوا بهاللعبة" : `اللعبة لـ ${winnerName}`}
       </p>
+
+      <div className="mt-4 flex justify-center gap-6 text-lg font-black">
+        <span className="text-[#ff5a5f]">
+          {side1Name} <span dir="ltr">+{gained.side1}</span>
+        </span>
+        <span className="text-[#2f9bff]">
+          {side2Name} <span dir="ltr">+{gained.side2}</span>
+        </span>
+      </div>
     </OverlayShell>
   );
 }

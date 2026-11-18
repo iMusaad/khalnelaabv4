@@ -8,7 +8,7 @@ import { GEO_PLACES, type GeoPlace } from "@/data/geoPlaces";
 import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
 import { TRIAL_LIMITS } from "@/lib/trial";
-import type { WinnerType } from "@/types/game";
+import type { RoundPoints, WinnerType } from "@/types/game";
 
 const PLACES_PER_ROUND = 3;
 
@@ -76,7 +76,7 @@ export default function GeoGame({
 }: {
   side1Name: string;
   side2Name: string;
-  onRoundEnd: (winner?: WinnerType) => void;
+  onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
   trial?: boolean;
@@ -202,7 +202,10 @@ export default function GeoGame({
     setSide2Score(next2);
 
     if (index + 1 >= rounds.length) {
-      onRoundEnd(next1 > next2 ? "side1" : next2 > next1 ? "side2" : "none");
+      onRoundEnd(next1 > next2 ? "side1" : next2 > next1 ? "side2" : "none", {
+        side1: next1,
+        side2: next2,
+      });
       return;
     }
 

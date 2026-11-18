@@ -33,7 +33,9 @@ import {
 } from "@/lib/savedMatch";
 import { createResultShareImage } from "@/lib/shareImage";
 import type { ShareAction } from "@/components/match/SessionOverlays";
-import type { WinnerType } from "@/types/game";
+import type { RoundPoints, WinnerType } from "@/types/game";
+
+const WIN_BONUS = 3;
 import type { ModeType, RoundStat } from "@/types/match";
 
 type PhaseType = "setup" | "countdown" | "playing" | "transition" | "finished";
@@ -188,6 +190,11 @@ export default function MatchPage() {
 
   const [showRoundResult, setShowRoundResult] = useState(false);
 
+  const [roundGained, setRoundGained] = useState<RoundPoints>({
+    side1: 0,
+    side2: 0,
+  });
+
   const [roundResultWinner, setRoundResultWinner] =
     useState<WinnerType>("none");
 
@@ -201,12 +208,12 @@ export default function MatchPage() {
     ? queue.slice(index + 1).find((round) => round.game !== current.game)?.game
     : undefined;
 
-  const battleStep = queue.length > 0 ? 50 / queue.length : 0;
+  const totalScore = side1Score + side2Score;
 
-  const side1Control = Math.max(
-    0,
-    Math.min(100, 50 + (side1Score - side2Score) * battleStep),
-  );
+  const side1Control =
+    totalScore > 0
+      ? Math.max(10, Math.min(90, (side1Score / totalScore) * 100))
+      : 50;
 
   function snapshot(overrides: Partial<SavedMatch>): SavedMatch {
     return {
@@ -364,7 +371,7 @@ export default function MatchPage() {
     }, 1500);
   }
 
-  function applyRoundWinner(winner?: WinnerType) {
+  function applyRoundWinner(winner?: WinnerType, points?: RoundPoints) {
     if (!current || phase !== "playing" || resolvedRoundRef.current === index) {
       return;
     }
@@ -376,9 +383,19 @@ export default function MatchPage() {
 
     const finalWinner = winner ?? "none";
 
-    const nextSide1Score = side1Score + (finalWinner === "side1" ? 1 : 0);
+    const gained: RoundPoints = points
+      ? {
+          side1: Math.max(0, Math.round(points.side1)),
+          side2: Math.max(0, Math.round(points.side2)),
+        }
+      : {
+          side1: finalWinner === "side1" ? WIN_BONUS : 0,
+          side2: finalWinner === "side2" ? WIN_BONUS : 0,
+        };
 
-    const nextSide2Score = side2Score + (finalWinner === "side2" ? 1 : 0);
+    const nextSide1Score = side1Score + gained.side1;
+
+    const nextSide2Score = side2Score + gained.side2;
 
     const nextRoundStats: RoundStat[] = [
       ...roundStats,
@@ -414,6 +431,7 @@ export default function MatchPage() {
     );
 
     setRoundResultWinner(finalWinner);
+    setRoundGained(gained);
     setShowRoundResult(true);
 
     roundResultTimer.current = setTimeout(() => {
@@ -425,7 +443,7 @@ export default function MatchPage() {
     }, 2500);
   }
 
-  function endRound(winner?: WinnerType) {
+  function endRound(winner?: WinnerType, points?: RoundPoints) {
     if (!current || phase !== "playing" || endingRoundRef.current === index) {
       return;
     }
@@ -433,7 +451,7 @@ export default function MatchPage() {
     endingRoundRef.current = index;
 
     if (winner !== undefined) {
-      applyRoundWinner(winner);
+      applyRoundWinner(winner, points);
       return;
     }
 
@@ -768,6 +786,9 @@ export default function MatchPage() {
         show={showRoundResult}
         winnerName={roundWinnerName}
         isDraw={roundIsDraw}
+        side1Name={side1 || "فريق 1"}
+        side2Name={side2 || "فريق 2"}
+        gained={roundGained}
       />
 
       {!started ? (
