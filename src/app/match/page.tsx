@@ -780,8 +780,6 @@ export default function MatchPage() {
           selectedGames={selectedGames}
           pinnedGame={pinnedGame}
           setSelectedGames={setSelectedGames}
-          gameRounds={gameRounds}
-          setGameRounds={setGameRounds}
           quizCategories={quizCategories}
           setQuizCategories={setQuizCategories}
           timerEnabled={timerEnabled}

@@ -204,7 +204,7 @@ export function WinnerOverlay({
           onClick={onReplay}
           className={mode === "quick" ? "btn-secondary" : "btn-primary"}
         >
-          {mode === "quick" ? "نعيدها؟" : "نعيدها بنفس الألعاب"}
+          {mode === "quick" ? "جولة ثانية" : "نعيدها بنفس الألعاب"}
         </button>
 
         <button type="button" onClick={onChangeGames} className="btn-secondary">
