@@ -19,7 +19,7 @@ type Props = {
   timerSeconds?: number;
 };
 
-const clubDeck = createDeck(CLUBS);
+const clubDeck = createDeck(CLUBS, "club");
 
 type ClubRoundState = {
   clubs: [ClubItem, ClubItem];

@@ -55,9 +55,12 @@ type WordRoundState = {
 
 const playableWords = WORDS.filter((word) => isPlayableWord(word.answer));
 
-const wordDeck = createDeck(playableWords);
+const wordDeck = createDeck(playableWords, "word");
 
-const trialWordDeck = createDeck(playableWords.slice(0, TRIAL_LIMITS.word));
+const trialWordDeck = createDeck(
+  playableWords.slice(0, TRIAL_LIMITS.word),
+  "word-trial",
+);
 
 export default function WordGame({
   onRoundEnd,

@@ -17,7 +17,7 @@ const STAGE_POINTS = [3, 2, 1];
 
 type TeamSide = "side1" | "side2";
 
-const zoomDeck = createDeck(ZOOM_ITEMS);
+const zoomDeck = createDeck(ZOOM_ITEMS, "zoom");
 
 type ZoomRoundState = {
   rounds: ZoomItem[];

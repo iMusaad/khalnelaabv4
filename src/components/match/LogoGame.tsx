@@ -13,7 +13,7 @@ const TOTAL_ROUNDS = 2;
 
 type TeamSide = "side1" | "side2";
 
-const logoDeck = createDeck(LOGOS);
+const logoDeck = createDeck(LOGOS, "logo");
 
 type LogoRoundState = {
   rounds: LogoItem[];

@@ -19,7 +19,7 @@ type Props = {
   timerSeconds?: number;
 };
 
-const countryDeck = createDeck(COUNTRIES);
+const countryDeck = createDeck(COUNTRIES, "country");
 
 type CountryRoundState = {
   countries: [CountryItem, CountryItem];

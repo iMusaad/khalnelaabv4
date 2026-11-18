@@ -20,9 +20,12 @@ type Phase = "first" | "second" | "revealed";
 
 type Point = { lat: number; lon: number };
 
-const placeDeck = createDeck(GEO_PLACES);
+const placeDeck = createDeck(GEO_PLACES, "geo");
 
-const trialPlaceDeck = createDeck(GEO_PLACES.slice(0, TRIAL_LIMITS.geo));
+const trialPlaceDeck = createDeck(
+  GEO_PLACES.slice(0, TRIAL_LIMITS.geo),
+  "geo-trial",
+);
 
 type GeoRoundState = {
   rounds: GeoPlace[];
