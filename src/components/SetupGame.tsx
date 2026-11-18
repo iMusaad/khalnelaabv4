@@ -528,7 +528,7 @@ export default function SetupGame({
               اخترتوا {selectedCount} من {requiredGames}
             </p>
 
-            <div className="grid gap-4 lg:grid-cols-[1fr_1.05fr]">
+            <div className="grid gap-4 lg:grid-cols-[4fr_3fr]">
               {quizCards.length > 0 &&
                 section(
                   "أسئلة",
@@ -548,7 +548,9 @@ export default function SetupGame({
                     {zoomCards.map(renderCard)}
                   </div>,
                 )}
+            </div>
 
+            <div className="mt-4 grid gap-4 lg:grid-cols-2">
               {guessCards.length > 0 &&
                 section(
                   "نعم أو لا",
