@@ -13,7 +13,7 @@ const TOTAL_ROUNDS = 1;
 
 type TeamSide = "side1" | "side2";
 
-const peopleDeck = createDeck(WHO_GAME);
+const peopleDeck = createDeck(WHO_GAME, "scramble");
 
 type ScrambleRoundState = {
   rounds: typeof WHO_GAME;

@@ -15,7 +15,7 @@ import { readRoundState, writeRoundState } from "@/lib/roundState";
 import type { TeamTurn as Turn, WinnerType } from "@/types/game";
 import type { WheelValue as Value } from "@/data/wheel";
 
-const puzzleDeck = createDeck(PUZZLES);
+const puzzleDeck = createDeck(PUZZLES, "wheel");
 
 type WheelRoundState = {
   answer: string;

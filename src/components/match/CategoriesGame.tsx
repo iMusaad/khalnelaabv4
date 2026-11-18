@@ -8,7 +8,7 @@ import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
 import type { WinnerType } from "@/types/game";
 
-const letterDeck = createDeck(letters);
+const letterDeck = createDeck(letters, "categories");
 
 type CategoriesRoundState = {
   letter: string;

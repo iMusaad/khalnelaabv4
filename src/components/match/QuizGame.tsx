@@ -40,6 +40,7 @@ function drawQuizQuestions(category: QuizCategoryKey, trial: boolean) {
 
     deck = createDeck(
       trial ? questions.slice(0, TRIAL_LIMITS.quiz) : questions,
+      `quiz-${category}${trial ? "-trial" : ""}`,
     );
 
     decks.set(category, deck);

@@ -13,7 +13,7 @@ const SECOND_TIME = 10;
 
 type TeamSide = "side1" | "side2";
 
-const proverbDeck = createDeck(puzzles);
+const proverbDeck = createDeck(puzzles, "draw");
 
 type ProverbRoundState = {
   rounds: typeof puzzles;

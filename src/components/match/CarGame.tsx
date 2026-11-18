@@ -17,7 +17,7 @@ const STAGE_POINTS = [3, 2, 1];
 
 type TeamSide = "side1" | "side2";
 
-const carDeck = createDeck(CARS);
+const carDeck = createDeck(CARS, "car");
 
 type CarRoundState = {
   rounds: CarItem[];
