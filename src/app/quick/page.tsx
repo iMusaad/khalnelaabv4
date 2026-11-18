@@ -11,7 +11,7 @@ import HomeLogoLink from "@/components/HomeLogoLink";
 import PixelHero from "@/components/PixelHero";
 import PosterFlip from "@/components/PosterFlip";
 import type { GameType } from "@/lib/matchQueue";
-import { PLAYABLE_CARDS, QUIZ_COLORS, QUIZ_LABELS } from "@/data/quizCards";
+import { PLAYABLE_CARDS } from "@/data/quizCards";
 
 export const dynamic = "force-dynamic";
 
@@ -81,15 +81,6 @@ export default async function QuickPage() {
                       priority
                       className="object-cover"
                     />
-
-                    {game.category && (
-                      <span
-                        className="absolute inset-x-0 bottom-0 px-1 pb-2 pt-1.5 text-center text-base font-black text-white sm:text-lg"
-                        style={{ background: QUIZ_COLORS[game.category] }}
-                      >
-                        {QUIZ_LABELS[game.category]}
-                      </span>
-                    )}
 
                     {!open && (
                       <span className="absolute inset-0 flex items-end justify-center bg-[#130e28]/55 pb-3">

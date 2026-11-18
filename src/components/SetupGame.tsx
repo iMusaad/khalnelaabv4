@@ -11,7 +11,7 @@ import { UPCOMING_GAME_IDS } from "@/data/upcomingGames";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import PixelHero from "@/components/PixelHero";
 import { quizCategoryList, type QuizCategoryKey } from "@/data/quiz/meta";
-import { QUIZ_COLORS, QUIZ_LABELS } from "@/data/quizCards";
+import { QUIZ_LABELS } from "@/data/quizCards";
 import { getDefaultRounds } from "@/lib/matchQueue";
 
 type SetupGameId =
@@ -132,7 +132,7 @@ function toCards(games: typeof GAMES): SetupCard[] {
           game: game.id,
           category: category.key,
           name: `أسئلة ${QUIZ_LABELS[category.key]}`,
-          image: game.image,
+          image: `/images/posters/Quiz-${category.key}.png`,
         }))
       : [{ key: game.id, game: game.id, name: game.name, image: game.image }],
   );
@@ -372,15 +372,6 @@ export default function SetupGame({
               priority
               className="object-cover"
             />
-
-            {game.category && (
-              <span
-                className="absolute inset-x-0 bottom-0 z-[5] px-1 pb-2 pt-1.5 text-center text-base font-black text-white sm:text-lg"
-                style={{ background: QUIZ_COLORS[game.category] }}
-              >
-                {QUIZ_LABELS[game.category]}
-              </span>
-            )}
 
             {paywalled && (
               <span className="absolute inset-0 z-10 flex flex-col items-center justify-end bg-[#130e28]/55 pb-3">
