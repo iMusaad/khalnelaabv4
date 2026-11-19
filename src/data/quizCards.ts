@@ -10,7 +10,7 @@ export const QUIZ_LABELS: Record<QuizCategoryKey, string> = {
 
 export const QUIZ_COLORS: Record<QuizCategoryKey, string> = {
   seerah: "#0b7a3e",
-  saudi: "#1f6f5c",
+  saudi: "#005430",
   football: "#2f9bff",
   geography: "#c27700",
 };
