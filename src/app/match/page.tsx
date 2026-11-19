@@ -41,12 +41,7 @@ const WIN_BONUS = 3;
 import type { ModeType, RoundStat } from "@/types/match";
 
 type PhaseType =
-  | "setup"
-  | "countdown"
-  | "intro"
-  | "playing"
-  | "transition"
-  | "finished";
+  "setup" | "countdown" | "intro" | "playing" | "transition" | "finished";
 
 const GAME_LOADERS = {
   word: () => import("@/components/match/WordGame"),
@@ -523,11 +518,7 @@ export default function MatchPage() {
     const startTimer = setTimeout(() => {
       saveMatch(snapshotRef.current({ index: 0 }));
       setStarted(true);
-      setPhase(
-        queue[0] && !hasSeenIntro(queue[0].game)
-          ? "intro"
-          : "playing",
-      );
+      setPhase(queue[0] && !hasSeenIntro(queue[0].game) ? "intro" : "playing");
     }, 650);
 
     return () => clearTimeout(startTimer);
