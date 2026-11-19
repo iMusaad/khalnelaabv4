@@ -3,4 +3,5 @@ export const SITE = {
   url: "https://khalnelab.com",
   contactEmail: "khalnelab@outlook.com",
   freelanceNumber: "FL-242298205",
+  gaMeasurementId: "",
 };

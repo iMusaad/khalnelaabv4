@@ -5,11 +5,13 @@ import AdminDevices from "@/components/AdminDevices";
 import AdminGifts from "@/components/AdminGifts";
 import AdminMessages from "@/components/AdminMessages";
 import AdminReferrals from "@/components/AdminReferrals";
+import AdminStats from "@/components/AdminStats";
 import AdminUpcoming from "@/components/AdminUpcoming";
 
 const STORAGE_KEY = "khal-admin";
 
 const TABS = [
+  { id: "stats", label: "الجلسات" },
   { id: "messages", label: "الرسائل" },
   { id: "gifts", label: "الأكواد" },
   { id: "referrals", label: "المسوّقين" },
@@ -31,7 +33,7 @@ async function checkPassword(password: string) {
 export default function AdminPanel() {
   const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
-  const [tab, setTab] = useState<TabId>("messages");
+  const [tab, setTab] = useState<TabId>("stats");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -159,6 +161,7 @@ export default function AdminPanel() {
         </button>
       </div>
 
+      {tab === "stats" && <AdminStats password={password} />}
       {tab === "messages" && <AdminMessages password={password} />}
       {tab === "gifts" && (
         <div className="space-y-4">
