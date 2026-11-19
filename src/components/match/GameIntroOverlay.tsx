@@ -60,19 +60,11 @@ export default function GameIntroOverlay({
         </div>
       </div>
 
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+      <div className="mt-6 flex justify-center">
         <button
           type="button"
           onClick={onStart}
           className="btn-primary min-w-[180px] py-3 text-lg"
-        >
-          فهمنا، يلا
-        </button>
-
-        <button
-          type="button"
-          onClick={onStart}
-          className="text-sm font-black text-white/50 underline hover:text-white"
         >
           تخطي
         </button>
