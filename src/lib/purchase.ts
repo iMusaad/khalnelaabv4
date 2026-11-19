@@ -5,6 +5,7 @@ import {
   isPaidPurchaseWithReferral,
   type MoyasarPayment,
 } from "@/lib/payment";
+import { recordSale } from "@/lib/money";
 import { getStoredPayment } from "@/lib/paymentStore";
 import { recordReferralSale } from "@/lib/referral";
 import { ensureShortCode } from "@/lib/shortCode";
@@ -30,6 +31,10 @@ export async function findPaidPayment(
 
   if (store && fetched.metadata?.ref) {
     await recordReferralSale(store, fetched.id, fetched.metadata.ref);
+  }
+
+  if (store) {
+    await recordSale(store, fetched).catch(() => {});
   }
 
   return fetched;

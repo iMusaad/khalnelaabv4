@@ -4,6 +4,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import AdminDevices from "@/components/AdminDevices";
 import AdminGifts from "@/components/AdminGifts";
 import AdminMessages from "@/components/AdminMessages";
+import AdminMoney from "@/components/AdminMoney";
 import AdminReferrals from "@/components/AdminReferrals";
 import AdminStats from "@/components/AdminStats";
 import AdminUpcoming from "@/components/AdminUpcoming";
@@ -11,6 +12,7 @@ import AdminUpcoming from "@/components/AdminUpcoming";
 const STORAGE_KEY = "khal-admin";
 
 const TABS = [
+  { id: "money", label: "الفلوس" },
   { id: "stats", label: "الجلسات" },
   { id: "messages", label: "الرسائل" },
   { id: "gifts", label: "الأكواد" },
@@ -33,7 +35,7 @@ async function checkPassword(password: string) {
 export default function AdminPanel() {
   const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
-  const [tab, setTab] = useState<TabId>("stats");
+  const [tab, setTab] = useState<TabId>("money");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -132,7 +134,7 @@ export default function AdminPanel() {
       <div className="flex flex-wrap items-center gap-2">
         <div
           role="tablist"
-          className="flex flex-1 gap-1 rounded-xl bg-[#15102b] p-1"
+          className="grid flex-1 grid-cols-3 gap-1 rounded-xl bg-[#15102b] p-1 sm:flex"
         >
           {TABS.map((item) => (
             <button
@@ -141,7 +143,7 @@ export default function AdminPanel() {
               role="tab"
               aria-selected={tab === item.id}
               onClick={() => setTab(item.id)}
-              className={`flex-1 rounded-lg px-2 py-2 text-sm font-black transition-colors sm:text-base ${
+              className={`flex-1 whitespace-nowrap rounded-lg px-2 py-2 text-xs font-black transition-colors sm:text-base ${
                 tab === item.id
                   ? "bg-[#ffc23d] text-[#241339]"
                   : "text-white/60 hover:text-white"
@@ -161,6 +163,7 @@ export default function AdminPanel() {
         </button>
       </div>
 
+      {tab === "money" && <AdminMoney password={password} />}
       {tab === "stats" && <AdminStats password={password} />}
       {tab === "messages" && <AdminMessages password={password} />}
       {tab === "gifts" && (

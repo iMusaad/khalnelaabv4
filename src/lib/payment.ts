@@ -7,6 +7,7 @@ export type MoyasarPayment = {
   status: string;
   amount: number;
   currency: string;
+  fee?: number;
   metadata?: Record<string, string> | null;
 };
 

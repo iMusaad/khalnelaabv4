@@ -5,7 +5,10 @@ import Script from "next/script";
 import { useEffect, useState } from "react";
 
 import RiyalSign from "@/components/RiyalSign";
+import { trackEvent } from "@/lib/analytics";
+import { SOURCE_COOKIE } from "@/lib/attribution";
 import { emailProblem, suggestion } from "@/lib/emailCheck";
+import { readCookie, trackFunnel } from "@/lib/track";
 
 const MOYASAR_VERSION = "1.14.0";
 const MOYASAR_CDN = `https://cdn.moyasar.com/mpf/${MOYASAR_VERSION}`;
@@ -49,6 +52,21 @@ export default function BuyForm({
 
   const finalAmount = Math.max(100, amount - (referral?.discount ?? 0) * 100);
 
+  useEffect(() => {
+    trackFunnel("buy_view", true);
+    trackEvent("view_item", { currency: "SAR", value: amount / 100 });
+  }, [amount]);
+
+  useEffect(() => {
+    if (step === "pay") {
+      trackFunnel("checkout", true);
+      trackEvent("begin_checkout", {
+        currency: "SAR",
+        value: finalAmount / 100,
+      });
+    }
+  }, [step, finalAmount]);
+
   async function applyRef() {
     if (!refInput.trim() || refStatus === "checking") {
       return;
@@ -87,6 +105,7 @@ export default function BuyForm({
 
     const origin = window.location.origin;
     const trimmedEmail = email.trim();
+    const source = readCookie(SOURCE_COOKIE);
 
     window.Moyasar.init({
       element: ".mysr-form",
@@ -110,6 +129,7 @@ export default function BuyForm({
       metadata: {
         ...(trimmedEmail ? { email: trimmedEmail } : {}),
         ...(referral ? { ref: referral.code } : {}),
+        ...(source ? { src: source } : {}),
       },
     });
   }, [

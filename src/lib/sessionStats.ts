@@ -73,7 +73,7 @@ export function parseStatEvent(value: unknown): StatEvent | null {
   };
 }
 
-export function statKey(event: StatEvent, now = Date.now()) {
+export function statKey(event: StatEvent, now = Date.now(), source = "direct") {
   return [
     "stat",
     riyadhDate(now),
@@ -82,11 +82,18 @@ export function statKey(event: StatEvent, now = Date.now()) {
     event.trial ? "t" : "p",
     event.games.join("."),
     event.sessionId,
+    source,
   ].join(":");
 }
 
-export async function recordStat(store: KvStore, event: StatEvent) {
-  await store.put(statKey(event), "1", { expirationTtl: STAT_TTL_SECONDS });
+export async function recordStat(
+  store: KvStore,
+  event: StatEvent,
+  source = "direct",
+) {
+  await store.put(statKey(event, Date.now(), source), "1", {
+    expirationTtl: STAT_TTL_SECONDS,
+  });
 }
 
 export function summarizeStatKeys(

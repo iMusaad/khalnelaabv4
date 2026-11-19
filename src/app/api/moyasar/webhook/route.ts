@@ -4,6 +4,7 @@ import { linkPaymentToEmail } from "@/lib/emailIndex";
 import { getMessageStore, isRateLimited } from "@/lib/messageStore";
 import { isPaidPurchaseWithReferral, type MoyasarPayment } from "@/lib/payment";
 import { recordReferralSale } from "@/lib/referral";
+import { recordSale } from "@/lib/money";
 import { savePayment, webhookSecretMatches } from "@/lib/paymentStore";
 import { displayCodeForPayment } from "@/lib/purchase";
 import { notifyOwner } from "@/lib/telegram";
@@ -80,6 +81,7 @@ export async function POST(request: NextRequest) {
   }
 
   await savePayment(store, payment);
+  await recordSale(store, payment).catch(() => {});
 
   if (payment.metadata?.ref) {
     await recordReferralSale(store, payment.id, payment.metadata.ref);
