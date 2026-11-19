@@ -17,6 +17,7 @@ import {
 import type { QuizCategoryKey } from "@/data/quiz/meta";
 import GameIntroOverlay from "@/components/match/GameIntroOverlay";
 import { hasSeenIntro, markIntroSeen } from "@/lib/introSeen";
+import { newStatSessionId, reportSession } from "@/lib/analytics";
 import {
   buildRoundQueue,
   getDefaultRounds,
@@ -144,6 +145,8 @@ export default function MatchPage() {
   const resolvedRoundRef = useRef<number | null>(null);
 
   const sharingRef = useRef(false);
+
+  const statSessionRef = useRef("");
 
   const [mode, setMode] = useState<ModeType>("session");
 
@@ -316,6 +319,14 @@ export default function MatchPage() {
 
     setQueue(builtQueue);
 
+    statSessionRef.current = newStatSessionId();
+    reportSession("start", {
+      sessionId: statSessionRef.current,
+      mode,
+      trial,
+      rounds: builtQueue,
+    });
+
     setStarted(false);
     setIndex(0);
 
@@ -338,6 +349,16 @@ export default function MatchPage() {
 
   function finishSession(finalSide1Score: number, finalSide2Score: number) {
     clearFlowTimers();
+
+    if (statSessionRef.current) {
+      reportSession("finish", {
+        sessionId: statSessionRef.current,
+        mode,
+        trial,
+        rounds: queue,
+      });
+      statSessionRef.current = "";
+    }
 
     setSide1Score(finalSide1Score);
     setSide2Score(finalSide2Score);

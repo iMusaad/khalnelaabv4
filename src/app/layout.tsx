@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { SITE } from "@/data/site";
 import "./globals.css";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
 import RefCapture from "@/components/RefCapture";
 import { GAME_COUNT } from "@/data/quizCards";
 
@@ -62,6 +63,7 @@ export default function RootLayout({
       <body>
         <RefCapture />
         {children}
+        <GoogleAnalytics />
       </body>
     </html>
   );
