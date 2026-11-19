@@ -15,6 +15,8 @@ import {
   WinnerOverlay,
 } from "@/components/match/SessionOverlays";
 import type { QuizCategoryKey } from "@/data/quiz/meta";
+import GameIntroOverlay from "@/components/match/GameIntroOverlay";
+import { hasSeenIntro, markIntroSeen } from "@/lib/introSeen";
 import {
   buildRoundQueue,
   getDefaultRounds,
@@ -38,7 +40,8 @@ import type { RoundPoints, WinnerType } from "@/types/game";
 const WIN_BONUS = 3;
 import type { ModeType, RoundStat } from "@/types/match";
 
-type PhaseType = "setup" | "countdown" | "playing" | "transition" | "finished";
+type PhaseType =
+  "setup" | "countdown" | "intro" | "playing" | "transition" | "finished";
 
 const GAME_LOADERS = {
   word: () => import("@/components/match/WordGame"),
@@ -365,7 +368,11 @@ export default function MatchPage() {
     transitionTimer.current = setTimeout(() => {
       setIndex((currentIndex) => currentIndex + 1);
 
-      setPhase("playing");
+      setPhase(
+        upcomingRound && !hasSeenIntro(upcomingRound.game)
+          ? "intro"
+          : "playing",
+      );
 
       transitionTimer.current = null;
     }, 1500);
@@ -481,7 +488,10 @@ export default function MatchPage() {
 
   function confirmLeave(event: MouseEvent<HTMLAnchorElement>) {
     const inProgress =
-      phase === "countdown" || phase === "playing" || phase === "transition";
+      phase === "countdown" ||
+      phase === "intro" ||
+      phase === "playing" ||
+      phase === "transition";
 
     if (inProgress && !window.confirm("متأكدين؟ بتضيع نتيجة الجلسة")) {
       event.preventDefault();
@@ -508,11 +518,11 @@ export default function MatchPage() {
     const startTimer = setTimeout(() => {
       saveMatch(snapshotRef.current({ index: 0 }));
       setStarted(true);
-      setPhase("playing");
+      setPhase(queue[0] && !hasSeenIntro(queue[0].game) ? "intro" : "playing");
     }, 650);
 
     return () => clearTimeout(startTimer);
-  }, [phase, countdown]);
+  }, [phase, countdown, queue]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -753,6 +763,16 @@ export default function MatchPage() {
 
       {phase === "countdown" && <CountdownOverlay countdown={countdown} />}
 
+      {phase === "intro" && current && (
+        <GameIntroOverlay
+          game={current.game}
+          onStart={() => {
+            markIntroSeen(current.game);
+            setPhase("playing");
+          }}
+        />
+      )}
+
       {phase === "transition" && nextRound && (
         <TransitionOverlay nextRound={nextRound} />
       )}
@@ -827,7 +847,7 @@ export default function MatchPage() {
             />
           )}
 
-          {renderCurrentGame()}
+          {phase !== "intro" && renderCurrentGame()}
 
           <p className="mt-4 text-center text-sm font-bold text-white/50">
             الجولة {index + 1} من {queue.length}
