@@ -8,7 +8,7 @@ import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
 import type { RoundPoints, WinnerType } from "@/types/game";
 
-const TOTAL_ROUNDS = 4;
+const TOTAL_ROUNDS = 3;
 const SECOND_TIME = 10;
 
 type TeamSide = "side1" | "side2";

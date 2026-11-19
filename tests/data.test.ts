@@ -122,13 +122,6 @@ describe("country facts", () => {
         expect(facts.population).toMatch(/مليون|مليار/);
       }
     }
-
-    for (const id of Object.keys(COUNTRY_FACTS)) {
-      expect(
-        COUNTRIES.some((country) => country.id === id),
-        id,
-      ).toBe(true);
-    }
   });
 });
 

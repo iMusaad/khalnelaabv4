@@ -20,19 +20,9 @@ export const WHO_GAME = [
     answer: "حسون البارقي",
   },
   {
-    id: "mory",
-    image: "/images/people/mory.jpg",
-    answer: " توقوموري",
-  },
-  {
     id: "batman",
     image: "/images/people/batman.jpg",
     answer: "باتمان",
-  },
-  {
-    id: "3roj",
-    image: "/images/people/3roj.jpg",
-    answer: "عروج",
   },
   {
     id: "jobs",
@@ -65,11 +55,6 @@ export const WHO_GAME = [
     answer: "ماجد عبدالله",
   },
   {
-    id: "cj",
-    image: "/images/people/cj.jpg",
-    answer: "سي جي",
-  },
-  {
     id: "crash",
     image: "/images/people/crash.jpg",
     answer: "كراش",
@@ -78,11 +63,6 @@ export const WHO_GAME = [
     id: "talal",
     image: "/images/people/talal.jpg",
     answer: "طلال مداح",
-  },
-  {
-    id: "small",
-    image: "/images/people/small.jpg",
-    answer: "سمول كبتشينو",
   },
   {
     id: "CR7",
@@ -95,44 +75,14 @@ export const WHO_GAME = [
     answer: "فؤاد (طاش)",
   },
   {
-    id: "trump",
-    image: "/images/people/trump.jpg",
-    answer: "ترامب",
-  },
-  {
     id: "amer",
     image: "/images/people/amer.jpg",
     answer: "عامر (شباب البومب)",
   },
   {
-    id: "riyadh",
-    image: "/images/people/riyadh.jpg",
-    answer: "أسطورة الرياض",
-  },
-  {
     id: "you",
     image: "/images/people/you.jpg",
     answer: "اوصف نفسك شف يعرفونك ولا",
-  },
-  {
-    id: "rbeah",
-    image: "/images/people/rbeah.jpg",
-    answer: "ربيعة",
-  },
-  {
-    id: "buzz",
-    image: "/images/people/buzz.jpg",
-    answer: "باز يطير",
-  },
-  {
-    id: "woody",
-    image: "/images/people/woody.jpg",
-    answer: "وودي",
-  },
-  {
-    id: "bndr",
-    image: "/images/people/bndr.jpg",
-    answer: "بندرينا",
   },
   {
     id: "abdh",
@@ -145,58 +95,8 @@ export const WHO_GAME = [
     answer: "سبايدرمان",
   },
   {
-    id: "hussain",
-    image: "/images/people/hussain.jpg",
-    answer: "حسين عبدالغني",
-  },
-  {
-    id: "nor",
-    image: "/images/people/nor.jpg",
-    answer: "محمد نور",
-  },
-  {
     id: "nasser",
     image: "/images/people/nasser.jpg",
     answer: "ناصر القصبي",
-  },
-  {
-    id: "leon",
-    image: "/images/people/leon.jpg",
-    answer: "ليون كيندي",
-  },
-  {
-    id: "ronaldo",
-    image: "/images/people/ronaldo.jpg",
-    answer: "رونالدو",
-  },
-  {
-    id: "pepsi",
-    image: "/images/people/pepsi.jpg",
-    answer: "بيبسي مان",
-  },
-  {
-    id: "abdullah",
-    image: "/images/people/abdullah.jpg",
-    answer: "عبدالله الخيبري",
-  },
-  {
-    id: "dexter",
-    image: "/images/people/dexter.jpg",
-    answer: "ديكستر مورغان",
-  },
-  {
-    id: "prison",
-    image: "/images/people/prison.jpg",
-    answer: "مايكل سكوفيلد",
-  },
-  {
-    id: "ben",
-    image: "/images/people/ben.jpg",
-    answer: "بن 10",
-  },
-  {
-    id: "walter",
-    image: "/images/people/walter.jpg",
-    answer: "والتر وايت ",
   },
 ];
