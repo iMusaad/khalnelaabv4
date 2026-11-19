@@ -4,6 +4,7 @@ import { SITE } from "@/data/site";
 import "./globals.css";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import RefCapture from "@/components/RefCapture";
+import SourceCapture from "@/components/SourceCapture";
 import { GAME_COUNT } from "@/data/quizCards";
 
 const somar = localFont({
@@ -62,6 +63,7 @@ export default function RootLayout({
     <html lang="ar" dir="rtl" className={somar.variable}>
       <body>
         <RefCapture />
+        <SourceCapture />
         {children}
         <GoogleAnalytics />
       </body>

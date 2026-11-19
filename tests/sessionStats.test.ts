@@ -59,7 +59,9 @@ describe("session stats", () => {
       statKey(quick, NOW - 10 * 24 * 60 * 60 * 1000),
     ];
 
-    expect(keys[0]).toBe("stat:2026-11-20:s:m:p:geo.quiz-saudi:abcdefgh12");
+    expect(keys[0]).toBe(
+      "stat:2026-11-20:s:m:p:geo.quiz-saudi:abcdefgh12:direct",
+    );
 
     const summary = summarizeStatKeys(keys, NOW);
 
