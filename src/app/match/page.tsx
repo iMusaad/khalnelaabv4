@@ -17,7 +17,12 @@ import {
 import type { QuizCategoryKey } from "@/data/quiz/meta";
 import GameIntroOverlay from "@/components/match/GameIntroOverlay";
 import { hasSeenIntro, markIntroSeen } from "@/lib/introSeen";
-import { newStatSessionId, reportSession } from "@/lib/analytics";
+import {
+  cardKeyFor,
+  newStatSessionId,
+  reportSession,
+  trackEvent,
+} from "@/lib/analytics";
 import {
   buildRoundQueue,
   getDefaultRounds,
@@ -207,6 +212,28 @@ export default function MatchPage() {
   const [sharing, setSharing] = useState(false);
 
   const current = queue[index];
+
+  const trackedRoundRef = useRef("");
+
+  useEffect(() => {
+    if (phase !== "playing" || !current) {
+      return;
+    }
+
+    const roundKey = `${statSessionRef.current}:${index}`;
+
+    if (trackedRoundRef.current === roundKey) {
+      return;
+    }
+
+    trackedRoundRef.current = roundKey;
+    trackEvent("game_play", {
+      game: cardKeyFor(current),
+      round_number: index + 1,
+      match_mode: mode,
+      trial,
+    });
+  }, [phase, current, index, mode, trial]);
 
   const nextRound = queue[index + 1];
 
@@ -789,6 +816,7 @@ export default function MatchPage() {
           game={current.game}
           onStart={() => {
             markIntroSeen(current.game);
+            trackEvent("intro_skip", { game: cardKeyFor(current) });
             setPhase("playing");
           }}
         />

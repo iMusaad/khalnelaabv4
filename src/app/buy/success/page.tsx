@@ -4,6 +4,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import CopyButton from "@/components/CopyButton";
 import PageShell from "@/components/PageShell";
+import PurchaseTracker from "@/components/PurchaseTracker";
 import QrCode from "@/components/QrCode";
 import { getLicenseSecrets, verifyLicenseCode } from "@/lib/license";
 import { LICENSE_COOKIE } from "@/lib/licenseCookie";
@@ -40,6 +41,7 @@ export default async function SuccessPage() {
 
   return (
     <PageShell title="تم التفعيل">
+      <PurchaseTracker />
       <section className="arcade-card p-5 text-center sm:p-7">
         <p className="text-lg font-black text-white">
           شكرًا لك! اللعبة صارت مفعلة على هذا الجهاز.

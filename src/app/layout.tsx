@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { SITE } from "@/data/site";
 import "./globals.css";
+import CookieConsent from "@/components/CookieConsent";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import RefCapture from "@/components/RefCapture";
 import SourceCapture from "@/components/SourceCapture";
@@ -66,6 +67,7 @@ export default function RootLayout({
         <SourceCapture />
         {children}
         <GoogleAnalytics />
+        <CookieConsent />
       </body>
     </html>
   );

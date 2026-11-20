@@ -1,22 +1,39 @@
+"use client";
+
 import Script from "next/script";
+import { useEffect, useState } from "react";
 import { SITE } from "@/data/site";
+import { ensureGtag, gaEnabled } from "@/lib/analytics";
+import { CONSENT_EVENT, getConsent } from "@/lib/consent";
 
 export default function GoogleAnalytics() {
-  const id = SITE.gaMeasurementId;
+  const [granted, setGranted] = useState(false);
 
-  if (!/^G-[A-Z0-9]+$/.test(id)) {
+  useEffect(() => {
+    function sync() {
+      const ok = getConsent() === "granted";
+
+      if (ok) {
+        ensureGtag();
+      }
+
+      setGranted(ok);
+    }
+
+    sync();
+    window.addEventListener(CONSENT_EVENT, sync);
+
+    return () => window.removeEventListener(CONSENT_EVENT, sync);
+  }, []);
+
+  if (!gaEnabled() || !granted) {
     return null;
   }
 
   return (
-    <>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${id}`}
-        strategy="afterInteractive"
-      />
-      <Script id="ga-init" strategy="afterInteractive">
-        {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','${id}');`}
-      </Script>
-    </>
+    <Script
+      src={`https://www.googletagmanager.com/gtag/js?id=${SITE.gaMeasurementId}`}
+      strategy="afterInteractive"
+    />
   );
 }
