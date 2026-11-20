@@ -116,14 +116,21 @@ export default function ProverbGame({
     [index],
   );
 
-  const activeTurn: TeamSide = secondTurn
-    ? mainTurn === "side1"
-      ? "side2"
-      : "side1"
-    : mainTurn;
+  const isShared = rounds.length % 2 === 1 && index === rounds.length - 1;
 
-  const activeTeamName =
-    activeTurn === "side1" ? side1Name || "فريق 1" : side2Name || "فريق 2";
+  const activeTurn: TeamSide | undefined = isShared
+    ? undefined
+    : secondTurn
+      ? mainTurn === "side1"
+        ? "side2"
+        : "side1"
+      : mainTurn;
+
+  const activeTeamName = isShared
+    ? "الفريقين مع بعض"
+    : activeTurn === "side1"
+      ? side1Name || "فريق 1"
+      : side2Name || "فريق 2";
 
   useEffect(() => {
     if (!timerEnabled || revealed || !current) {
@@ -131,7 +138,7 @@ export default function ProverbGame({
     }
 
     if (timeLeft <= 0) {
-      if (!secondTurn) {
+      if (!secondTurn && !isShared) {
         setSecondTurn(true);
         setTimeLeft(SECOND_TIME);
       } else {
@@ -146,7 +153,7 @@ export default function ProverbGame({
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [timeLeft, revealed, secondTurn, current, timerEnabled]);
+  }, [timeLeft, revealed, secondTurn, current, timerEnabled, isShared]);
 
   function finishGame(final1: number, final2: number) {
     onRoundEnd(final1 > final2 ? "side1" : final2 > final1 ? "side2" : "none", {
@@ -219,6 +226,7 @@ export default function ProverbGame({
         side2Score={side2Score}
         turn={activeTeamName}
         turnSide={activeTurn}
+        neutralTurnStyle="duo"
         currentRound={currentRound}
         game="draw"
       >
@@ -229,6 +237,12 @@ export default function ProverbGame({
               {" / "}
               {rounds.length}
             </div>
+
+            {isShared && !revealed && (
+              <div className="text-sm font-black text-[#ffb21e]">
+                للفريقين، اللي يعرفه أول ياخذ النقطة
+              </div>
+            )}
 
             {secondTurn && !revealed && (
               <div className="text-sm font-black text-[#ffb21e]">
