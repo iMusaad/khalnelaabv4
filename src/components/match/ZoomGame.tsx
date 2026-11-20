@@ -235,6 +235,7 @@ export default function ZoomGame({
 
   return (
     <GameLayout
+      reportItem={current?.answer}
       title="عينك عالبوستر"
       side1={side1Name || "فريق 1"}
       side2={side2Name || "فريق 2"}

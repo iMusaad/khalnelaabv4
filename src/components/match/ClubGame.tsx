@@ -120,6 +120,7 @@ export default function ClubGame({
 
   return (
     <GameLayout
+      reportItem={clubs?.map((club) => club.nameAr).join(" / ")}
       title="وش ناديك؟"
       side1={side1}
       side2={side2}

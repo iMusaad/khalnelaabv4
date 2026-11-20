@@ -700,6 +700,7 @@ export default function WordGame({
   return (
     <>
       <GameLayout
+        reportItem={current ? `الكلمة: ${current}` : undefined}
         title="خمن الكلمة"
         side1={side1Name}
         side2={side2Name}

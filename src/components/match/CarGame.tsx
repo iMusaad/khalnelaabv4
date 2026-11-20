@@ -228,6 +228,7 @@ export default function CarGame({
 
   return (
     <GameLayout
+      reportItem={current ? `${current.brand} ${current.model}` : undefined}
       title="عينك عالموتر"
       side1={side1Name || "فريق 1"}
       side2={side2Name || "فريق 2"}

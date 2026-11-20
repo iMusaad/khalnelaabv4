@@ -252,6 +252,7 @@ export default function LogoGame({
 
   return (
     <GameLayout
+      reportItem={current?.answerAr}
       title="عينك عالشعار"
       side1={side1Name || "فريق 1"}
       side2={side2Name || "فريق 2"}
