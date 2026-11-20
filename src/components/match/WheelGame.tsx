@@ -648,7 +648,7 @@ export default function WheelGame({
           onClick={() => onRoundEnd("none")}
           className="btn-primary mt-4"
         >
-          إنهاء الجولة
+          إنهاء اللعبة
         </button>
       </div>
     );
@@ -690,7 +690,7 @@ export default function WheelGame({
               : phase === "guess"
                 ? `اختاروا حرف — الحرف بـ ${formatValue(currentValue)}`
                 : phase === "celebrate"
-                  ? "انتهت الجولة"
+                  ? "انتهت اللعبة"
                   : "لف العجلة"}
 
             {phase === "guess" && timerEnabled && (
@@ -959,7 +959,7 @@ export default function WheelGame({
 
                   <p className="mt-2 text-lg text-white/85">
                     {winnerName
-                      ? `أخذ الجولة بـ ${Math.max(score1, score2)} نقطة`
+                      ? `فاز بـ ${Math.max(score1, score2)} نقطة`
                       : `النقاط متساوية: ${score1}`}
                   </p>
                 </div>

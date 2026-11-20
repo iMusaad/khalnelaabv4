@@ -226,7 +226,7 @@ export default function GeoGame({
           onClick={() => onRoundEnd("none")}
           className="btn-primary mt-4"
         >
-          إنهاء الجولة
+          إنهاء اللعبة
         </button>
       </div>
     );
@@ -453,7 +453,7 @@ export default function GeoGame({
               onClick={next}
               className="btn-primary min-w-[180px]"
             >
-              {index + 1 >= rounds.length ? "إنهاء الجولة" : "الصورة الجاية"}
+              {index + 1 >= rounds.length ? "إنهاء اللعبة" : "الصورة الجاية"}
             </button>
           )}
         </div>

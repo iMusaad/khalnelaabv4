@@ -273,7 +273,7 @@ export default function QuizGame({
           onClick={() => onRoundEnd("none")}
           className="btn-primary mt-4"
         >
-          إنهاء الجولة
+          إنهاء اللعبة
         </button>
       </div>
     );
@@ -291,7 +291,7 @@ export default function QuizGame({
           onClick={() => onRoundEnd("none")}
           className="btn-primary mt-4"
         >
-          إنهاء الجولة
+          إنهاء اللعبة
         </button>
       </div>
     );
@@ -408,7 +408,7 @@ export default function QuizGame({
                 resetKey={index}
                 title={
                   isLastQuestion
-                    ? "مين جاوب صح؟ وبعدها تخلص الجولة"
+                    ? "مين جاوب صح؟ وبعدها تخلص اللعبة"
                     : "مين جاوب صح؟"
                 }
                 side1Name={side1Name}

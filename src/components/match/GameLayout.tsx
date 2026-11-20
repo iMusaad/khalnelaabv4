@@ -125,7 +125,7 @@ export default function GameLayout({
     <div className="mx-auto w-full max-w-3xl">
       <div className="flex items-center justify-between gap-3">
         <p className="w-16 shrink-0 text-right text-sm font-bold text-white/45">
-          الجولة {currentRound}
+          {currentRound ? `اللعبة ${currentRound}` : ""}
         </p>
 
         <div className="min-w-0 flex-1 text-center">

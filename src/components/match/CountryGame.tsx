@@ -324,7 +324,7 @@ export default function CountryGame({
                   onClick={() => onRoundEnd()}
                   className={actionButtonClass}
                 >
-                  إنهاء الجولة
+                  إنهاء اللعبة
                 </button>
               </div>
             )}

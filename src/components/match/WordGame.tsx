@@ -691,7 +691,7 @@ export default function WordGame({
           onClick={() => onRoundEnd("none")}
           className="btn-primary mt-4"
         >
-          إنهاء الجولة
+          إنهاء اللعبة
         </button>
       </div>
     );
@@ -876,7 +876,7 @@ export default function WordGame({
                   onClick={() => onRoundEnd()}
                   className="btn-secondary min-w-[105px] px-4 py-2 text-sm"
                 >
-                  إنهاء الجولة
+                  إنهاء اللعبة
                 </button>
               </>
             )}
@@ -887,7 +887,7 @@ export default function WordGame({
                 onClick={() => onRoundEnd("none")}
                 className="btn-primary min-w-[150px]"
               >
-                إنهاء الجولة
+                إنهاء اللعبة
               </button>
             )}
           </div>

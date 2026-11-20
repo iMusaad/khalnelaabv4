@@ -218,7 +218,7 @@ export default function ZoomGame({
           onClick={() => onRoundEnd("none")}
           className="btn-primary mt-4"
         >
-          إنهاء الجولة
+          إنهاء اللعبة
         </button>
       </div>
     );

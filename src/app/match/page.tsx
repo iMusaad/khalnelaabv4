@@ -716,12 +716,25 @@ export default function MatchPage() {
     }
   }
 
+  const gameNumbers = queue.map(
+    (round, position) =>
+      queue
+        .slice(0, position + 1)
+        .filter(
+          (item, itemIndex) =>
+            itemIndex === 0 ||
+            cardKeyFor(item) !== cardKeyFor(queue[itemIndex - 1]),
+        ).length,
+  );
+  const gameNumber = gameNumbers[index] ?? 1;
+  const totalGames = gameNumbers.at(-1) ?? 1;
+
   const commonGameProps = {
     onRoundEnd: endRound,
     roundKey: index,
     side1Name: side1,
     side2Name: side2,
-    currentRound: index + 1,
+    currentRound: mode === "session" ? gameNumber : 0,
     timerEnabled,
     timerSeconds: current
       ? getTimerSeconds(current.game, timerSeconds)
@@ -845,7 +858,7 @@ export default function MatchPage() {
 
       <TeamPickModal
         show={showRoundWinnerPicker}
-        kicker="خلصت الجولة"
+        kicker="خلصت اللعبة"
         title="مين أخذها؟"
         side1Name={side1}
         side2Name={side2}
@@ -898,9 +911,11 @@ export default function MatchPage() {
 
           {phase !== "intro" && renderCurrentGame()}
 
-          <p className="mt-4 text-center text-sm font-bold text-white/50">
-            الجولة {index + 1} من {queue.length}
-          </p>
+          {mode === "session" && totalGames > 1 && (
+            <p className="mt-4 text-center text-sm font-bold text-white/50">
+              اللعبة {gameNumber} من {totalGames}
+            </p>
+          )}
         </div>
       )}
     </main>

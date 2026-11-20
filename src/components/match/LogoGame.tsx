@@ -9,7 +9,7 @@ import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
 import type { RoundPoints, WinnerType } from "@/types/game";
 
-const LOGOS_PER_ROUND = 2;
+const LOGOS_PER_ROUND = 4;
 
 const DEFAULT_START_ZOOM = 7;
 
@@ -233,7 +233,7 @@ export default function LogoGame({
           onClick={() => onRoundEnd("none")}
           className="btn-primary mt-4"
         >
-          إنهاء الجولة
+          إنهاء اللعبة
         </button>
       </div>
     );

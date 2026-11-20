@@ -1,9 +1,10 @@
 import QRCode from "qrcode";
 import { SITE } from "@/data/site";
-import { getRoundsLabel } from "@/lib/matchLabels";
+import { getGamesLabel } from "@/lib/matchLabels";
 import type { WinnerType } from "@/types/game";
 
 type ShareRoundStat = {
+  game: string;
   winner: WinnerType;
 };
 
@@ -284,7 +285,9 @@ export async function createResultShareImage({
   teamPanel(100, side2 || "فريق 2", side2Score, side2Leads, TEAM2, TEAM2_EDGE);
 
   const draws = roundStats.filter((stat) => stat.winner === "none").length;
-  const roundText = getRoundsLabel(roundStats.length);
+  const roundText = getGamesLabel(
+    new Set(roundStats.map((stat) => stat.game)).size,
+  );
   const drawText =
     draws === 0 ? "بدون تعادل" : draws === 1 ? "تعادل واحد" : `${draws} تعادل`;
 
