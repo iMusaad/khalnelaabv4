@@ -1,6 +1,6 @@
 import { OverlayHeading, OverlayShell } from "@/components/match/Overlays";
 import { quizCategoryMeta } from "@/data/quiz/meta";
-import { getGameName, getRoundsLabel } from "@/lib/matchLabels";
+import { getGameName, getGamesLabel } from "@/lib/matchLabels";
 import type { Round } from "@/lib/matchQueue";
 import type { GameStat, ModeType, RoundStat } from "@/types/match";
 
@@ -151,12 +151,10 @@ export function WinnerOverlay({
 
       <p className="mt-3 text-sm font-bold text-white/45">
         {mode === "session"
-          ? gameStats.length === 1
-            ? "لعبة وحدة"
-            : gameStats.length === 2
-              ? "لعبتين"
-              : `${gameStats.length} ألعاب`
-          : getRoundsLabel(roundStats.length)}
+          ? getGamesLabel(gameStats.length)
+          : roundStats[0]
+            ? getGameName(roundStats[0].game)
+            : ""}
         {mode !== "session" && totalDraws > 0 && ` • تعادل ${totalDraws}`}
       </p>
 
@@ -178,8 +176,7 @@ export function WinnerOverlay({
                   </p>
 
                   <p className="text-xs font-bold text-white/40">
-                    {getRoundsLabel(stat.total)}
-                    {stat.draws > 0 && ` • تعادل ${stat.draws}`}
+                    {stat.draws > 0 ? `تعادل ${stat.draws}` : ""}
                   </p>
                 </div>
 
@@ -218,7 +215,7 @@ export function WinnerOverlay({
           onClick={onReplay}
           className={mode === "quick" ? "btn-secondary" : "btn-primary"}
         >
-          {mode === "quick" ? "جولة ثانية" : "نعيدها بنفس الألعاب"}
+          {mode === "quick" ? "نلعبها مرة ثانية" : "نعيدها بنفس الألعاب"}
         </button>
 
         <button type="button" onClick={onChangeGames} className="btn-secondary">

@@ -167,7 +167,7 @@ export default function CategoriesGame({
     <div className="mx-auto w-full max-w-3xl text-center">
       <div className="flex items-center justify-between gap-3">
         <p className="w-16 shrink-0 text-right text-sm font-bold text-white/45">
-          الجولة {currentRound}
+          {currentRound ? `اللعبة ${currentRound}` : ""}
         </p>
 
         <div className="min-w-0 flex-1 text-center">
@@ -272,7 +272,7 @@ export default function CategoriesGame({
 
         {revealed && (
           <p className="mt-4 text-sm font-bold text-white/60">
-            راجعوا الإجابات وبعدها أنهوا الجولة
+            راجعوا الإجابات وبعدها أنهوا اللعبة
           </p>
         )}
 
@@ -283,7 +283,7 @@ export default function CategoriesGame({
             disabled={!revealed}
             className="btn-primary min-w-[170px]"
           >
-            إنهاء الجولة
+            إنهاء اللعبة
           </button>
         </div>
       </div>

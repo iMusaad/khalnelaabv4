@@ -322,7 +322,7 @@ export default function ClubGame({
                   onClick={() => onRoundEnd()}
                   className={actionButtonClass}
                 >
-                  إنهاء الجولة
+                  إنهاء اللعبة
                 </button>
               </div>
             )}
