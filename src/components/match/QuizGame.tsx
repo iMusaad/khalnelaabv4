@@ -309,6 +309,11 @@ export default function QuizGame({
   return (
     <>
       <GameLayout
+        reportItem={
+          current
+            ? `${current.question} | الجواب: ${current.answer}`
+            : undefined
+        }
         title="أسئلة وأجوبة"
         side1={side1Name || "فريق 1"}
         side2={side2Name || "فريق 2"}

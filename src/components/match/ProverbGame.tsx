@@ -211,6 +211,7 @@ export default function ProverbGame({
   return (
     <>
       <GameLayout
+        reportItem={current?.answer}
         title="خمن المثل"
         side1={side1Name || "فريق 1"}
         side2={side2Name || "فريق 2"}

@@ -122,6 +122,7 @@ export default function CountryGame({
 
   return (
     <GameLayout
+      reportItem={countries?.map((country) => country.nameAr).join(" / ")}
       title="وش علمك؟"
       side1={side1}
       side2={side2}

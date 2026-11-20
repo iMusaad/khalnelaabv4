@@ -664,6 +664,7 @@ export default function WheelGame({
   return (
     <>
       <GameLayout
+        reportItem={answer ? `${category}: ${answer}` : undefined}
         title="لف وخمن"
         side1={side1Name}
         side2={side2Name}

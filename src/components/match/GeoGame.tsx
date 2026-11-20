@@ -240,6 +240,7 @@ export default function GeoGame({
 
   return (
     <GameLayout
+      reportItem={current ? `${current.place} (${current.region})` : undefined}
       title="ثبّت الموقع"
       side1={names.side1}
       side2={names.side2}
