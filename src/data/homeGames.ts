@@ -12,7 +12,7 @@ export const ALL_HOME_GAMES: HomeGame[] = [
   {
     id: "logo",
     image: "/images/posters/Logogame-2.png",
-    title: "خمن الشعار",
+    title: "عينك عالشعار",
     text: "جزء صغير من شعار، تعرفونه؟",
   },
   {

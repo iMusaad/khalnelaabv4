@@ -97,7 +97,7 @@ export const HOW_TO_PLAY: HowToPlay[] = [
   {
     id: "logo",
     image: "/images/posters/Logogame-2.png",
-    title: "خمن الشعار",
+    title: "عينك عالشعار",
     how: [
       "يطلع جزء صغير من شعار للفريق اللي عليه الدور",
       "كل ما بعّدتوا الصورة يبين أكثر، بس نقاطكم تنقص",

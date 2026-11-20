@@ -252,7 +252,7 @@ export default function LogoGame({
 
   return (
     <GameLayout
-      title="خمن الشعار"
+      title="عينك عالشعار"
       side1={side1Name || "فريق 1"}
       side2={side2Name || "فريق 2"}
       side1Score={side1Score}

@@ -7,7 +7,7 @@ export const GAME_NAMES: Record<GameType, string> = {
   wheel: "لف وخمن",
   categories: "إنسان حيوان نبات جماد بلاد",
   draw: "خمن المثل",
-  logo: "خمن الشعار",
+  logo: "عينك عالشعار",
   country: "وش علمك؟",
   club: "وش ناديك؟",
   car: "عينك عالموتر",

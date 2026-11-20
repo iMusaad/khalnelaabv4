@@ -55,7 +55,7 @@ const GAMES: {
 }[] = [
   {
     id: "logo",
-    name: "خمن الشعار",
+    name: "عينك عالشعار",
     image: "/images/posters/Logogame-2.png",
   },
   {
