@@ -12,6 +12,7 @@ import type { Dispatch, ReactNode, SetStateAction } from "react";
 import PixelHero from "@/components/PixelHero";
 import { quizCategoryList, type QuizCategoryKey } from "@/data/quiz/meta";
 import { QUIZ_LABELS } from "@/data/quizCards";
+import { trackEvent } from "@/lib/analytics";
 import { getDefaultRounds } from "@/lib/matchQueue";
 
 type SetupGameId =
@@ -219,6 +220,7 @@ export default function SetupGame({
     }
 
     if (isCardPaywalled(card)) {
+      trackEvent("locked_game_click", { game: card.key });
       goBuy();
       return;
     }

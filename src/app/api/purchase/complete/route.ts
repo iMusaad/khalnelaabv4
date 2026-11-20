@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { claimDevice, setDeviceCookie } from "@/lib/devices";
 import { sendLicenseEmail } from "@/lib/email";
 import { LICENSE_COOKIE, LICENSE_COOKIE_OPTIONS } from "@/lib/licenseCookie";
+import { PURCHASE_COOKIE } from "@/lib/purchaseEvent";
 import { isValidPaymentId } from "@/lib/payment";
 import {
   canConfirmPayments,
@@ -71,6 +72,15 @@ export async function GET(request: NextRequest) {
 
   const response = redirectTo(request, "/buy/success");
   response.cookies.set(LICENSE_COOKIE, code, LICENSE_COOKIE_OPTIONS);
+
+  if (!restore) {
+    response.cookies.set(PURCHASE_COOKIE, `${payment.id}.${payment.amount}`, {
+      path: "/",
+      maxAge: 60 * 10,
+      sameSite: "lax",
+      secure: request.nextUrl.protocol === "https:",
+    });
+  }
   setDeviceCookie(response, device.deviceId);
 
   return response;

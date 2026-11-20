@@ -89,6 +89,7 @@ export default function BuyForm({
 
       if (data?.ok && data.code) {
         setReferral({ code: data.code, discount: data.discount ?? 0 });
+        trackEvent("referral_applied", { coupon: data.code });
         setRefOpen(false);
         setRefStatus("idle");
         return;
