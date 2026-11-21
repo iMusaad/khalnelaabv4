@@ -125,6 +125,19 @@ export const HOW_TO_PLAY: HowToPlay[] = [
   },
 
   {
+    id: "rebus",
+    image: "/images/posters/Proverbgame-2.png",
+    title: "ركّبها",
+    how: [
+      "تطلع صور جنب بعض، ركّبوها مع بعض وتطلع لكم كلمة",
+      "الفريق اللي عليه الدور يحاول يعرف الكلمة",
+      "إذا ما جاوب، تروح الفرصة للفريق الثاني",
+      "بعدها تطلع الإجابة، وحددوا مين جاوب صح",
+    ],
+    example: "😵 مت + 🪑 قاعد = متقاعد",
+  },
+
+  {
     id: "zoom",
     image: "/images/posters/Postergame.png",
     title: "عينك عالبوستر",
