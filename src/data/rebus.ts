@@ -5,8 +5,6 @@ export type RebusPuzzle = {
   answer: string;
 };
 
-// Each puzzle is a row of pictures (and the odd letter) joined with "+".
-// Picture files live in public/images/rebus/ as square PNGs with a clear background.
 export const REBUS_PUZZLES: RebusPuzzle[] = [
   {
     parts: [
