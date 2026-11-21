@@ -13,7 +13,6 @@ export const GAME_NAMES: Record<GameType, string> = {
   car: "عينك عالموتر",
   zoom: "عينك عالبوستر",
   geo: "ثبّت الموقع",
-  rebus: "ركّبها",
 };
 
 export function getGameName(game: GameType) {

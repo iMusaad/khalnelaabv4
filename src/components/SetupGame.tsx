@@ -27,8 +27,7 @@ type SetupGameId =
   | "club"
   | "car"
   | "zoom"
-  | "geo"
-  | "rebus";
+  | "geo";
 
 type SetupGameProps = {
   mode?: "session" | "quick";
@@ -114,11 +113,6 @@ const GAMES: {
     name: "عينك عالبوستر",
     image: "/images/posters/Postergame.png",
   },
-  {
-    id: "rebus",
-    name: "ركّبها",
-    image: "/images/posters/Proverbgame-2.png",
-  },
 ];
 
 const MAX_SESSION_GAMES = 5;
@@ -158,7 +152,6 @@ const MINUTES_PER_ROUND: Record<SetupGameId, number> = {
   car: 4,
   zoom: 4,
   geo: 5,
-  rebus: 4,
 };
 
 function estimateMinutes(games: SetupGameId[], quizCategoryCount: number) {

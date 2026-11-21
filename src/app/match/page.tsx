@@ -62,7 +62,6 @@ const GAME_LOADERS = {
   car: () => import("@/components/match/CarGame"),
   zoom: () => import("@/components/match/ZoomGame"),
   geo: () => import("@/components/match/GeoGame"),
-  rebus: () => import("@/components/match/RebusGame"),
 };
 
 function GameLoading() {
@@ -99,11 +98,6 @@ const CategoriesGame = dynamic(GAME_LOADERS.categories, {
 });
 
 const ProverbGame = dynamic(GAME_LOADERS.draw, {
-  ssr: false,
-  loading: GameLoading,
-});
-
-const RebusGame = dynamic(GAME_LOADERS.rebus, {
   ssr: false,
   loading: GameLoading,
 });
@@ -803,9 +797,6 @@ export default function MatchPage() {
 
       case "draw":
         return <ProverbGame key={index} {...commonGameProps} />;
-
-      case "rebus":
-        return <RebusGame key={index} {...commonGameProps} />;
 
       case "logo":
         return <LogoGame key={index} {...commonGameProps} />;
