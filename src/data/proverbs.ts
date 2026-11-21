@@ -96,4 +96,5 @@ export const PROVERB_PUZZLES = [
     image: "/images/proverbs/proverb_37.png",
     answer: "يا شين السرج على البقره",
   },
+  { image: "/images/proverbs/proverb_38.png", answer: "كل شارب وله مقص" },
 ];
