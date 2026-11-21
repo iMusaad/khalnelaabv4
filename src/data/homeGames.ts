@@ -1,3 +1,5 @@
+import { UPCOMING_GAME_IDS } from "@/data/upcomingGames";
+
 export type HomeGame = {
   id: string;
   title: string;
@@ -6,12 +8,12 @@ export type HomeGame = {
   image: string;
 };
 
-export const HOME_GAMES: HomeGame[] = [
+export const ALL_HOME_GAMES: HomeGame[] = [
   {
     id: "logo",
     image: "/images/posters/Logogame-2.png",
-    title: "خمن الشعار",
-    text: "مبكسل، تعرفونه قبل يتضح؟",
+    title: "عينك عالشعار",
+    text: "جزء صغير من شعار، تعرفونه؟",
   },
   {
     id: "car",
@@ -39,6 +41,12 @@ export const HOME_GAMES: HomeGame[] = [
     title: "وش علمك؟",
     text: "نعم أو لا لين تعرفون علمكم",
     phone: true,
+  },
+  {
+    id: "geo",
+    image: "/images/posters/Geogame-3.png",
+    title: "ثبّت الموقع",
+    text: "صورة لمكان بالسعودية، حطوا الدبوس على الخريطة",
   },
   {
     id: "categories",
@@ -71,3 +79,7 @@ export const HOME_GAMES: HomeGame[] = [
     text: "من الفئات اللي تختارونها",
   },
 ];
+
+export const HOME_GAMES = ALL_HOME_GAMES.filter(
+  (game) => !UPCOMING_GAME_IDS.includes(game.id),
+);

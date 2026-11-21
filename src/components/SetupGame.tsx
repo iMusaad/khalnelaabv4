@@ -1,13 +1,19 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { posterThumb } from "@/lib/poster";
 import PosterFlip from "@/components/PosterFlip";
 import TeamSplitter from "@/components/TeamSplitter";
+import LockIcon from "@/components/LockIcon";
+import { FREE_QUIZ_CATEGORIES, isFreeGame } from "@/lib/trial";
 import { UPCOMING_GAME_IDS } from "@/data/upcomingGames";
-import type { Dispatch, SetStateAction } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import PixelHero from "@/components/PixelHero";
 import { quizCategoryList, type QuizCategoryKey } from "@/data/quiz/meta";
+import { QUIZ_LABELS } from "@/data/quizCards";
+import { trackEvent } from "@/lib/analytics";
+import { getDefaultRounds } from "@/lib/matchQueue";
 
 type SetupGameId =
   | "word"
@@ -20,7 +26,8 @@ type SetupGameId =
   | "country"
   | "club"
   | "car"
-  | "zoom";
+  | "zoom"
+  | "geo";
 
 type SetupGameProps = {
   mode?: "session" | "quick";
@@ -31,8 +38,6 @@ type SetupGameProps = {
   selectedGames: SetupGameId[];
   pinnedGame?: SetupGameId | null;
   setSelectedGames: Dispatch<SetStateAction<SetupGameId[]>>;
-  gameRounds: Record<string, number>;
-  setGameRounds: Dispatch<SetStateAction<Record<string, number>>>;
   quizCategories: QuizCategoryKey[];
   setQuizCategories: Dispatch<SetStateAction<QuizCategoryKey[]>>;
   timerEnabled: boolean;
@@ -40,6 +45,7 @@ type SetupGameProps = {
   timerSeconds: number;
   setTimerSeconds: (value: number) => void;
   onStart: () => void;
+  trial?: boolean;
 };
 
 const GAMES: {
@@ -49,7 +55,7 @@ const GAMES: {
 }[] = [
   {
     id: "logo",
-    name: "خمن الشعار",
+    name: "عينك عالشعار",
     image: "/images/posters/Logogame-2.png",
   },
   {
@@ -71,6 +77,11 @@ const GAMES: {
     id: "country",
     name: "وش علمك؟",
     image: "/images/posters/Countries-2.png",
+  },
+  {
+    id: "geo",
+    name: "ثبّت الموقع",
+    image: "/images/posters/Geogame-3.png",
   },
   {
     id: "categories",
@@ -104,34 +115,29 @@ const GAMES: {
   },
 ];
 
-function getRoundOptions(gameId: string) {
-  switch (gameId) {
-    case "quiz":
-      return [];
-
-    case "word":
-      return [2, 4, 6];
-
-    default:
-      return [1, 2, 3];
-  }
-}
-
-function getDefaultRounds(gameId: string) {
-  switch (gameId) {
-    case "quiz":
-      return 6;
-
-    case "word":
-    case "scramble":
-      return 2;
-
-    default:
-      return 1;
-  }
-}
-
 const MAX_SESSION_GAMES = 5;
+
+type SetupCard = {
+  key: string;
+  game: SetupGameId;
+  category?: QuizCategoryKey;
+  name: string;
+  image: string;
+};
+
+function toCards(games: typeof GAMES): SetupCard[] {
+  return games.flatMap<SetupCard>((game) =>
+    game.id === "quiz"
+      ? quizCategoryList.map((category) => ({
+          key: `quiz-${category.key}`,
+          game: game.id,
+          category: category.key,
+          name: `أسئلة ${QUIZ_LABELS[category.key]}`,
+          image: `/images/posters/Quiz-${category.key}.png`,
+        }))
+      : [{ key: game.id, game: game.id, name: game.name, image: game.image }],
+  );
+}
 
 const MINUTES_PER_ROUND: Record<SetupGameId, number> = {
   word: 4,
@@ -145,16 +151,13 @@ const MINUTES_PER_ROUND: Record<SetupGameId, number> = {
   club: 5,
   car: 4,
   zoom: 4,
+  geo: 5,
 };
 
-function estimateMinutes(
-  games: SetupGameId[],
-  rounds: Record<string, number>,
-  quizCategoryCount: number,
-) {
+function estimateMinutes(games: SetupGameId[], quizCategoryCount: number) {
   const total = games.reduce((sum, game) => {
     const count =
-      game === "quiz" ? Math.max(1, quizCategoryCount) : rounds[game] || 1;
+      game === "quiz" ? Math.max(1, quizCategoryCount) : getDefaultRounds(game);
 
     return sum + count * MINUTES_PER_ROUND[game];
   }, 0);
@@ -171,8 +174,6 @@ export default function SetupGame({
   selectedGames,
   pinnedGame = null,
   setSelectedGames,
-  gameRounds,
-  setGameRounds,
   quizCategories,
   setQuizCategories,
   timerEnabled,
@@ -180,65 +181,95 @@ export default function SetupGame({
   timerSeconds,
   setTimerSeconds,
   onStart,
+  trial = false,
 }: SetupGameProps) {
+  const router = useRouter();
+
   const isQuickMode = mode === "quick";
 
   const needsQuizCategory =
     selectedGames.includes("quiz") && quizCategories.length === 0;
 
-  const canStart = selectedGames.length > 0 && !needsQuizCategory;
+  function goBuy() {
+    router.push(
+      `/buy?next=${encodeURIComponent(window.location.pathname + window.location.search)}`,
+    );
+  }
 
-  const startHint =
-    selectedGames.length === 0
-      ? "اختاروا لعبة وحدة على الأقل"
-      : needsQuizCategory
-        ? "اختاروا فئة للأسئلة"
-        : "";
+  const selectedCount =
+    selectedGames.filter((game) => game !== "quiz").length +
+    (selectedGames.includes("quiz") ? quizCategories.length : 0);
 
-  function toggleGame(id: SetupGameId) {
+  function isCardActive(card: SetupCard) {
+    return card.category
+      ? selectedGames.includes("quiz") && quizCategories.includes(card.category)
+      : selectedGames.includes(card.game);
+  }
+
+  function isCardPaywalled(card: SetupCard) {
+    if (!trial) return false;
+
+    return card.category
+      ? !FREE_QUIZ_CATEGORIES.includes(card.category)
+      : !isFreeGame(card.game);
+  }
+
+  function toggleCard(card: SetupCard) {
     if (isQuickMode) {
       return;
     }
 
-    if (selectedGames.includes(id)) {
-      setSelectedGames((previous) => previous.filter((game) => game !== id));
+    if (isCardPaywalled(card)) {
+      trackEvent("locked_game_click", { game: card.key });
+      goBuy();
+      return;
+    }
+
+    const active = isCardActive(card);
+
+    if (!active && selectedCount >= MAX_SESSION_GAMES) {
+      return;
+    }
+
+    if (!card.category) {
+      setSelectedGames((previous) =>
+        active
+          ? previous.filter((game) => game !== card.game)
+          : previous.includes(card.game)
+            ? previous
+            : [...previous, card.game],
+      );
 
       return;
     }
 
-    if (selectedGames.length >= MAX_SESSION_GAMES) {
+    const category = card.category;
+
+    if (active) {
+      const remaining = quizCategories.filter((item) => item !== category);
+
+      setQuizCategories(remaining);
+
+      if (remaining.length === 0) {
+        setSelectedGames((previous) =>
+          previous.filter((game) => game !== "quiz"),
+        );
+      }
+
       return;
     }
+
+    setQuizCategories((previous) =>
+      selectedGames.includes("quiz")
+        ? previous.includes(category)
+          ? previous
+          : [...previous, category]
+        : [category],
+    );
 
     setSelectedGames((previous) =>
-      previous.includes(id) || previous.length >= MAX_SESSION_GAMES
-        ? previous
-        : [...previous, id],
+      previous.includes("quiz") ? previous : [...previous, "quiz"],
     );
-
-    setGameRounds((previous) =>
-      previous[id]
-        ? previous
-        : {
-            ...previous,
-            [id]: getDefaultRounds(id),
-          },
-    );
-  }
-
-  function toggleCategory(category: QuizCategoryKey) {
-    setQuizCategories((previous) =>
-      previous.includes(category)
-        ? previous.filter((current) => current !== category)
-        : [...previous, category],
-    );
-  }
-
-  function selectRounds(gameId: SetupGameId, round: number) {
-    setGameRounds((previous) => ({
-      ...previous,
-      [gameId]: round,
-    }));
   }
 
   const orderedGames = pinnedGame
@@ -255,11 +286,141 @@ export default function SetupGame({
           !UPCOMING_GAME_IDS.includes(game.id) || game.id === pinnedGame,
       );
 
-  const minutes = estimateMinutes(
-    selectedGames,
-    gameRounds,
-    quizCategories.length,
+  const visibleCards = toCards(visibleGames).filter(
+    (card) =>
+      !isQuickMode ||
+      !card.category ||
+      quizCategories.length === 0 ||
+      quizCategories.includes(card.category),
   );
+
+  const minutes = estimateMinutes(selectedGames, quizCategories.length);
+
+  const requiredGames = isQuickMode
+    ? 1
+    : Math.min(
+        MAX_SESSION_GAMES,
+        visibleCards.filter((card) => !isCardPaywalled(card)).length,
+      );
+
+  const missingGames = Math.max(0, requiredGames - selectedCount);
+
+  const canStart = missingGames === 0 && !needsQuizCategory;
+
+  const startHint =
+    missingGames > 0
+      ? isQuickMode
+        ? "اختاروا لعبة"
+        : missingGames === 1
+          ? "باقي لعبة وحدة"
+          : missingGames === 2
+            ? "باقي لعبتين"
+            : `اختاروا ${requiredGames} ألعاب، باقي ${missingGames}`
+      : needsQuizCategory
+        ? "اختاروا فئة للأسئلة"
+        : "";
+
+  const ZOOM_GROUP: SetupGameId[] = ["car", "logo", "geo", "zoom"];
+
+  const quizCards = visibleCards.filter((card) => card.category);
+
+  const zoomCards = visibleCards.filter(
+    (card) => !card.category && ZOOM_GROUP.includes(card.game),
+  );
+
+  const GUESS_GROUP: SetupGameId[] = ["scramble", "club", "country"];
+
+  const guessCards = visibleCards.filter(
+    (card) => !card.category && GUESS_GROUP.includes(card.game),
+  );
+
+  const otherCards = visibleCards.filter(
+    (card) =>
+      !card.category &&
+      !ZOOM_GROUP.includes(card.game) &&
+      !GUESS_GROUP.includes(card.game),
+  );
+
+  function renderCard(game: SetupCard) {
+    const active = isCardActive(game);
+
+    const locked =
+      !isQuickMode && !active && selectedCount >= MAX_SESSION_GAMES;
+
+    const paywalled = isCardPaywalled(game);
+
+    return (
+      <div key={game.key}>
+        <PosterFlip game={game.game}>
+          <button
+            type="button"
+            onClick={() => toggleCard(game)}
+            disabled={isQuickMode || (locked && !paywalled)}
+            aria-pressed={isQuickMode ? undefined : active}
+            aria-label={game.name}
+            className={`relative block h-full w-full overflow-hidden rounded-2xl outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${active ? "outline-[#ffc23d]" : "outline-transparent"} ${
+              isQuickMode
+                ? "cursor-default"
+                : locked
+                  ? "cursor-not-allowed opacity-35"
+                  : ""
+            }`}
+          >
+            <Image
+              src={posterThumb(game.image)}
+              alt=""
+              fill
+              unoptimized
+              priority
+              className="object-cover"
+            />
+
+            {paywalled && (
+              <span className="absolute inset-0 z-10 flex flex-col items-center justify-end bg-[#130e28]/55 pb-3">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#ffc23d] text-[#241339] shadow-[0_3px_0_#c27700]">
+                  <LockIcon />
+                </span>
+              </span>
+            )}
+
+            {!isQuickMode && active && (
+              <span
+                aria-hidden="true"
+                className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-[#ffc23d] text-sm font-black text-[#1d1238]"
+              >
+                ✓
+              </span>
+            )}
+          </button>
+        </PosterFlip>
+      </div>
+    );
+  }
+
+  function section(
+    title: string,
+    dot: string,
+    content: ReactNode,
+    wide = false,
+  ) {
+    return (
+      <section
+        className={`rounded-3xl bg-[#1b1535] p-3 shadow-[0_6px_0_#0e0a1f] sm:p-4 ${
+          wide ? "lg:col-span-2" : ""
+        }`}
+      >
+        <h2 className="mb-3 flex items-center gap-2 text-lg font-black sm:text-xl">
+          <span
+            aria-hidden="true"
+            className="h-3 w-3 rounded-full"
+            style={{ background: dot }}
+          />
+          {title}
+        </h2>
+        {content}
+      </section>
+    );
+  }
 
   return (
     <div className="text-white">
@@ -343,139 +504,60 @@ export default function SetupGame({
 
       <div
         className={`mx-auto mt-3 grid w-full gap-3 ${
-          isQuickMode
-            ? "max-w-[420px]"
-            : "max-w-[700px] [@media(min-height:860px)]:max-w-[820px] [@media(min-height:960px)]:max-w-[900px] [@media(max-height:820px)]:max-w-[620px]"
+          isQuickMode ? "max-w-[420px]" : "max-w-[1160px]"
         }`}
       >
-        <div>
-          {!isQuickMode && (
-            <p className="mb-2 text-left text-sm font-bold text-white/45">
-              {selectedGames.length}/{MAX_SESSION_GAMES}
-            </p>
-          )}
-
-          <div
-            className={`grid items-start gap-3 ${
-              isQuickMode
-                ? "mx-auto max-w-[200px] grid-cols-1"
-                : "grid-cols-3 sm:grid-cols-5"
-            }`}
-          >
-            {visibleGames.map((game, gameIndex) => {
-              const active = selectedGames.includes(game.id);
-
-              const locked =
-                !isQuickMode &&
-                !active &&
-                selectedGames.length >= MAX_SESSION_GAMES;
-
-              return (
-                <div
-                  key={game.id}
-                  className={
-                    !isQuickMode &&
-                    visibleGames.length % 3 === 1 &&
-                    gameIndex === visibleGames.length - 1
-                      ? "col-start-2 sm:col-start-auto"
-                      : ""
-                  }
-                >
-                  <PosterFlip game={game.id}>
-                    <button
-                      type="button"
-                      onClick={() => toggleGame(game.id)}
-                      disabled={isQuickMode || locked}
-                      aria-pressed={isQuickMode ? undefined : active}
-                      aria-label={game.name}
-                      className={`relative block h-full w-full overflow-hidden rounded-2xl outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${active ? "outline-[#ffc23d]" : "outline-transparent"} ${
-                        isQuickMode
-                          ? "cursor-default"
-                          : locked
-                            ? "cursor-not-allowed opacity-35"
-                            : ""
-                      }`}
-                    >
-                      <Image
-                        src={posterThumb(game.image)}
-                        alt=""
-                        fill
-                        unoptimized
-                        priority
-                        className="object-cover"
-                      />
-
-                      {!isQuickMode && active && (
-                        <span
-                          aria-hidden="true"
-                          className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-[#ffc23d] text-sm font-black text-[#1d1238]"
-                        >
-                          ✓
-                        </span>
-                      )}
-                    </button>
-                  </PosterFlip>
-                  {active && (
-                    <div className="mt-2">
-                      {game.id !== "quiz" ? (
-                        <div
-                          className="flex rounded-xl bg-[#221a3f] p-1"
-                          role="group"
-                          aria-label={`عدد جولات ${game.name}`}
-                        >
-                          {getRoundOptions(game.id).map((round) => {
-                            const selected = gameRounds[game.id] === round;
-
-                            return (
-                              <button
-                                key={round}
-                                type="button"
-                                aria-pressed={selected}
-                                aria-label={`${round} جولات`}
-                                onClick={() => selectRounds(game.id, round)}
-                                className={`flex h-7 flex-1 items-center justify-center rounded-lg text-sm font-black transition-colors duration-150 ${
-                                  selected
-                                    ? "bg-white text-[#1d1238]"
-                                    : "text-white/60 hover:text-white"
-                                }`}
-                              >
-                                {round}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      ) : (
-                        <div className="grid grid-cols-2 gap-1 rounded-xl bg-[#221a3f] p-1">
-                          {quizCategoryList.map((category) => {
-                            const selected = quizCategories.includes(
-                              category.key,
-                            );
-
-                            return (
-                              <button
-                                key={category.key}
-                                type="button"
-                                aria-pressed={selected}
-                                onClick={() => toggleCategory(category.key)}
-                                className={`min-h-7 rounded-lg px-0.5 py-1 text-[10px] font-black leading-tight transition-colors duration-150 sm:text-xs ${
-                                  selected
-                                    ? "bg-white text-[#1d1238]"
-                                    : "text-white/60 hover:text-white"
-                                }`}
-                              >
-                                {category.title}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+        {isQuickMode ? (
+          <div className="mx-auto grid w-full max-w-[200px] grid-cols-1 items-start gap-3">
+            {visibleCards.map(renderCard)}
           </div>
-        </div>
+        ) : (
+          <div>
+            <p className="mb-3 text-center text-sm font-black text-[#ffc23d]">
+              اخترتوا {selectedCount} من {requiredGames}
+            </p>
+
+            <div className="grid gap-4 lg:grid-cols-[4fr_3fr]">
+              {quizCards.length > 0 &&
+                section(
+                  "أسئلة",
+                  "#ff5a5f",
+                  <div className="grid grid-cols-4 items-start gap-2.5">
+                    {quizCards.map(renderCard)}
+                  </div>,
+                )}
+
+              {zoomCards.length > 0 &&
+                section(
+                  "زوم",
+                  "#2f9bff",
+                  <div className="grid grid-cols-3 items-start gap-2.5">
+                    {zoomCards.map(renderCard)}
+                  </div>,
+                )}
+            </div>
+
+            <div className="mt-4 grid gap-4 lg:grid-cols-2">
+              {guessCards.length > 0 &&
+                section(
+                  "نعم أو لا",
+                  "#ffc23d",
+                  <div className="grid grid-cols-3 items-start gap-2.5">
+                    {guessCards.map(renderCard)}
+                  </div>,
+                )}
+
+              {otherCards.length > 0 &&
+                section(
+                  "كلمات",
+                  "#3ddc84",
+                  <div className="grid grid-cols-3 items-start gap-2.5">
+                    {otherCards.map(renderCard)}
+                  </div>,
+                )}
+            </div>
+          </div>
+        )}
 
         <div className="mx-auto mt-1 w-full max-w-[280px]">
           <button

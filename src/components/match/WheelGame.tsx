@@ -12,10 +12,10 @@ import {
 import { createDeck } from "@/lib/deck";
 import { getPointsWinner } from "@/lib/scoring";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
-import type { TeamTurn as Turn, WinnerType } from "@/types/game";
+import type { RoundPoints, TeamTurn as Turn, WinnerType } from "@/types/game";
 import type { WheelValue as Value } from "@/data/wheel";
 
-const puzzleDeck = createDeck(PUZZLES);
+const puzzleDeck = createDeck(PUZZLES, "wheel");
 
 type WheelRoundState = {
   answer: string;
@@ -65,7 +65,7 @@ export default function WheelGame({
 }: {
   side1Name: string;
   side2Name: string;
-  onRoundEnd: (winner?: WinnerType) => void;
+  onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
   timerEnabled?: boolean;
@@ -648,7 +648,7 @@ export default function WheelGame({
           onClick={() => onRoundEnd("none")}
           className="btn-primary mt-4"
         >
-          إنهاء الجولة
+          إنهاء اللعبة
         </button>
       </div>
     );
@@ -664,6 +664,7 @@ export default function WheelGame({
   return (
     <>
       <GameLayout
+        reportItem={answer ? `${category}: ${answer}` : undefined}
         title="لف وخمن"
         side1={side1Name}
         side2={side2Name}
@@ -690,7 +691,7 @@ export default function WheelGame({
               : phase === "guess"
                 ? `اختاروا حرف — الحرف بـ ${formatValue(currentValue)}`
                 : phase === "celebrate"
-                  ? "انتهت الجولة"
+                  ? "انتهت اللعبة"
                   : "لف العجلة"}
 
             {phase === "guess" && timerEnabled && (
@@ -959,7 +960,7 @@ export default function WheelGame({
 
                   <p className="mt-2 text-lg text-white/85">
                     {winnerName
-                      ? `أخذ الجولة بـ ${Math.max(score1, score2)} نقطة`
+                      ? `فاز بـ ${Math.max(score1, score2)} نقطة`
                       : `النقاط متساوية: ${score1}`}
                   </p>
                 </div>

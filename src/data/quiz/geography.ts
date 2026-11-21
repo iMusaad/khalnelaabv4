@@ -31,8 +31,8 @@ export const geographyQuestions: QuizQuestion[] = [
   },
   {
     question: "ما اسم المعلم التاريخي الشهير الظاهر في الصورة؟",
-    image: "/images/hagia-sophia.jpg",
     answer: "آيا صوفيا",
+    image: "/images/hagia-sophia.jpg",
     options: ["آيا صوفيا", "المسجد الأزرق", "مسجد الفاتح", "قصر طوب قابي"],
   },
   {
@@ -42,8 +42,8 @@ export const geographyQuestions: QuizQuestion[] = [
   },
   {
     question: "ما اسم الدولة المظللة في خريطة قارة أفريقيا؟",
-    image: "/images/sudan-in-africa-map.jpg",
     answer: "السودان",
+    image: "/images/sudan-in-africa-map.jpg",
     options: ["مصر", "السودان", "تشاد", "إثيوبيا"],
   },
   {
@@ -76,8 +76,8 @@ export const geographyQuestions: QuizQuestion[] = [
   {
     question:
       "ما اسم المضيق الظاهر في هذه الخريطة، والذي يفصل بين المغرب وإسبانيا؟",
-    image: "/images/gibraltar-strait.jpg",
     answer: "مضيق جبل طارق",
+    image: "/images/gibraltar-strait.jpg",
     options: ["مضيق البوسفور", "قناة السويس", "مضيق تيران", "مضيق جبل طارق"],
   },
   {
@@ -88,8 +88,8 @@ export const geographyQuestions: QuizQuestion[] = [
   },
   {
     question: "في أي دولة يقع المعلم الطبيعي المسمى صخرة الروشة؟",
-    image: "/images/raouche-rock.jpg",
     answer: "لبنان",
+    image: "/images/raouche-rock.jpg",
     options: ["سوريا", "لبنان", "تونس", "المغرب"],
   },
   {
@@ -114,8 +114,8 @@ export const geographyQuestions: QuizQuestion[] = [
   },
   {
     question: "ما اسم القارة الظاهرة في الصورة؟",
-    image: "/images/south-america-map.jpg",
     answer: "أمريكا الجنوبية",
+    image: "/images/south-america-map.jpg",
     options: ["أمريكا الجنوبية", "أفريقيا", "آسيا", "أوروبا"],
   },
   {
@@ -130,8 +130,8 @@ export const geographyQuestions: QuizQuestion[] = [
   },
   {
     question: "في أي مدينة يقع المعلم التاريخي الظاهر في الصورة؟",
-    image: "/images/colosseum.jpg",
     answer: "روما",
+    image: "/images/colosseum.jpg",
     options: ["روما", "ميلان", "فينيسيا", "نابولي"],
   },
   {
@@ -147,20 +147,20 @@ export const geographyQuestions: QuizQuestion[] = [
   },
   {
     question: "ما هي الدولة التي يمثّلها هذا العلم؟",
-    image: "/images/vietnam-flag.jpg",
     answer: "فيتنام",
+    image: "/images/vietnam-flag.jpg",
     options: ["فيتنام", "الصين", "كوريا الشمالية", "تركيا"],
   },
   {
     question: "في أي مدينة أمريكية يقع هذا البرج الشهير؟",
-    image: "/images/willis-tower.jpg",
     answer: "شيكاغو",
+    image: "/images/willis-tower.jpg",
     options: ["شيكاغو", "نيويورك", "لوس أنجلوس", "هيوستن"],
   },
   {
     question: "في أي ولاية أمريكية يقع الجراند كانيون؟",
-    image: "/images/grand-canyon.jpg",
     answer: "أريزونا",
+    image: "/images/grand-canyon.jpg",
     options: ["أريزونا", "كاليفورنيا", "نيفادا", "يوتا"],
   },
   {
@@ -170,26 +170,26 @@ export const geographyQuestions: QuizQuestion[] = [
   },
   {
     question: "ما اسم الجبل البركاني الشهير الظاهر في الصورة؟",
-    image: "/images/mount-fuji.jpg",
     answer: "جبل فوجي",
+    image: "/images/mount-fuji.jpg",
     options: ["جبل فوجي", "إيفرست", "كي2", "كليمنجارو"],
   },
   {
     question: "ما اسم هذا المعلم التاريخي الشهير؟",
-    image: "/images/taj-mahal.jpg",
     answer: "تاج محل",
+    image: "/images/taj-mahal.jpg",
     options: ["تاج محل", "مسجد الشيخ زايد", "آيا صوفيا", "ضريح همايون"],
   },
   {
     question: "ما اسم المدينة الظاهرة في هذه اللقطة الجوية؟",
-    image: "/images/new-york-skyline.jpg",
     answer: "نيويورك",
+    image: "/images/new-york-skyline.jpg",
     options: ["نيويورك", "شيكاغو", "تورونتو", "بوسطن"],
   },
   {
     question: "ما اسم النصب التذكاري المنحوت على الجبل والظاهر في الصورة؟",
-    image: "/images/mount-rushmore.jpg",
     answer: "جبل راشمور",
+    image: "/images/mount-rushmore.jpg",
     options: [
       "جبل راشمور",
       "تماثيل جزيرة الفصح",
@@ -205,26 +205,26 @@ export const geographyQuestions: QuizQuestion[] = [
   },
   {
     question: "ما هي الدولة التي يمثّلها هذا العلم؟",
-    image: "/images/indonesia-flag.jpg",
     answer: "إندونيسيا",
+    image: "/images/indonesia-flag.jpg",
     options: ["إندونيسيا", "بولندا", "موناكو", "النمسا"],
   },
   {
     question: "ما هي الدولة التي يمثّلها هذا العلم؟",
-    image: "/images/belgium-flag.jpg",
     answer: "بلجيكا",
+    image: "/images/belgium-flag.jpg",
     options: ["بلجيكا", "فرنسا", "ألمانيا", "رومانيا"],
   },
   {
     question: "في أي دولة عربية يقع المعلم الأثري الظاهر في الصورة؟",
-    image: "/images/petra-monastery.jpg",
     answer: "الأردن",
+    image: "/images/petra-monastery.jpg",
     options: ["الأردن", "لبنان", "مصر", "المغرب"],
   },
   {
     question: "ما اسم الممر المائي الاستراتيجي الظاهر في الخريطة؟",
-    image: "/images/bab-al-mandab.jpg",
     answer: "باب المندب",
+    image: "/images/bab-al-mandab.jpg",
     options: ["باب المندب", "مضيق هرمز", "قناة السويس", "مضيق جبل طارق"],
   },
   {
@@ -287,5 +287,55 @@ export const geographyQuestions: QuizQuestion[] = [
     question: "مدينة ليما هي عاصمة لأي دولة في أمريكا الجنوبية؟",
     answer: "بيرو",
     options: ["بيرو", "تشيلي", "الأرجنتين", "كولومبيا"],
+  },
+  {
+    question: "ما هي عاصمة كندا؟",
+    answer: "أوتاوا",
+    options: ["أوتاوا", "مونتريال", "تورونتو", "فانكوفر"],
+  },
+  {
+    question: "ما هي عاصمة نيجيريا؟",
+    answer: "أبوجا",
+    options: ["أبوجا", "إبادان", "لاغوس", "كانو"],
+  },
+  {
+    question: "ما هي عاصمة باكستان؟",
+    answer: "إسلام آباد",
+    options: ["بيشاور", "كراتشي", "لاهور", "إسلام آباد"],
+  },
+  {
+    question: "ما هي عاصمة كازاخستان؟",
+    answer: "أستانا",
+    options: ["طشقند", "بيشكيك", "ألماتي", "أستانا"],
+  },
+  {
+    question: "ما هي أكبر جزيرة في العالم؟",
+    answer: "غرينلاند",
+    options: ["غرينلاند", "بورنيو", "غينيا الجديدة", "مدغشقر"],
+  },
+  {
+    question: "ما هي أعمق بحيرة في العالم؟",
+    answer: "بحيرة بايكال",
+    options: ["بحيرة تنجانيقا", "بحر قزوين", "بحيرة بايكال", "بحيرة فيكتوريا"],
+  },
+  {
+    question: "ما هي القناة التي تربط المحيط الأطلسي بالمحيط الهادئ؟",
+    answer: "قناة بنما",
+    options: ["قناة بنما", "قناة كييل", "قناة كورنث", "قناة السويس"],
+  },
+  {
+    question: "ما هو أطول نهر في أوروبا؟",
+    answer: "الفولغا",
+    options: ["الراين", "الفولغا", "الدانوب", "السين"],
+  },
+  {
+    question: "ما هي الدولة التي تحيط بها جنوب أفريقيا من كل الجهات؟",
+    answer: "ليسوتو",
+    options: ["ليسوتو", "ناميبيا", "إسواتيني", "بوتسوانا"],
+  },
+  {
+    question: "في أي دولة تقع صحراء أتاكاما؟",
+    answer: "تشيلي",
+    options: ["الأرجنتين", "المكسيك", "تشيلي", "بيرو"],
   },
 ];

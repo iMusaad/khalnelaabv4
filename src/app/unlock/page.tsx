@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageShell from "@/components/PageShell";
 import UnlockForm from "@/components/UnlockForm";
+import { isEmailEnabled } from "@/lib/email";
 import { safeNextPath } from "@/lib/licenseCookie";
 
 export const metadata: Metadata = {
@@ -20,7 +21,8 @@ export default async function UnlockPage({
       <UnlockForm
         initialCode={code ?? ""}
         next={safeNextPath(next)}
-        paymentError={error === "payment"}
+        devicesError={error === "devices"}
+        emailEnabled={isEmailEnabled()}
       />
     </PageShell>
   );

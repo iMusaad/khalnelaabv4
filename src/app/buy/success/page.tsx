@@ -4,9 +4,12 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import CopyButton from "@/components/CopyButton";
 import PageShell from "@/components/PageShell";
+import PurchaseTracker from "@/components/PurchaseTracker";
 import QrCode from "@/components/QrCode";
 import { getLicenseSecrets, verifyLicenseCode } from "@/lib/license";
 import { LICENSE_COOKIE } from "@/lib/licenseCookie";
+import { getMessageStore } from "@/lib/messageStore";
+import { shortCodeForLicense } from "@/lib/shortCode";
 import { getSiteOrigin } from "@/lib/siteUrl";
 
 export const metadata: Metadata = {
@@ -28,10 +31,17 @@ export default async function SuccessPage() {
   const host = headerList.get("host") ?? "localhost:3000";
   const protocol = headerList.get("x-forwarded-proto") ?? "http";
   const origin = getSiteOrigin(`${protocol}://${host}`);
-  const unlockUrl = `${origin}/unlock?code=${encodeURIComponent(code)}`;
+  const store = await getMessageStore();
+  const shortCode =
+    store && check.type === "purchase"
+      ? await shortCodeForLicense(store, check.id)
+      : null;
+  const shownCode = shortCode ?? code;
+  const unlockUrl = `${origin}/unlock?code=${encodeURIComponent(shownCode)}`;
 
   return (
     <PageShell title="تم التفعيل">
+      <PurchaseTracker />
       <section className="arcade-card p-5 text-center sm:p-7">
         <p className="text-lg font-black text-white">
           شكرًا لك! اللعبة صارت مفعلة على هذا الجهاز.
@@ -43,7 +53,7 @@ export default async function SuccessPage() {
           dir="ltr"
           className="mt-1 select-all break-words rounded-xl border border-cyan-300/30 bg-black/30 px-3 py-3 text-lg font-black tracking-wide text-cyan-100 sm:text-xl"
         >
-          {code}
+          {shownCode}
         </p>
 
         <p className="mt-2 text-sm font-bold text-yellow-100/80">
@@ -51,7 +61,7 @@ export default async function SuccessPage() {
         </p>
 
         <div className="mt-4">
-          <CopyButton text={code} />
+          <CopyButton text={shownCode} />
         </div>
 
         <div className="mt-5 flex flex-col items-center gap-2">

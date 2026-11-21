@@ -6,9 +6,9 @@ import HowToPlayButton from "@/components/match/HowToPlayButton";
 import { CATEGORY_LETTERS as letters } from "@/data/categories";
 import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
-import type { WinnerType } from "@/types/game";
+import type { RoundPoints, WinnerType } from "@/types/game";
 
-const letterDeck = createDeck(letters);
+const letterDeck = createDeck(letters, "categories");
 
 type CategoriesRoundState = {
   letter: string;
@@ -31,7 +31,7 @@ export default function CategoriesGame({
 }: {
   side1Name: string;
   side2Name: string;
-  onRoundEnd: (winner?: WinnerType) => void;
+  onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
   timerEnabled?: boolean;
@@ -167,7 +167,7 @@ export default function CategoriesGame({
     <div className="mx-auto w-full max-w-3xl text-center">
       <div className="flex items-center justify-between gap-3">
         <p className="w-16 shrink-0 text-right text-sm font-bold text-white/45">
-          الجولة {currentRound}
+          {currentRound ? `اللعبة ${currentRound}` : ""}
         </p>
 
         <div className="min-w-0 flex-1 text-center">
@@ -272,7 +272,7 @@ export default function CategoriesGame({
 
         {revealed && (
           <p className="mt-4 text-sm font-bold text-white/60">
-            راجعوا الإجابات وبعدها أنهوا الجولة
+            راجعوا الإجابات وبعدها أنهوا اللعبة
           </p>
         )}
 
@@ -283,7 +283,7 @@ export default function CategoriesGame({
             disabled={!revealed}
             className="btn-primary min-w-[170px]"
           >
-            إنهاء الجولة
+            إنهاء اللعبة
           </button>
         </div>
       </div>

@@ -5,6 +5,7 @@ import {
   newMessageId,
   saveMessage,
 } from "@/lib/messageStore";
+import { notifyNewMessage } from "@/lib/telegram";
 
 export const dynamic = "force-dynamic";
 
@@ -41,14 +42,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false }, { status: 429 });
   }
 
-  await saveMessage(store, {
+  const saved = {
     id: newMessageId(),
     createdAt: new Date().toISOString(),
     name,
     email: clean(body?.email, 120),
     phone: clean(body?.phone, 40),
     message,
-  });
+  };
+
+  await saveMessage(store, saved);
+
+  await notifyNewMessage(store, saved);
 
   return NextResponse.json({ ok: true });
 }

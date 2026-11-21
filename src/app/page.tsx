@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import PixelHero from "@/components/PixelHero";
+import RiyalSign from "@/components/RiyalSign";
+import { GAME_COUNT } from "@/data/quizCards";
 import SaudiMadeSticker from "@/components/SaudiMadeSticker";
 import SiteFooter from "@/components/SiteFooter";
 import { HOME_GAMES } from "@/data/homeGames";
@@ -21,8 +23,8 @@ const STEPS = [
     title: "قسموا نفسكم فريقين",
     text: "جهاز واحد يكفي، وصاحب الجلسة يحكم",
   },
-  { title: "اختاروا ألعابكم", text: "لعبة وحدة أو العشر كلها" },
-  { title: "اللي يجمع أكثر يفوز", text: "النقاط تنجمع لين آخر جولة" },
+  { title: "اختاروا ألعابكم", text: "لعبة وحدة أو كم لعبة ورا بعض" },
+  { title: "اللي يجمع أكثر يفوز", text: "النقاط تنجمع لين آخر لعبة" },
 ];
 
 export default function Home() {
@@ -117,7 +119,7 @@ export default function Home() {
             prefetch={false}
             className="flex flex-wrap items-baseline justify-center gap-x-2 text-center text-base font-black text-white/80 transition-colors hover:text-white sm:text-xl"
           >
-            <span>كل الألعاب بـ</span>
+            <span>{GAME_COUNT} لعبة بـ</span>
 
             {PRICING.onSale && (
               <span className="text-white/40 line-through">
@@ -126,10 +128,10 @@ export default function Home() {
             )}
 
             <span className="text-2xl font-black text-[#ffc23d] sm:text-3xl">
-              {getCurrentPrice()} ريال
+              {getCurrentPrice()} <RiyalSign />
             </span>
 
-            <span>تدفعونها مرة وحدة بدون اشتراك</span>
+            <span>تصير لكم للأبد بدون اشتراك</span>
           </Link>
 
           <Link

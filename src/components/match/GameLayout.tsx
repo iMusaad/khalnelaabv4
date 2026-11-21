@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import HowToPlayButton from "@/components/match/HowToPlayButton";
+import ReportButton from "@/components/match/ReportButton";
 import type { GameType } from "@/lib/matchQueue";
 
 type TeamSide = "side1" | "side2";
@@ -29,6 +30,8 @@ type GameLayoutProps = {
   neutralTurnStyle?: "default" | "duo";
 
   game?: GameType;
+
+  reportItem?: string;
 
   children: ReactNode;
 };
@@ -90,6 +93,8 @@ export default function GameLayout({
 
   game,
 
+  reportItem,
+
   children,
 }: GameLayoutProps) {
   const cleanTurn = normalizeTeamName(turn);
@@ -124,15 +129,16 @@ export default function GameLayout({
   return (
     <div className="mx-auto w-full max-w-3xl">
       <div className="flex items-center justify-between gap-3">
-        <p className="w-16 shrink-0 text-right text-sm font-bold text-white/45">
-          الجولة {currentRound}
+        <p className="w-20 shrink-0 text-right text-sm font-bold text-white/45">
+          {currentRound ? `اللعبة ${currentRound}` : ""}
         </p>
 
         <div className="min-w-0 flex-1 text-center">
           <GameTitle title={title} />
         </div>
 
-        <div className="flex w-16 shrink-0 justify-end">
+        <div className="flex w-20 shrink-0 justify-end gap-2">
+          <ReportButton game={title} item={reportItem} />
           {game ? <HowToPlayButton game={game} /> : null}
         </div>
       </div>

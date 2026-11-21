@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 
-export default function CopyButton({ text }: { text: string }) {
+export default function CopyButton({
+  text,
+  label = "انسخ الكود",
+}: {
+  text: string;
+  label?: string;
+}) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
@@ -17,7 +23,7 @@ export default function CopyButton({ text }: { text: string }) {
 
   return (
     <button type="button" onClick={copy} className="btn-secondary w-full">
-      {copied ? "تم النسخ" : "انسخ الكود"}
+      {copied ? "تم النسخ" : label}
     </button>
   );
 }

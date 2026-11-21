@@ -20,6 +20,12 @@ const eslintConfig = [
       "react-hooks/refs": "off",
     },
   },
+  {
+    files: ["src/lib/analytics.ts"],
+    rules: {
+      "prefer-rest-params": "off",
+    },
+  },
 ];
 
 export default eslintConfig;

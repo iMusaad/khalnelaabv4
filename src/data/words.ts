@@ -4,58 +4,19 @@ export const WORDS = [
   { answer: "دراجة", category: "مركبة بدون محرك" },
   { answer: "سفينة", category: "مركبة في البحر" },
   { answer: "طيارة", category: "مركبة في السماء" },
-
   { answer: "حديقة", category: "مكان للطلعات" },
   { answer: "مدرسة", category: "مكان للدراسة" },
   { answer: "عيادة", category: "مكان للعلاج" },
   { answer: "مكتبة", category: "محل" },
   { answer: "بقالة", category: "محل" },
-
   { answer: "نافذة", category: "جزء من البيت" },
   { answer: "وسادة", category: "غرفة النوم" },
   { answer: "ستارة", category: "ديكور البيت" },
   { answer: "مكنسة", category: "أداة تنظيف" },
   { answer: "منشفة", category: "دورة المياه" },
-
   { answer: "ليمون", category: "فاكهة" },
   { answer: "شمامة", category: "فاكهة" },
   { answer: "بطاطس", category: "خضار" },
   { answer: "كنافة", category: "حلى" },
   { answer: "بسكوت", category: "سناك" },
-
-  { answer: "فراشة", category: "حشرة" },
-  { answer: "حمامة", category: "طير" },
-  { answer: "دجاجة", category: "طير" },
-  { answer: "غزالة", category: "حيوان بري" },
-  { answer: "زرافة", category: "حيوان بري" },
-
-  { answer: "مقلاة", category: "أواني الطبخ" },
-  { answer: "صينية", category: "أواني الطبخ" },
-  { answer: "ملعقة", category: "أدوات الأكل" },
-  { answer: "ثلاجة", category: "جهاز في المطبخ" },
-  { answer: "مصفاة", category: "أواني الطبخ" },
-
-  { answer: "مطرقة", category: "عدة النجار" },
-  { answer: "منشار", category: "عدة النجار" },
-  { answer: "مسمار", category: "عدة النجار" },
-  { answer: "كماشة", category: "عدة السباك" },
-  { answer: "ميزان", category: "أداة قياس" },
-
-  { answer: "مفتاح", category: "أغراض الجيب" },
-  { answer: "محفظة", category: "أغراض الجيب" },
-  { answer: "نظارة", category: "إكسسوار" },
-  { answer: "فرشاة", category: "أدوات النظافة" },
-  { answer: "حقيبة", category: "أغراض السفر" },
-
-  { answer: "عباية", category: "لبس نسائي" },
-  { answer: "فستان", category: "لبس المناسبات" },
-  { answer: "جاكيت", category: "لبس شتوي" },
-  { answer: "جوارب", category: "لبس الرجول" },
-  { answer: "تنورة", category: "لبس نسائي" },
-
-  { answer: "رسالة", category: "تواصل" },
-  { answer: "جريدة", category: "إعلام" },
-  { answer: "قصيدة", category: "أدب" },
-  { answer: "رواية", category: "أدب" },
-  { answer: "مذكرة", category: "دراسة" },
 ];

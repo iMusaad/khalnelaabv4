@@ -1,10 +1,13 @@
-import { PRICING, isAcceptedAmount } from "@/lib/pricing";
+import type { KvStore } from "@/lib/messageStore";
+import { PRICING, isAcceptedAmount, toHalalas } from "@/lib/pricing";
+import { getReferral, lowestAmountFor } from "@/lib/referral";
 
 export type MoyasarPayment = {
   id: string;
   status: string;
   amount: number;
   currency: string;
+  fee?: number;
   metadata?: Record<string, string> | null;
 };
 
@@ -13,6 +16,34 @@ export function isPaidPurchase(payment: MoyasarPayment) {
     payment.status === "paid" &&
     payment.currency === PRICING.currency &&
     isAcceptedAmount(payment.amount)
+  );
+}
+
+export async function isPaidPurchaseWithReferral(
+  payment: MoyasarPayment,
+  store: KvStore | null,
+) {
+  if (isPaidPurchase(payment)) {
+    return true;
+  }
+
+  const ref = payment.metadata?.ref;
+
+  if (
+    payment.status !== "paid" ||
+    payment.currency !== PRICING.currency ||
+    !ref ||
+    !store
+  ) {
+    return false;
+  }
+
+  const referral = await getReferral(store, ref);
+
+  return Boolean(
+    referral &&
+    payment.amount >= lowestAmountFor(referral) &&
+    payment.amount <= toHalalas(PRICING.basePrice),
   );
 }
 

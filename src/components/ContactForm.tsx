@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 const COUNTRY_CODES = [
   { label: "السعودية \u2066+966\u2069", code: "+966" },
@@ -54,6 +55,7 @@ export default function ContactForm() {
       }
 
       setStatus("sent");
+      trackEvent("contact_submit");
       setName("");
       setEmail("");
       setPhone("");

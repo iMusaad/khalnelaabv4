@@ -7,19 +7,19 @@ import GameLayout from "@/components/match/GameLayout";
 import { COUNTRIES, type CountryItem } from "@/data/countries";
 import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
-import type { WinnerType } from "@/types/game";
+import type { RoundPoints, WinnerType } from "@/types/game";
 
 type Props = {
   side1Name: string;
   side2Name: string;
-  onRoundEnd: (winner?: WinnerType) => void;
+  onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
   timerEnabled?: boolean;
   timerSeconds?: number;
 };
 
-const countryDeck = createDeck(COUNTRIES);
+const countryDeck = createDeck(COUNTRIES, "country");
 
 type CountryRoundState = {
   countries: [CountryItem, CountryItem];
@@ -122,6 +122,7 @@ export default function CountryGame({
 
   return (
     <GameLayout
+      reportItem={countries?.map((country) => country.nameAr).join(" / ")}
       title="وش علمك؟"
       side1={side1}
       side2={side2}
@@ -324,7 +325,7 @@ export default function CountryGame({
                   onClick={() => onRoundEnd()}
                   className={actionButtonClass}
                 >
-                  إنهاء الجولة
+                  إنهاء اللعبة
                 </button>
               </div>
             )}

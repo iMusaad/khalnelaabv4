@@ -12,7 +12,8 @@ export type GameType =
   | "country"
   | "club"
   | "car"
-  | "zoom";
+  | "zoom"
+  | "geo";
 
 export type Round = {
   game: GameType;
@@ -31,6 +32,7 @@ export const VALID_GAMES: GameType[] = [
   "club",
   "car",
   "zoom",
+  "geo",
 ];
 
 export const DEFAULT_ROUNDS: Record<GameType, number> = {
@@ -45,6 +47,7 @@ export const DEFAULT_ROUNDS: Record<GameType, number> = {
   club: 1,
   car: 1,
   zoom: 1,
+  geo: 1,
 };
 
 export function isGameType(value: string | null): value is GameType {
@@ -62,15 +65,8 @@ export function getDefaultRounds(game: GameType) {
   return DEFAULT_ROUNDS[game];
 }
 
-export function getRoundCount(
-  game: GameType,
-  gameRounds: Record<string, number>,
-) {
-  const value = Math.floor(Number(gameRounds[game]));
-
-  return Number.isFinite(value) && value > 0
-    ? Math.min(value, 10)
-    : getDefaultRounds(game);
+export function getRoundCount(game: GameType) {
+  return getDefaultRounds(game);
 }
 
 export function buildRoundQueue(
@@ -91,7 +87,7 @@ export function buildRoundQueue(
       return;
     }
 
-    const count = getRoundCount(game, gameRounds);
+    const count = getRoundCount(game);
 
     for (let i = 0; i < count; i += 1) {
       queue.push({

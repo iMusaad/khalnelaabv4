@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
   const password = typeof body?.password === "string" ? body.password : "";
 
-  if (!(await adminPasswordMatches(password))) {
+  if (!(await adminPasswordMatches(password, request))) {
     return NextResponse.json({ ok: false }, { status: 401 });
   }
 
@@ -33,5 +33,11 @@ export async function POST(request: NextRequest) {
     await deleteMessage(store, body.deleteId);
   }
 
-  return NextResponse.json({ ok: true, messages: await listMessages(store) });
+  const lastHook = await store.get("hook:last");
+
+  return NextResponse.json({
+    ok: true,
+    messages: await listMessages(store),
+    lastHook: lastHook ? JSON.parse(lastHook) : null,
+  });
 }

@@ -84,9 +84,16 @@ export const PROVERB_PUZZLES = [
     answer: "شف وجه العنز واحلب لبن",
   },
   { image: "/images/proverbs/proverb_31.png", answer: "لسانه يلوط اذانه" },
-  { image: "/images/proverbs/proverb_32.png", answer: "البس يحب خناقه" },
+  { image: "/images/proverbs/proverb_32.png", answer: "جا يكحلها عماها" },
+  { image: "/images/proverbs/proverb_33.png", answer: "الوقت من ذهب" },
+  { image: "/images/proverbs/proverb_34.png", answer: "الصبر مفتاح الفرج" },
   {
-    image: "/images/proverbs/proverb_33.png",
+    image: "/images/proverbs/proverb_35.png",
+    answer: "اللي في القدر يطلعه الملاس",
+  },
+  { image: "/images/proverbs/proverb_36.png", answer: "البس يحب خناقه" },
+  {
+    image: "/images/proverbs/proverb_37.png",
     answer: "يا شين السرج على البقره",
   },
 ];

@@ -2,6 +2,11 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { SITE } from "@/data/site";
 import "./globals.css";
+import CookieConsent from "@/components/CookieConsent";
+import GoogleAnalytics from "@/components/GoogleAnalytics";
+import RefCapture from "@/components/RefCapture";
+import SourceCapture from "@/components/SourceCapture";
+import { GAME_COUNT } from "@/data/quizCards";
 
 const somar = localFont({
   src: [
@@ -22,7 +27,7 @@ const somar = localFont({
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || SITE.url;
 
-const description = "ألعاب جماعية للجلسات: فريقين، عشر ألعاب، وبطل واحد.";
+const description = `${GAME_COUNT} لعبة جماعية للجلسات: فريقين على جهاز واحد، وفريق واحد يفوز.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -57,7 +62,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl" className={somar.variable}>
-      <body>{children}</body>
+      <body>
+        <RefCapture />
+        <SourceCapture />
+        {children}
+        <GoogleAnalytics />
+        <CookieConsent />
+      </body>
     </html>
   );
 }

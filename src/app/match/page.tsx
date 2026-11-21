@@ -15,6 +15,14 @@ import {
   WinnerOverlay,
 } from "@/components/match/SessionOverlays";
 import type { QuizCategoryKey } from "@/data/quiz/meta";
+import GameIntroOverlay from "@/components/match/GameIntroOverlay";
+import { hasSeenIntro, markIntroSeen } from "@/lib/introSeen";
+import {
+  cardKeyFor,
+  newStatSessionId,
+  reportSession,
+  trackEvent,
+} from "@/lib/analytics";
 import {
   buildRoundQueue,
   getDefaultRounds,
@@ -33,10 +41,13 @@ import {
 } from "@/lib/savedMatch";
 import { createResultShareImage } from "@/lib/shareImage";
 import type { ShareAction } from "@/components/match/SessionOverlays";
-import type { WinnerType } from "@/types/game";
+import type { RoundPoints, WinnerType } from "@/types/game";
+
+const WIN_BONUS = 3;
 import type { ModeType, RoundStat } from "@/types/match";
 
-type PhaseType = "setup" | "countdown" | "playing" | "transition" | "finished";
+type PhaseType =
+  "setup" | "countdown" | "intro" | "playing" | "transition" | "finished";
 
 const GAME_LOADERS = {
   word: () => import("@/components/match/WordGame"),
@@ -50,6 +61,7 @@ const GAME_LOADERS = {
   club: () => import("@/components/match/ClubGame"),
   car: () => import("@/components/match/CarGame"),
   zoom: () => import("@/components/match/ZoomGame"),
+  geo: () => import("@/components/match/GeoGame"),
 };
 
 function GameLoading() {
@@ -115,6 +127,11 @@ const ZoomGame = dynamic(GAME_LOADERS.zoom, {
   loading: GameLoading,
 });
 
+const GeoGame = dynamic(GAME_LOADERS.geo, {
+  ssr: false,
+  loading: GameLoading,
+});
+
 function preloadGames(games: GameType[]) {
   games.forEach((game) => {
     void GAME_LOADERS[game]().catch(() => {});
@@ -134,7 +151,18 @@ export default function MatchPage() {
 
   const sharingRef = useRef(false);
 
+  const statSessionRef = useRef("");
+
   const [mode, setMode] = useState<ModeType>("session");
+
+  const [trial, setTrial] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/license/status")
+      .then((response) => response.json())
+      .then((data: { paid?: boolean }) => setTrial(data?.paid === false))
+      .catch(() => {});
+  }, []);
 
   const [phase, setPhase] = useState<PhaseType>("setup");
 
@@ -173,6 +201,11 @@ export default function MatchPage() {
 
   const [showRoundResult, setShowRoundResult] = useState(false);
 
+  const [roundGained, setRoundGained] = useState<RoundPoints>({
+    side1: 0,
+    side2: 0,
+  });
+
   const [roundResultWinner, setRoundResultWinner] =
     useState<WinnerType>("none");
 
@@ -180,18 +213,40 @@ export default function MatchPage() {
 
   const current = queue[index];
 
+  const trackedRoundRef = useRef("");
+
+  useEffect(() => {
+    if (phase !== "playing" || !current) {
+      return;
+    }
+
+    const roundKey = `${statSessionRef.current}:${index}`;
+
+    if (trackedRoundRef.current === roundKey) {
+      return;
+    }
+
+    trackedRoundRef.current = roundKey;
+    trackEvent("game_play", {
+      game: cardKeyFor(current),
+      round_number: index + 1,
+      match_mode: mode,
+      trial,
+    });
+  }, [phase, current, index, mode, trial]);
+
   const nextRound = queue[index + 1];
 
   const nextDifferentGame = current
     ? queue.slice(index + 1).find((round) => round.game !== current.game)?.game
     : undefined;
 
-  const battleStep = queue.length > 0 ? 50 / queue.length : 0;
+  const totalScore = side1Score + side2Score;
 
-  const side1Control = Math.max(
-    0,
-    Math.min(100, 50 + (side1Score - side2Score) * battleStep),
-  );
+  const side1Control =
+    totalScore > 0
+      ? Math.max(10, Math.min(90, (side1Score / totalScore) * 100))
+      : 50;
 
   function snapshot(overrides: Partial<SavedMatch>): SavedMatch {
     return {
@@ -291,6 +346,14 @@ export default function MatchPage() {
 
     setQueue(builtQueue);
 
+    statSessionRef.current = newStatSessionId();
+    reportSession("start", {
+      sessionId: statSessionRef.current,
+      mode,
+      trial,
+      rounds: builtQueue,
+    });
+
     setStarted(false);
     setIndex(0);
 
@@ -313,6 +376,16 @@ export default function MatchPage() {
 
   function finishSession(finalSide1Score: number, finalSide2Score: number) {
     clearFlowTimers();
+
+    if (statSessionRef.current) {
+      reportSession("finish", {
+        sessionId: statSessionRef.current,
+        mode,
+        trial,
+        rounds: queue,
+      });
+      statSessionRef.current = "";
+    }
 
     setSide1Score(finalSide1Score);
     setSide2Score(finalSide2Score);
@@ -343,13 +416,17 @@ export default function MatchPage() {
     transitionTimer.current = setTimeout(() => {
       setIndex((currentIndex) => currentIndex + 1);
 
-      setPhase("playing");
+      setPhase(
+        upcomingRound && !hasSeenIntro(upcomingRound.game)
+          ? "intro"
+          : "playing",
+      );
 
       transitionTimer.current = null;
     }, 1500);
   }
 
-  function applyRoundWinner(winner?: WinnerType) {
+  function applyRoundWinner(winner?: WinnerType, points?: RoundPoints) {
     if (!current || phase !== "playing" || resolvedRoundRef.current === index) {
       return;
     }
@@ -361,9 +438,19 @@ export default function MatchPage() {
 
     const finalWinner = winner ?? "none";
 
-    const nextSide1Score = side1Score + (finalWinner === "side1" ? 1 : 0);
+    const gained: RoundPoints = points
+      ? {
+          side1: Math.max(0, Math.round(points.side1)),
+          side2: Math.max(0, Math.round(points.side2)),
+        }
+      : {
+          side1: finalWinner === "side1" ? WIN_BONUS : 0,
+          side2: finalWinner === "side2" ? WIN_BONUS : 0,
+        };
 
-    const nextSide2Score = side2Score + (finalWinner === "side2" ? 1 : 0);
+    const nextSide1Score = side1Score + gained.side1;
+
+    const nextSide2Score = side2Score + gained.side2;
 
     const nextRoundStats: RoundStat[] = [
       ...roundStats,
@@ -371,6 +458,8 @@ export default function MatchPage() {
         game: current.game,
         round: index + 1,
         winner: finalWinner,
+        side1Points: gained.side1,
+        side2Points: gained.side2,
       },
     ];
 
@@ -399,6 +488,7 @@ export default function MatchPage() {
     );
 
     setRoundResultWinner(finalWinner);
+    setRoundGained(gained);
     setShowRoundResult(true);
 
     roundResultTimer.current = setTimeout(() => {
@@ -410,7 +500,7 @@ export default function MatchPage() {
     }, 2500);
   }
 
-  function endRound(winner?: WinnerType) {
+  function endRound(winner?: WinnerType, points?: RoundPoints) {
     if (!current || phase !== "playing" || endingRoundRef.current === index) {
       return;
     }
@@ -418,7 +508,7 @@ export default function MatchPage() {
     endingRoundRef.current = index;
 
     if (winner !== undefined) {
-      applyRoundWinner(winner);
+      applyRoundWinner(winner, points);
       return;
     }
 
@@ -446,7 +536,10 @@ export default function MatchPage() {
 
   function confirmLeave(event: MouseEvent<HTMLAnchorElement>) {
     const inProgress =
-      phase === "countdown" || phase === "playing" || phase === "transition";
+      phase === "countdown" ||
+      phase === "intro" ||
+      phase === "playing" ||
+      phase === "transition";
 
     if (inProgress && !window.confirm("متأكدين؟ بتضيع نتيجة الجلسة")) {
       event.preventDefault();
@@ -473,11 +566,11 @@ export default function MatchPage() {
     const startTimer = setTimeout(() => {
       saveMatch(snapshotRef.current({ index: 0 }));
       setStarted(true);
-      setPhase("playing");
+      setPhase(queue[0] && !hasSeenIntro(queue[0].game) ? "intro" : "playing");
     }, 650);
 
     return () => clearTimeout(startTimer);
-  }, [phase, countdown]);
+  }, [phase, countdown, queue]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -623,12 +716,25 @@ export default function MatchPage() {
     }
   }
 
+  const gameNumbers = queue.map(
+    (round, position) =>
+      queue
+        .slice(0, position + 1)
+        .filter(
+          (item, itemIndex) =>
+            itemIndex === 0 ||
+            cardKeyFor(item) !== cardKeyFor(queue[itemIndex - 1]),
+        ).length,
+  );
+  const gameNumber = gameNumbers[index] ?? 1;
+  const totalGames = gameNumbers.at(-1) ?? 1;
+
   const commonGameProps = {
     onRoundEnd: endRound,
     roundKey: index,
     side1Name: side1,
     side2Name: side2,
-    currentRound: index + 1,
+    currentRound: mode === "session" ? gameNumber : 0,
     timerEnabled,
     timerSeconds: current
       ? getTimerSeconds(current.game, timerSeconds)
@@ -646,6 +752,7 @@ export default function MatchPage() {
           <WordGame
             key={index}
             {...commonGameProps}
+            trial={trial}
             side1Score={side1Score}
             side2Score={side2Score}
           />
@@ -656,6 +763,7 @@ export default function MatchPage() {
           <QuizGame
             key={index}
             {...commonGameProps}
+            trial={trial}
             category={current.category}
           />
         );
@@ -704,6 +812,9 @@ export default function MatchPage() {
 
       case "zoom":
         return <ZoomGame key={index} {...commonGameProps} />;
+
+      case "geo":
+        return <GeoGame key={index} {...commonGameProps} trial={trial} />;
     }
   }
 
@@ -712,6 +823,17 @@ export default function MatchPage() {
       <HomeLogoLink onClick={confirmLeave} />
 
       {phase === "countdown" && <CountdownOverlay countdown={countdown} />}
+
+      {phase === "intro" && current && (
+        <GameIntroOverlay
+          game={current.game}
+          onStart={() => {
+            markIntroSeen(current.game);
+            trackEvent("intro_skip", { game: cardKeyFor(current) });
+            setPhase("playing");
+          }}
+        />
+      )}
 
       {phase === "transition" && nextRound && (
         <TransitionOverlay nextRound={nextRound} />
@@ -736,7 +858,7 @@ export default function MatchPage() {
 
       <TeamPickModal
         show={showRoundWinnerPicker}
-        kicker="خلصت الجولة"
+        kicker="خلصت اللعبة"
         title="مين أخذها؟"
         side1Name={side1}
         side2Name={side2}
@@ -748,6 +870,9 @@ export default function MatchPage() {
         show={showRoundResult}
         winnerName={roundWinnerName}
         isDraw={roundIsDraw}
+        side1Name={side1 || "فريق 1"}
+        side2Name={side2 || "فريق 2"}
+        gained={roundGained}
       />
 
       {!started ? (
@@ -760,14 +885,13 @@ export default function MatchPage() {
           selectedGames={selectedGames}
           pinnedGame={pinnedGame}
           setSelectedGames={setSelectedGames}
-          gameRounds={gameRounds}
-          setGameRounds={setGameRounds}
           quizCategories={quizCategories}
           setQuizCategories={setQuizCategories}
           timerEnabled={timerEnabled}
           setTimerEnabled={setTimerEnabled}
           timerSeconds={timerSeconds}
           setTimerSeconds={setTimerSeconds}
+          trial={trial}
           onStart={start}
         />
       ) : (
@@ -785,11 +909,13 @@ export default function MatchPage() {
             />
           )}
 
-          {renderCurrentGame()}
+          {phase !== "intro" && renderCurrentGame()}
 
-          <p className="mt-4 text-center text-sm font-bold text-white/50">
-            الجولة {index + 1} من {queue.length}
-          </p>
+          {mode === "session" && totalGames > 1 && (
+            <p className="mt-4 text-center text-sm font-bold text-white/50">
+              اللعبة {gameNumber} من {totalGames}
+            </p>
+          )}
         </div>
       )}
     </main>

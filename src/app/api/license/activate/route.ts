@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { claimDevice, setDeviceCookie } from "@/lib/devices";
 import { normalizeGiftCode, redeemGift } from "@/lib/giftStore";
 import {
   createLicenseCode,
@@ -8,6 +9,8 @@ import {
 } from "@/lib/license";
 import { LICENSE_COOKIE, LICENSE_COOKIE_OPTIONS } from "@/lib/licenseCookie";
 import { getMessageStore } from "@/lib/messageStore";
+import { licenseForPayment } from "@/lib/purchase";
+import { normalizeShortCode, paymentForShortCode } from "@/lib/shortCode";
 
 export const dynamic = "force-dynamic";
 
@@ -47,6 +50,17 @@ async function redeemShortGift(input: string) {
   return { code, expiresAt };
 }
 
+async function purchaseCodeFromShort(input: string) {
+  if (!normalizeShortCode(input)) {
+    return null;
+  }
+
+  const store = await getMessageStore();
+  const paymentId = store ? await paymentForShortCode(store, input) : null;
+
+  return paymentId ? licenseForPayment(paymentId) : null;
+}
+
 export async function POST(request: NextRequest) {
   const body = (await request.json().catch(() => null)) as {
     code?: unknown;
@@ -56,20 +70,42 @@ export async function POST(request: NextRequest) {
 
   let code = input.trim().toUpperCase();
   let expiresAt: Date | null = null;
+  let deviceId: string | null = null;
 
-  const gift = await redeemShortGift(input);
+  const purchaseCode = await purchaseCodeFromShort(input);
+  const gift = purchaseCode ? null : await redeemShortGift(input);
 
   if (gift) {
     code = gift.code;
     expiresAt = gift.expiresAt;
   } else {
-    const check = await verifyLicenseCode(input, getLicenseSecrets());
+    const check = await verifyLicenseCode(
+      purchaseCode ?? input,
+      getLicenseSecrets(),
+    );
 
     if (!check.valid) {
       return NextResponse.json({ ok: false }, { status: 400 });
     }
 
+    if (purchaseCode) {
+      code = purchaseCode;
+    }
+
     expiresAt = check.expiresAt;
+
+    if (check.type === "purchase") {
+      const device = await claimDevice(request, check.id);
+
+      if (!device.allowed) {
+        return NextResponse.json(
+          { ok: false, reason: "devices" },
+          { status: 403 },
+        );
+      }
+
+      deviceId = device.deviceId;
+    }
   }
 
   const response = NextResponse.json({ ok: true });
@@ -84,6 +120,10 @@ export async function POST(request: NextRequest) {
         }
       : {}),
   });
+
+  if (deviceId) {
+    setDeviceCookie(response, deviceId);
+  }
 
   return response;
 }

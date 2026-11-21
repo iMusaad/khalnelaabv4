@@ -1,193 +1,60 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import GameLayout from "@/components/match/GameLayout";
 import { InlineJudge } from "@/components/match/Overlays";
 import { LOGOS, type LogoItem } from "@/data/logos";
 import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
-import type { WinnerType } from "@/types/game";
+import type { RoundPoints, WinnerType } from "@/types/game";
 
-const TOTAL_ROUNDS = 2;
+const LOGOS_PER_ROUND = 4;
+
+const DEFAULT_START_ZOOM = 7;
+
+const ZOOM_STEPS = [1, 0.64, 0.42, 0.28];
+
+const ZOOM_LEVELS = ZOOM_STEPS;
+
+function zoomLevels(start: number) {
+  return ZOOM_STEPS.map((step) => Math.max(1.8, start * step));
+}
+
+const STAGE_POINTS = [4, 3, 2, 1];
 
 type TeamSide = "side1" | "side2";
 
-const logoDeck = createDeck(LOGOS);
+const logoDeck = createDeck(LOGOS, "logo");
+
+type LogoRound = LogoItem & { focusX: number; focusY: number };
+
+function withFocus(logo: LogoItem): LogoRound {
+  const spots = logo.spots.length > 0 ? logo.spots : [[50, 50]];
+  const [focusX, focusY] =
+    logo.fixedSpot ?? spots[Math.floor(Math.random() * spots.length)];
+
+  return { ...logo, focusX, focusY };
+}
 
 type LogoRoundState = {
-  rounds: LogoItem[];
+  rounds: LogoRound[];
   index: number;
+  stage: number;
   revealed: boolean;
   side1Score: number;
   side2Score: number;
 };
 
-function PixelatedLogo({
-  logo,
-  revealed,
-}: {
-  logo: LogoItem;
-  revealed: boolean;
-}) {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+function pointsLabel(points: number) {
+  if (points === 1) return "نقطة";
+  if (points === 2) return "نقطتين";
 
-  const [failed, setFailed] = useState(false);
+  return `${points} نقاط`;
+}
 
-  useEffect(() => {
-    const currentCanvas = canvasRef.current;
-
-    if (!currentCanvas) {
-      return;
-    }
-
-    const currentContext = currentCanvas.getContext("2d");
-
-    if (!currentContext) {
-      return;
-    }
-
-    const canvas: HTMLCanvasElement = currentCanvas;
-
-    const ctx: CanvasRenderingContext2D = currentContext;
-
-    const image = new Image();
-
-    let cancelled = false;
-
-    const drawLogo = () => {
-      if (cancelled || image.naturalWidth === 0 || image.naturalHeight === 0) {
-        return;
-      }
-
-      const DISPLAY_SIZE = 512;
-
-      canvas.width = DISPLAY_SIZE;
-
-      canvas.height = DISPLAY_SIZE;
-
-      ctx.clearRect(0, 0, DISPLAY_SIZE, DISPLAY_SIZE);
-
-      const scale = Math.min(
-        DISPLAY_SIZE / image.naturalWidth,
-        DISPLAY_SIZE / image.naturalHeight,
-      );
-
-      const displayWidth = image.naturalWidth * scale;
-
-      const displayHeight = image.naturalHeight * scale;
-
-      const x = (DISPLAY_SIZE - displayWidth) / 2;
-
-      const y = (DISPLAY_SIZE - displayHeight) / 2;
-
-      if (revealed) {
-        ctx.imageSmoothingEnabled = true;
-
-        ctx.imageSmoothingQuality = "high";
-
-        ctx.drawImage(image, x, y, displayWidth, displayHeight);
-
-        return;
-      }
-
-      const pixelSize = logo.pixelSize ?? 28;
-
-      const ratio = image.naturalWidth / image.naturalHeight;
-
-      let smallWidth = pixelSize;
-
-      let smallHeight = pixelSize;
-
-      if (ratio >= 1) {
-        smallHeight = Math.max(1, Math.round(pixelSize / ratio));
-      } else {
-        smallWidth = Math.max(1, Math.round(pixelSize * ratio));
-      }
-
-      const offscreen = document.createElement("canvas");
-
-      offscreen.width = smallWidth;
-
-      offscreen.height = smallHeight;
-
-      const smallContext = offscreen.getContext("2d");
-
-      if (!smallContext) {
-        return;
-      }
-
-      smallContext.clearRect(0, 0, smallWidth, smallHeight);
-
-      smallContext.imageSmoothingEnabled = true;
-
-      smallContext.drawImage(image, 0, 0, smallWidth, smallHeight);
-
-      ctx.imageSmoothingEnabled = false;
-
-      ctx.drawImage(
-        offscreen,
-        0,
-        0,
-        smallWidth,
-        smallHeight,
-        x,
-        y,
-        displayWidth,
-        displayHeight,
-      );
-
-      ctx.imageSmoothingEnabled = true;
-    };
-
-    image.onload = drawLogo;
-
-    image.onerror = () => {
-      if (!cancelled) {
-        setFailed(true);
-      }
-    };
-
-    image.src = logo.image;
-
-    if (image.complete && image.naturalWidth > 0 && image.naturalHeight > 0) {
-      drawLogo();
-    }
-
-    return () => {
-      cancelled = true;
-      image.onload = null;
-      image.onerror = null;
-    };
-  }, [logo.image, logo.pixelSize, revealed]);
-
-  if (failed) {
-    return (
-      <div className="mx-auto flex aspect-square w-full max-w-[360px] items-center justify-center text-center text-base font-black text-slate-500 sm:max-w-[400px]">
-        {revealed ? logo.answerAr : "الصورة ما حملت"}
-      </div>
-    );
-  }
-
-  return (
-    <div className="relative mx-auto aspect-square w-full max-w-[260px] sm:max-w-[400px]">
-      <canvas
-        role="img"
-        aria-label={revealed ? logo.answerAr : "شعار مبكسل"}
-        ref={canvasRef}
-        className={`
-          h-full
-          w-full
-          transition-all
-          duration-500
-          ${revealed ? "scale-[1.02]" : "scale-100"}
-        `}
-        style={{
-          imageRendering: revealed ? "auto" : "pixelated",
-        }}
-      />
-    </div>
-  );
+function getStageSeconds(timerSeconds: number) {
+  return Math.max(5, Math.round(timerSeconds / ZOOM_LEVELS.length));
 }
 
 export default function LogoGame({
@@ -201,19 +68,23 @@ export default function LogoGame({
 }: {
   side1Name: string;
   side2Name: string;
-  onRoundEnd: (winner?: WinnerType) => void;
+  onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
   timerEnabled?: boolean;
   timerSeconds?: number;
 }) {
+  const stageSeconds = getStageSeconds(timerSeconds);
+
   const [index, setIndex] = useState(0);
 
-  const [rounds, setRounds] = useState<LogoItem[]>([]);
+  const [rounds, setRounds] = useState<LogoRound[]>([]);
+
+  const [stage, setStage] = useState(0);
 
   const [revealed, setRevealed] = useState(false);
 
-  const [timeLeft, setTimeLeft] = useState(timerSeconds);
+  const [timeLeft, setTimeLeft] = useState(stageSeconds);
 
   const [side1Score, setSide1Score] = useState(0);
 
@@ -224,29 +95,31 @@ export default function LogoGame({
   useEffect(() => {
     setLoaded(true);
 
-    setTimeLeft(timerSeconds);
+    setTimeLeft(stageSeconds);
 
     const saved = readRoundState<LogoRoundState>("logo", roundKey);
 
-    if (saved && saved.rounds.length > 0) {
+    if (
+      saved &&
+      saved.rounds.length > 0 &&
+      typeof saved.rounds[0].focusX === "number"
+    ) {
       setRounds(saved.rounds);
       setIndex(saved.index);
+      setStage(saved.stage);
       setRevealed(saved.revealed);
       setSide1Score(saved.side1Score);
       setSide2Score(saved.side2Score);
       return;
     }
 
-    setRounds(logoDeck.draw(TOTAL_ROUNDS));
-
+    setRounds(logoDeck.draw(LOGOS_PER_ROUND).map(withFocus));
     setIndex(0);
-
+    setStage(0);
     setRevealed(false);
-
     setSide1Score(0);
-
     setSide2Score(0);
-  }, [roundKey, timerSeconds]);
+  }, [roundKey, stageSeconds]);
 
   useEffect(() => {
     if (!loaded || rounds.length === 0) {
@@ -256,11 +129,21 @@ export default function LogoGame({
     writeRoundState<LogoRoundState>("logo", roundKey, {
       rounds,
       index,
+      stage,
       revealed,
       side1Score,
       side2Score,
     });
-  }, [loaded, roundKey, rounds, index, revealed, side1Score, side2Score]);
+  }, [
+    loaded,
+    roundKey,
+    rounds,
+    index,
+    stage,
+    revealed,
+    side1Score,
+    side2Score,
+  ]);
 
   const current = rounds[index];
 
@@ -272,13 +155,22 @@ export default function LogoGame({
   const activeTeamName =
     activeSide === "side1" ? side1Name || "فريق 1" : side2Name || "فريق 2";
 
+  const isLastStage = stage >= ZOOM_LEVELS.length - 1;
+
+  const stagePoints = STAGE_POINTS[stage];
+
   useEffect(() => {
     if (!timerEnabled || revealed || !current) {
       return;
     }
 
     if (timeLeft <= 0) {
-      setRevealed(true);
+      if (isLastStage) {
+        setRevealed(true);
+      } else {
+        setStage((previous) => previous + 1);
+        setTimeLeft(stageSeconds);
+      }
 
       return;
     }
@@ -288,56 +180,45 @@ export default function LogoGame({
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [timerEnabled, revealed, timeLeft, current]);
+  }, [timerEnabled, revealed, timeLeft, current, isLastStage, stageSeconds]);
+
+  function zoomOut() {
+    if (isLastStage) {
+      return;
+    }
+
+    setStage((previous) => previous + 1);
+    setTimeLeft(stageSeconds);
+  }
 
   function finishGame(final1: number, final2: number) {
-    if (final1 > final2) {
-      onRoundEnd("side1");
-
-      return;
-    }
-
-    if (final2 > final1) {
-      onRoundEnd("side2");
-
-      return;
-    }
-
-    onRoundEnd("none");
+    onRoundEnd(final1 > final2 ? "side1" : final2 > final1 ? "side2" : "none", {
+      side1: final1,
+      side2: final2,
+    });
   }
 
   function goNext(next1: number, next2: number) {
     if (index + 1 >= rounds.length) {
       finishGame(next1, next2);
-
       return;
     }
 
     setIndex((currentIndex) => currentIndex + 1);
-
+    setStage(0);
     setRevealed(false);
-
-    setTimeLeft(timerSeconds);
+    setTimeLeft(stageSeconds);
   }
 
-  function givePoint(winner: "side1" | "side2" | "none") {
-    const next1 = side1Score + (winner === "side1" ? 1 : 0);
+  function award(points: number) {
+    const next1 = side1Score + (activeSide === "side1" ? points : 0);
 
-    const next2 = side2Score + (winner === "side2" ? 1 : 0);
+    const next2 = side2Score + (activeSide === "side2" ? points : 0);
 
     setSide1Score(next1);
-
     setSide2Score(next2);
 
     goNext(next1, next2);
-  }
-
-  function markCorrect() {
-    givePoint(activeSide);
-  }
-
-  function markWrong() {
-    givePoint("none");
   }
 
   if (!current) {
@@ -352,88 +233,130 @@ export default function LogoGame({
           onClick={() => onRoundEnd("none")}
           className="btn-primary mt-4"
         >
-          إنهاء الجولة
+          إنهاء اللعبة
         </button>
       </div>
     );
   }
 
   const timerClass =
-    timeLeft <= 5
+    timeLeft <= 3
       ? "animate-pulse text-red-300"
-      : timeLeft <= 10
+      : timeLeft <= 6
         ? "text-yellow-300"
         : "text-white/70";
 
+  const zoom = revealed
+    ? 1
+    : zoomLevels(current.startZoom ?? DEFAULT_START_ZOOM)[stage];
+
   return (
-    <>
-      <GameLayout
-        title="خمن الشعار"
-        side1={side1Name || "فريق 1"}
-        side2={side2Name || "فريق 2"}
-        side1Score={side1Score}
-        side2Score={side2Score}
-        turn={activeTeamName}
-        turnSide={activeSide}
-        currentRound={currentRound}
-        game="logo"
-      >
-        <div className="flex flex-col gap-4">
-          <p className="text-center text-sm font-bold text-white/50">
-            الشعار {index + 1} من {rounds.length}
-            {!revealed && timerEnabled && (
-              <span className={`ms-3 font-black ${timerClass}`}>
-                {timeLeft} ثانية
+    <GameLayout
+      reportItem={current?.answerAr}
+      title="عينك عالشعار"
+      side1={side1Name || "فريق 1"}
+      side2={side2Name || "فريق 2"}
+      side1Score={side1Score}
+      side2Score={side2Score}
+      turn={activeTeamName}
+      turnSide={activeSide}
+      currentRound={currentRound}
+      game="logo"
+    >
+      <div className="flex flex-col gap-4">
+        <p className="text-center text-sm font-bold text-white/50">
+          الشعار {index + 1} من {rounds.length}
+          {!revealed && (
+            <>
+              {" · "}
+              <span className="font-black text-[#ffb21e]">
+                لو عرفتوه الحين: {pointsLabel(stagePoints)}
               </span>
-            )}
-          </p>
+            </>
+          )}
+          {!revealed && timerEnabled && (
+            <span className={`ms-3 font-black ${timerClass}`}>
+              {timeLeft} ثانية
+            </span>
+          )}
+        </p>
 
-          <div className="text-center">
-            <div className="mx-auto max-w-[440px] rounded-3xl bg-white p-4 shadow-[0_6px_0_#cfc8e6] sm:p-7">
-              <PixelatedLogo
-                key={current.id}
-                logo={current}
-                revealed={revealed}
-              />
+        <div className="text-center">
+          <div className="relative mx-auto aspect-square w-full max-w-[420px] overflow-hidden rounded-3xl bg-white shadow-[0_6px_0_#cfc8e6]">
+            <img
+              src={current.image}
+              alt={revealed ? current.answerAr : ""}
+              draggable={false}
+              className="pointer-events-none absolute inset-0 h-full w-full select-none object-contain transition-transform duration-500 ease-[var(--ease-out)]"
+              style={{
+                transform: `scale(${zoom})`,
+                transformOrigin: `${current.focusX}% ${current.focusY}%`,
+              }}
+            />
+          </div>
+
+          {!revealed && (
+            <div
+              className="mt-3 flex justify-center gap-1.5"
+              aria-hidden="true"
+            >
+              {ZOOM_LEVELS.map((_, level) => (
+                <span
+                  key={level}
+                  className={`h-1.5 w-8 rounded-full ${
+                    level <= stage ? "bg-[#ffb21e]" : "bg-white/15"
+                  }`}
+                />
+              ))}
             </div>
+          )}
 
-            {revealed && (
-              <div className="mt-4 animate-fade-in-up">
-                <p className="text-2xl font-black text-white sm:text-3xl">
-                  {current.answerAr}
+          {revealed && (
+            <div className="mt-4 animate-fade-in-up">
+              <p className="text-2xl font-black text-white sm:text-3xl">
+                {current.answerAr}
+              </p>
+
+              {current.answer && current.answer !== current.answerAr && (
+                <p className="mt-1 text-sm font-bold text-white/45 sm:text-base">
+                  {current.answer}
                 </p>
+              )}
 
-                {current.answer && current.answer !== current.answerAr && (
-                  <p className="mt-1 text-sm font-bold text-white/45 sm:text-base">
-                    {current.answer}
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-3">
-            {!revealed && (
-              <button
-                type="button"
-                onClick={() => setRevealed(true)}
-                className="btn-primary min-w-[180px]"
-              >
-                إظهار الشعار
-              </button>
-            )}
-
-            {revealed && (
-              <InlineJudge
-                resetKey={index}
-                teamName={activeTeamName}
-                onCorrect={markCorrect}
-                onWrong={markWrong}
-              />
-            )}
-          </div>
+              <p className="mt-1 text-sm font-bold text-white/55">
+                لو كان جوابهم صح ياخذون {pointsLabel(stagePoints)}
+              </p>
+            </div>
+          )}
         </div>
-      </GameLayout>
-    </>
+
+        <div className="flex flex-wrap justify-center gap-3">
+          {!revealed && !isLastStage && (
+            <button type="button" onClick={zoomOut} className="btn-secondary">
+              بعّد شوي
+            </button>
+          )}
+
+          {!revealed && (
+            <button
+              type="button"
+              onClick={() => setRevealed(true)}
+              className="btn-primary min-w-[160px]"
+            >
+              شوفوا الجواب
+            </button>
+          )}
+
+          {revealed && (
+            <InlineJudge
+              resetKey={index}
+              teamName={activeTeamName}
+              onCorrect={() => award(stagePoints)}
+              onWrong={() => award(0)}
+            />
+          )}
+        </div>
+      </div>
+    </GameLayout>
   );
 }

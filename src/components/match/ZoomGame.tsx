@@ -7,7 +7,7 @@ import { InlineJudge } from "@/components/match/Overlays";
 import { ZOOM_ITEMS, type ZoomItem } from "@/data/zoom";
 import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
-import type { WinnerType } from "@/types/game";
+import type { RoundPoints, WinnerType } from "@/types/game";
 
 const ITEMS_PER_ROUND = 2;
 
@@ -17,7 +17,7 @@ const STAGE_POINTS = [3, 2, 1];
 
 type TeamSide = "side1" | "side2";
 
-const zoomDeck = createDeck(ZOOM_ITEMS);
+const zoomDeck = createDeck(ZOOM_ITEMS, "zoom");
 
 type ZoomRoundState = {
   rounds: ZoomItem[];
@@ -50,7 +50,7 @@ export default function ZoomGame({
 }: {
   side1Name: string;
   side2Name: string;
-  onRoundEnd: (winner?: WinnerType) => void;
+  onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
   timerEnabled?: boolean;
@@ -177,17 +177,10 @@ export default function ZoomGame({
   }
 
   function finishGame(final1: number, final2: number) {
-    if (final1 > final2) {
-      onRoundEnd("side1");
-      return;
-    }
-
-    if (final2 > final1) {
-      onRoundEnd("side2");
-      return;
-    }
-
-    onRoundEnd("none");
+    onRoundEnd(final1 > final2 ? "side1" : final2 > final1 ? "side2" : "none", {
+      side1: final1,
+      side2: final2,
+    });
   }
 
   function goNext(next1: number, next2: number) {
@@ -225,7 +218,7 @@ export default function ZoomGame({
           onClick={() => onRoundEnd("none")}
           className="btn-primary mt-4"
         >
-          إنهاء الجولة
+          إنهاء اللعبة
         </button>
       </div>
     );
@@ -242,6 +235,7 @@ export default function ZoomGame({
 
   return (
     <GameLayout
+      reportItem={current?.answer}
       title="عينك عالبوستر"
       side1={side1Name || "فريق 1"}
       side2={side2Name || "فريق 2"}

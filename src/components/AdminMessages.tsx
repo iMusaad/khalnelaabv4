@@ -10,6 +10,9 @@ const dateFormat = new Intl.DateTimeFormat("ar-SA", {
 
 export default function AdminMessages({ password }: { password: string }) {
   const [messages, setMessages] = useState<ContactMessage[] | null>(null);
+  const [lastHook, setLastHook] = useState<{ at: string; body: string } | null>(
+    null,
+  );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -27,10 +30,12 @@ export default function AdminMessages({ password }: { password: string }) {
 
         const data = (await response.json().catch(() => null)) as {
           messages?: ContactMessage[];
+          lastHook?: { at: string; body: string } | null;
         } | null;
 
         if (response.ok && data?.messages) {
           setMessages(data.messages);
+          setLastHook(data.lastHook ?? null);
         } else {
           setError("الرسائل غير مفعلة، تأكد من إعدادات Cloudflare");
         }
@@ -71,6 +76,20 @@ export default function AdminMessages({ password }: { password: string }) {
           تحديث
         </button>
       </div>
+
+      {lastHook && (
+        <div className="rounded-2xl bg-[#221a3f] p-4">
+          <p className="text-sm font-black text-[#ffc23d]">
+            آخر إشعار من ميسر · {dateFormat.format(new Date(lastHook.at))}
+          </p>
+          <pre
+            dir="ltr"
+            className="mt-2 whitespace-pre-wrap break-all text-left text-xs text-white/80"
+          >
+            {lastHook.body}
+          </pre>
+        </div>
+      )}
 
       {messages.length === 0 && (
         <p className="rounded-2xl bg-[#221a3f] p-6 text-center font-bold text-white/60">

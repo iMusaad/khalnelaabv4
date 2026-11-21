@@ -7,19 +7,19 @@ import GameLayout from "@/components/match/GameLayout";
 import { CLUBS, type ClubItem } from "@/data/clubs";
 import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
-import type { WinnerType } from "@/types/game";
+import type { RoundPoints, WinnerType } from "@/types/game";
 
 type Props = {
   side1Name: string;
   side2Name: string;
-  onRoundEnd: (winner?: WinnerType) => void;
+  onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
   timerEnabled?: boolean;
   timerSeconds?: number;
 };
 
-const clubDeck = createDeck(CLUBS);
+const clubDeck = createDeck(CLUBS, "club");
 
 type ClubRoundState = {
   clubs: [ClubItem, ClubItem];
@@ -120,6 +120,7 @@ export default function ClubGame({
 
   return (
     <GameLayout
+      reportItem={clubs?.map((club) => club.nameAr).join(" / ")}
       title="وش ناديك؟"
       side1={side1}
       side2={side2}
@@ -322,7 +323,7 @@ export default function ClubGame({
                   onClick={() => onRoundEnd()}
                   className={actionButtonClass}
                 >
-                  إنهاء الجولة
+                  إنهاء اللعبة
                 </button>
               </div>
             )}

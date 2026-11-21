@@ -14,7 +14,8 @@ import {
   type CellState,
 } from "@/lib/wordRules";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
-import type { WinnerType } from "@/types/game";
+import { TRIAL_LIMITS } from "@/lib/trial";
+import type { RoundPoints, WinnerType } from "@/types/game";
 
 type TeamSide = "side1" | "side2";
 
@@ -52,8 +53,13 @@ type WordRoundState = {
   side2RevealUsed?: boolean;
 };
 
-const wordDeck = createDeck(
-  WORDS.filter((word) => isPlayableWord(word.answer)),
+const playableWords = WORDS.filter((word) => isPlayableWord(word.answer));
+
+const wordDeck = createDeck(playableWords, "word");
+
+const trialWordDeck = createDeck(
+  playableWords.slice(0, TRIAL_LIMITS.word),
+  "word-trial",
 );
 
 export default function WordGame({
@@ -66,8 +72,10 @@ export default function WordGame({
   currentRound = 1,
   timerEnabled = false,
   timerSeconds = 30,
+  trial = false,
 }: {
-  onRoundEnd: (winner?: WinnerType) => void;
+  trial?: boolean;
+  onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   side1Name?: string;
   side2Name?: string;
@@ -190,7 +198,7 @@ export default function WordGame({
       return;
     }
 
-    const [randomWord] = wordDeck.draw(1);
+    const [randomWord] = (trial ? trialWordDeck : wordDeck).draw(1);
 
     if (!randomWord) {
       setAnswer("");
@@ -683,7 +691,7 @@ export default function WordGame({
           onClick={() => onRoundEnd("none")}
           className="btn-primary mt-4"
         >
-          إنهاء الجولة
+          إنهاء اللعبة
         </button>
       </div>
     );
@@ -692,6 +700,7 @@ export default function WordGame({
   return (
     <>
       <GameLayout
+        reportItem={current ? `الكلمة: ${current}` : undefined}
         title="خمن الكلمة"
         side1={side1Name}
         side2={side2Name}
@@ -868,7 +877,7 @@ export default function WordGame({
                   onClick={() => onRoundEnd()}
                   className="btn-secondary min-w-[105px] px-4 py-2 text-sm"
                 >
-                  إنهاء الجولة
+                  إنهاء اللعبة
                 </button>
               </>
             )}
@@ -879,7 +888,7 @@ export default function WordGame({
                 onClick={() => onRoundEnd("none")}
                 className="btn-primary min-w-[150px]"
               >
-                إنهاء الجولة
+                إنهاء اللعبة
               </button>
             )}
           </div>

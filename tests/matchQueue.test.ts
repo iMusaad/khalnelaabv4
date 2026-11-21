@@ -22,24 +22,19 @@ describe("buildRoundQueue", () => {
     expect(buildRoundQueue(["quiz"], {}, [])).toEqual([]);
   });
 
-  it("repeats other games by their round count", () => {
-    const queue = buildRoundQueue(["word", "wheel"], { word: 4, wheel: 1 }, []);
+  it("uses each game's fixed round count and ignores stored choices", () => {
+    const queue = buildRoundQueue(["word", "wheel"], { word: 6, wheel: 3 }, []);
 
-    expect(queue.filter((round) => round.game === "word")).toHaveLength(4);
+    expect(queue.filter((round) => round.game === "word")).toHaveLength(2);
     expect(queue.filter((round) => round.game === "wheel")).toHaveLength(1);
   });
 });
 
 describe("getRoundCount", () => {
-  it("falls back to the default for missing or invalid values", () => {
-    expect(getRoundCount("word", {})).toBe(2);
-    expect(getRoundCount("word", { word: 0 })).toBe(2);
-    expect(getRoundCount("word", { word: -3 })).toBe(2);
-    expect(getRoundCount("word", { word: Number.NaN })).toBe(2);
-  });
-
-  it("caps very large values", () => {
-    expect(getRoundCount("word", { word: 99 })).toBe(10);
+  it("gives each game its fixed round count", () => {
+    expect(getRoundCount("word")).toBe(2);
+    expect(getRoundCount("scramble")).toBe(2);
+    expect(getRoundCount("geo")).toBe(1);
   });
 });
 

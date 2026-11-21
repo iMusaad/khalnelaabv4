@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getLicenseSecrets, verifyLicenseCode } from "@/lib/license";
 import { LICENSE_COOKIE, isPaywallEnabled } from "@/lib/licenseCookie";
+import { isFreeGame } from "@/lib/trial";
 
 export async function middleware(request: NextRequest) {
   if (!isPaywallEnabled()) {
@@ -15,6 +16,13 @@ export async function middleware(request: NextRequest) {
     if (check.valid) {
       return NextResponse.next();
     }
+  }
+
+  const params = request.nextUrl.searchParams;
+  const game = params.get("game");
+
+  if (!game || isFreeGame(game, params.get("category"))) {
+    return NextResponse.next();
   }
 
   const url = new URL("/buy", request.url);
