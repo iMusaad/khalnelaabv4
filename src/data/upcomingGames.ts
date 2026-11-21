@@ -1,3 +1,4 @@
+import { FOCUS_CLIPS } from "@/data/focus";
 import { ZOOM_CATEGORIES, ZOOM_ITEMS } from "@/data/zoom";
 
 export type UpcomingGame = {
@@ -8,6 +9,12 @@ export type UpcomingGame = {
 };
 
 export const UPCOMING_GAMES: UpcomingGame[] = [
+  {
+    id: "focus",
+    name: "ركّز",
+    image: "/images/posters/Focusgame.png",
+    content: [`${FOCUS_CLIPS.length} مقطع`, "مخفية حالياً"],
+  },
   {
     id: "categories",
     name: "إنسان حيوان نبات جماد بلاد",
