@@ -91,4 +91,10 @@ export const PROVERB_PUZZLES = [
     image: "/images/proverbs/proverb_35.png",
     answer: "اللي في القدر يطلعه الملاس",
   },
+  { image: "/images/proverbs/proverb_36.png", answer: "البس يحب خناقه" },
+  {
+    image: "/images/proverbs/proverb_37.png",
+    answer: "يا شين السرج على البقره",
+  },
+  { image: "/images/proverbs/proverb_38.png", answer: "كل شارب وله مقص" },
 ];
