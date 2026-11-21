@@ -1,3 +1,4 @@
+import { REBUS_PUZZLES } from "@/data/rebus";
 import { ZOOM_CATEGORIES, ZOOM_ITEMS } from "@/data/zoom";
 
 export type UpcomingGame = {
@@ -8,6 +9,12 @@ export type UpcomingGame = {
 };
 
 export const UPCOMING_GAMES: UpcomingGame[] = [
+  {
+    id: "rebus",
+    name: "ركّبها",
+    image: "/images/posters/Proverbgame-2.png",
+    content: [`${REBUS_PUZZLES.length} لغز`, "مخفية حالياً"],
+  },
   {
     id: "categories",
     name: "إنسان حيوان نبات جماد بلاد",
