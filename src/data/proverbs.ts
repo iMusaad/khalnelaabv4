@@ -84,4 +84,9 @@ export const PROVERB_PUZZLES = [
     answer: "شف وجه العنز واحلب لبن",
   },
   { image: "/images/proverbs/proverb_31.png", answer: "لسانه يلوط اذانه" },
+  { image: "/images/proverbs/proverb_32.png", answer: "البس يحب خناقه" },
+  {
+    image: "/images/proverbs/proverb_33.png",
+    answer: "يا شين السرج على البقره",
+  },
 ];
