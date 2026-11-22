@@ -13,6 +13,7 @@ export type GameType =
   | "club"
   | "car"
   | "zoom"
+  | "focus"
   | "geo";
 
 export type Round = {
@@ -32,6 +33,7 @@ export const VALID_GAMES: GameType[] = [
   "club",
   "car",
   "zoom",
+  "focus",
   "geo",
 ];
 
@@ -47,6 +49,7 @@ export const DEFAULT_ROUNDS: Record<GameType, number> = {
   club: 1,
   car: 1,
   zoom: 1,
+  focus: 1,
   geo: 1,
 };
 
