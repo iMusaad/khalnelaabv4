@@ -46,6 +46,8 @@ export default function CountryGame({
 
   const [started, setStarted] = useState(false);
 
+  const [scanStep, setScanStep] = useState(0);
+
   const [revealed, setRevealed] = useState(false);
 
   const [timeLeft, setTimeLeft] = useState(timerSeconds);
@@ -145,7 +147,9 @@ export default function CountryGame({
           <>
             <div className="mb-4 text-center">
               <h2 className="text-xl font-black text-white sm:text-2xl">
-                كل فريق يمسح كوده
+                {scanStep === 0
+                  ? `${side1} يمسح كوده`
+                  : `الحين دور ${side2} يمسح كوده`}
               </h2>
 
               <p className="mt-2 text-sm font-bold text-white/50">
@@ -153,18 +157,10 @@ export default function CountryGame({
               </p>
             </div>
 
-            <div
-              className="
-                grid
-                grid-cols-1
-                gap-4
-                sm:grid-cols-2
-                sm:gap-8
-                lg:gap-16
-              "
-            >
-              <div
-                className="
+            <div className="grid grid-cols-1">
+              {scanStep === 0 && (
+                <div
+                  className="
                   mx-auto
                   w-full
                   max-w-[310px]
@@ -174,24 +170,26 @@ export default function CountryGame({
                   text-center
                   shadow-[0_5px_0_#140f29]
                 "
-              >
-                <p className="text-base font-black text-[#ff7a7f]">{side1}</p>
+                >
+                  <p className="text-base font-black text-[#ff7a7f]">{side1}</p>
 
-                <div className="mx-auto mt-3 w-fit rounded-[16px] bg-white p-2">
-                  {side2FlagUrl ? (
-                    <QrCode
-                      value={side2FlagUrl}
-                      label={`كود ${side1}`}
-                      className="h-[200px] w-[200px]"
-                    />
-                  ) : (
-                    <div className="h-[200px] w-[200px]" />
-                  )}
+                  <div className="mx-auto mt-3 w-fit rounded-[16px] bg-white p-2">
+                    {side2FlagUrl ? (
+                      <QrCode
+                        value={side2FlagUrl}
+                        label={`كود ${side1}`}
+                        className="h-[200px] w-[200px]"
+                      />
+                    ) : (
+                      <div className="h-[200px] w-[200px]" />
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <div
-                className="
+              {scanStep === 1 && (
+                <div
+                  className="
                   mx-auto
                   w-full
                   max-w-[310px]
@@ -201,38 +199,49 @@ export default function CountryGame({
                   text-center
                   shadow-[0_5px_0_#140f29]
                 "
-              >
-                <p className="text-base font-black text-[#4aa8ff]">{side2}</p>
+                >
+                  <p className="text-base font-black text-[#4aa8ff]">{side2}</p>
 
-                <div className="mx-auto mt-3 w-fit rounded-[16px] bg-white p-2">
-                  {side1FlagUrl ? (
-                    <QrCode
-                      value={side1FlagUrl}
-                      label={`كود ${side2}`}
-                      className="h-[200px] w-[200px]"
-                    />
-                  ) : (
-                    <div className="h-[200px] w-[200px]" />
-                  )}
+                  <div className="mx-auto mt-3 w-fit rounded-[16px] bg-white p-2">
+                    {side1FlagUrl ? (
+                      <QrCode
+                        value={side1FlagUrl}
+                        label={`كود ${side2}`}
+                        className="h-[200px] w-[200px]"
+                      />
+                    ) : (
+                      <div className="h-[200px] w-[200px]" />
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <p className="mt-5 text-center text-sm font-bold text-white/50">
               اللي يسكن كود الفريق اللي ضده يا ويله
             </p>
 
-            <button
-              type="button"
-              onClick={() => {
-                setStarted(true);
+            {scanStep === 0 ? (
+              <button
+                type="button"
+                onClick={() => setScanStep(1)}
+                className={actionButtonClass}
+              >
+                الكود الثاني
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setStarted(true);
 
-                setTimeLeft(timerSeconds);
-              }}
-              className={actionButtonClass}
-            >
-              الكل شاف العلم؟ ابدأوا
-            </button>
+                  setTimeLeft(timerSeconds);
+                }}
+                className={actionButtonClass}
+              >
+                ابدأوا
+              </button>
+            )}
           </>
         ) : (
           <>

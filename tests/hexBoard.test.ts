@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { hasWinningPath, hexNeighbors, type HexOwner } from "@/lib/hexBoard";
+import {
+  canStillWin,
+  hasWinningPath,
+  hexNeighbors,
+  type HexOwner,
+} from "@/lib/hexBoard";
 
 function board(cells: [number, HexOwner][]) {
   const owners: HexOwner[] = Array(25).fill(null);
@@ -37,5 +42,18 @@ describe("hex board", () => {
     const owners = board([10, 11, 13, 14].map((i) => [i, "side1"]));
 
     expect(hasWinningPath(owners, "side1")).toBe(false);
+  });
+});
+
+describe("blocked cells", () => {
+  it("knows when a side can no longer connect", () => {
+    const owners: HexOwner[] = Array(25).fill(null);
+
+    for (const index of [2, 7, 12, 17, 22]) {
+      owners[index] = "blocked";
+    }
+
+    expect(canStillWin(owners, "side1")).toBe(false);
+    expect(canStillWin(owners, "side2")).toBe(true);
   });
 });

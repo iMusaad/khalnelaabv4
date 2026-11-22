@@ -1,4 +1,4 @@
-export type HexOwner = "side1" | "side2" | null;
+export type HexOwner = "side1" | "side2" | "blocked" | null;
 
 export const HEX_SIZE = 5;
 
@@ -35,12 +35,34 @@ export function hasWinningPath(
   side: "side1" | "side2",
   size = HEX_SIZE,
 ) {
+  return pathExists(owners, side, (owner) => owner === side, size);
+}
+
+export function canStillWin(
+  owners: HexOwner[],
+  side: "side1" | "side2",
+  size = HEX_SIZE,
+) {
+  return pathExists(
+    owners,
+    side,
+    (owner) => owner === side || owner === null,
+    size,
+  );
+}
+
+function pathExists(
+  owners: HexOwner[],
+  side: "side1" | "side2",
+  usable: (owner: HexOwner) => boolean,
+  size: number,
+) {
   const starts: number[] = [];
 
   for (let i = 0; i < size; i += 1) {
     const index = side === "side1" ? i * size : i;
 
-    if (owners[index] === side) {
+    if (usable(owners[index])) {
       starts.push(index);
     }
   }
@@ -58,7 +80,7 @@ export function hasWinningPath(
     }
 
     for (const next of hexNeighbors(index, size)) {
-      if (!seen.has(next) && owners[next] === side) {
+      if (!seen.has(next) && usable(owners[next])) {
         seen.add(next);
         queue.push(next);
       }
