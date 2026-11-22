@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import GameLayout from "@/components/match/GameLayout";
 import { InlineTeamPick } from "@/components/match/Overlays";
+import YouTubeClip from "@/components/match/YouTubeClip";
 import { FOCUS_CLIPS as clips, type FocusClip } from "@/data/focus";
 import { createDeck } from "@/lib/deck";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
@@ -13,7 +14,7 @@ const SECOND_TIME = 10;
 
 type TeamSide = "side1" | "side2";
 
-type Stage = "ready" | "watching" | "question" | "revealed";
+type Stage = "ready" | "watching" | "question" | "revealed" | "failed";
 
 const clipDeck = createDeck(clips, "focus");
 
@@ -143,6 +144,34 @@ export default function FocusGame({
     setReplaying(false);
   }
 
+  function handleClipEnded() {
+    if (stage === "watching") {
+      setTimeLeft(timerSeconds);
+      setStage("question");
+    }
+  }
+
+  function handleClipError() {
+    if (stage === "watching") {
+      setStage("failed");
+    } else {
+      setReplaying(false);
+    }
+  }
+
+  function skipClip() {
+    if (index + 1 >= rounds.length) {
+      finishGame(side1Score, side2Score);
+      return;
+    }
+
+    setIndex((currentIndex) => currentIndex + 1);
+    setStage("ready");
+    setSecondTurn(false);
+    setReplaying(false);
+    setTimeLeft(timerSeconds);
+  }
+
   function finishGame(final1: number, final2: number) {
     onRoundEnd(final1 > final2 ? "side1" : final2 > final1 ? "side2" : "none", {
       side1: final1,
@@ -240,24 +269,52 @@ export default function FocusGame({
           </div>
         )}
 
-        {(stage === "watching" || replaying) && (
-          <video
-            key={`${current.id}-${replaying ? "replay" : "watch"}`}
-            ref={videoRef}
-            src={current.video}
-            poster={current.poster}
-            autoPlay
-            muted
-            playsInline
-            controls={replaying}
-            onEnded={() => {
-              if (stage === "watching") {
-                setTimeLeft(timerSeconds);
-                setStage("question");
-              }
-            }}
-            className="mx-auto aspect-video w-full max-w-[640px] rounded-3xl bg-black object-contain"
-          />
+        {(stage === "watching" || replaying) &&
+          (current.kind === "youtube" ? (
+            <YouTubeClip
+              key={`${current.id}-${replaying ? "replay" : "watch"}`}
+              youtubeId={current.youtubeId}
+              start={current.start}
+              end={current.end}
+              controls={replaying}
+              onEnded={stage === "watching" ? handleClipEnded : undefined}
+              onError={handleClipError}
+            />
+          ) : (
+            <video
+              key={`${current.id}-${replaying ? "replay" : "watch"}`}
+              ref={videoRef}
+              src={current.video}
+              poster={current.poster}
+              autoPlay
+              muted
+              playsInline
+              controls={replaying}
+              onEnded={handleClipEnded}
+              onError={handleClipError}
+              className="mx-auto aspect-video w-full max-w-[640px] rounded-3xl bg-black object-contain"
+            />
+          ))}
+
+        {stage === "failed" && (
+          <div className="mx-auto flex aspect-video w-full max-w-[640px] flex-col items-center justify-center gap-4 rounded-3xl bg-[#221a3f] p-6 text-center shadow-[0_6px_0_#140f29]">
+            <p className="text-xl font-black text-white">المقطع ما اشتغل</p>
+            <p className="text-sm font-bold text-white/60">
+              تأكدوا من النت، أو تخطّوا للمقطع اللي بعده
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <button type="button" onClick={startClip} className="btn-primary">
+                جرّبوا مرة ثانية
+              </button>
+              <button
+                type="button"
+                onClick={skipClip}
+                className="btn-secondary"
+              >
+                تخطّوا المقطع
+              </button>
+            </div>
+          </div>
         )}
 
         {(stage === "question" || stage === "revealed") && (
@@ -314,7 +371,7 @@ export default function FocusGame({
 
         {stage === "revealed" && (
           <p className="text-center text-xs font-bold text-white/35" dir="auto">
-            المقطع: {current.author} · {current.license}
+            المقطع: {current.credit}
           </p>
         )}
       </div>
