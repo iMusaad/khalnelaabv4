@@ -53,6 +53,7 @@ export default function FocusGame({
   const [side1Score, setSide1Score] = useState(0);
   const [side2Score, setSide2Score] = useState(0);
   const [replaying, setReplaying] = useState(false);
+  const [big, setBig] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
@@ -145,6 +146,8 @@ export default function FocusGame({
   }
 
   function handleClipEnded() {
+    setBig(false);
+
     if (stage === "watching") {
       setTimeLeft(timerSeconds);
       setStage("question");
@@ -269,32 +272,68 @@ export default function FocusGame({
           </div>
         )}
 
-        {(stage === "watching" || replaying) &&
-          (current.kind === "youtube" ? (
-            <YouTubeClip
-              key={`${current.id}-${replaying ? "replay" : "watch"}`}
-              youtubeId={current.youtubeId}
-              start={current.start}
-              end={current.end}
-              controls={replaying}
-              onEnded={stage === "watching" ? handleClipEnded : undefined}
-              onError={handleClipError}
-            />
-          ) : (
-            <video
-              key={`${current.id}-${replaying ? "replay" : "watch"}`}
-              ref={videoRef}
-              src={current.video}
-              poster={current.poster}
-              autoPlay
-              muted
-              playsInline
-              controls={replaying}
-              onEnded={handleClipEnded}
-              onError={handleClipError}
-              className="mx-auto aspect-video w-full max-w-[640px] rounded-3xl bg-black object-contain"
-            />
-          ))}
+        {(stage === "watching" || replaying) && (
+          <div
+            className={
+              big
+                ? "fixed inset-0 z-[90] flex items-center justify-center bg-black"
+                : "flex flex-col items-center gap-2"
+            }
+          >
+            <div
+              className={
+                big
+                  ? "relative flex h-[100dvh] w-[100dvw] items-center justify-center portrait:h-[100dvw] portrait:w-[100dvh] portrait:rotate-90"
+                  : "contents"
+              }
+            >
+              <div
+                className={
+                  big
+                    ? "aspect-video w-[min(100dvw,calc(100dvh*16/9))] overflow-hidden portrait:w-[min(100dvh,calc(100dvw*16/9))]"
+                    : "aspect-video w-full max-w-[640px] overflow-hidden rounded-3xl"
+                }
+              >
+                {current.kind === "youtube" ? (
+                  <YouTubeClip
+                    key={`${current.id}-${replaying ? "replay" : "watch"}`}
+                    youtubeId={current.youtubeId}
+                    start={current.start}
+                    end={current.end}
+                    controls={replaying}
+                    onEnded={stage === "watching" ? handleClipEnded : undefined}
+                    onError={handleClipError}
+                  />
+                ) : (
+                  <video
+                    key={`${current.id}-${replaying ? "replay" : "watch"}`}
+                    ref={videoRef}
+                    src={current.video}
+                    poster={current.poster}
+                    autoPlay
+                    playsInline
+                    controls={replaying}
+                    onEnded={handleClipEnded}
+                    onError={handleClipError}
+                    className="h-full w-full bg-black object-contain"
+                  />
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setBig((value) => !value)}
+                className={
+                  big
+                    ? "absolute right-3 top-3 rounded-full bg-white/15 px-4 py-1.5 text-sm font-black text-white"
+                    : "rounded-full bg-white/10 px-4 py-1.5 text-sm font-black text-white/80 hover:text-white"
+                }
+              >
+                {big ? "صغّر المقطع" : "كبّر المقطع"}
+              </button>
+            </div>
+          </div>
+        )}
 
         {stage === "failed" && (
           <div className="mx-auto flex aspect-video w-full max-w-[640px] flex-col items-center justify-center gap-4 rounded-3xl bg-[#221a3f] p-6 text-center shadow-[0_6px_0_#140f29]">

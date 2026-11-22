@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   YOUTUBE_ENDED,
+  YOUTUBE_PLAYING,
   isValidYouTubeId,
   loadYouTubeApi,
   type YouTubePlayer,
@@ -26,6 +27,8 @@ export default function YouTubeClip({
   onError: () => void;
 }) {
   const holderRef = useRef<HTMLDivElement | null>(null);
+  const playerRef = useRef<YouTubePlayer | null>(null);
+  const [needsSound, setNeedsSound] = useState(false);
   const endedRef = useRef(onEnded);
   const errorRef = useRef(onError);
 
@@ -71,14 +74,28 @@ export default function YouTubeClip({
             start,
             end,
             autoplay: 1,
-            mute: 1,
+            mute: 0,
             controls: controls ? 1 : 0,
             playsinline: 1,
             rel: 0,
             disablekb: controls ? 0 : 1,
           },
           events: {
-            onReady: (event) => event.target.playVideo(),
+            onReady: (event) => {
+              playerRef.current = event.target;
+              event.target.playVideo();
+
+              setTimeout(() => {
+                if (
+                  !cancelled &&
+                  event.target.getPlayerState() !== YOUTUBE_PLAYING
+                ) {
+                  event.target.mute();
+                  event.target.playVideo();
+                  setNeedsSound(true);
+                }
+              }, 1500);
+            },
             onStateChange: (event) => {
               if (event.data === YOUTUBE_ENDED) {
                 finish();
@@ -106,13 +123,29 @@ export default function YouTubeClip({
       }
 
       player?.destroy();
+      playerRef.current = null;
     };
   }, [youtubeId, start, end, controls]);
 
   return (
-    <div
-      ref={holderRef}
-      className="mx-auto aspect-video w-full max-w-[640px] overflow-hidden rounded-3xl bg-black [&_iframe]:h-full [&_iframe]:w-full"
-    />
+    <div className="relative h-full w-full">
+      <div
+        ref={holderRef}
+        className="h-full w-full overflow-hidden bg-black [&_iframe]:h-full [&_iframe]:w-full"
+      />
+
+      {needsSound && (
+        <button
+          type="button"
+          onClick={() => {
+            playerRef.current?.unMute();
+            setNeedsSound(false);
+          }}
+          className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-[#ffc23d] px-5 py-2 text-sm font-black text-[#241339] shadow-[0_4px_0_#c27700]"
+        >
+          شغّل الصوت
+        </button>
+      )}
+    </div>
   );
 }
