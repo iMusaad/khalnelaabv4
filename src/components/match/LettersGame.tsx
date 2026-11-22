@@ -5,7 +5,12 @@ import GameLayout from "@/components/match/GameLayout";
 import { InlineTeamPick } from "@/components/match/Overlays";
 import { LETTERS, LETTER_QUESTIONS, type LetterQuestion } from "@/data/letters";
 import { createDeck, shuffle } from "@/lib/deck";
-import { HEX_SIZE, hasWinningPath, type HexOwner } from "@/lib/hexBoard";
+import {
+  HEX_SIZE,
+  canStillWin,
+  hasWinningPath,
+  type HexOwner,
+} from "@/lib/hexBoard";
 import { readRoundState, writeRoundState } from "@/lib/roundState";
 import type { RoundPoints, WinnerType } from "@/types/game";
 
@@ -126,9 +131,8 @@ export default function LettersGame({
 
     const nextOwners = [...state.owners];
 
-    if (winner === "side1" || winner === "side2") {
-      nextOwners[state.active.index] = winner;
-    }
+    nextOwners[state.active.index] =
+      winner === "side1" || winner === "side2" ? winner : "blocked";
 
     const points = {
       side1: nextOwners.filter((owner) => owner === "side1").length,
@@ -141,6 +145,22 @@ export default function LettersGame({
         onRoundEnd(winner, points);
         return;
       }
+    }
+
+    if (
+      !canStillWin(nextOwners, "side1") &&
+      !canStillWin(nextOwners, "side2")
+    ) {
+      setState({ ...state, owners: nextOwners, active: null });
+      onRoundEnd(
+        points.side1 > points.side2
+          ? "side1"
+          : points.side2 > points.side1
+            ? "side2"
+            : "none",
+        points,
+      );
+      return;
     }
 
     setState({
@@ -228,7 +248,13 @@ export default function LettersGame({
                 <polygon
                   points={hexPoints(x, y, RADIUS - 2)}
                   fill={
-                    owner ? TEAM_FILL[owner] : selected ? "#ffc23d" : "#221a3f"
+                    owner === "blocked"
+                      ? "#0d0a1c"
+                      : owner
+                        ? TEAM_FILL[owner]
+                        : selected
+                          ? "#ffc23d"
+                          : "#221a3f"
                   }
                   stroke={selected ? "#ffe39a" : "#3a2f66"}
                   strokeWidth={3}
@@ -240,7 +266,13 @@ export default function LettersGame({
                   dominantBaseline="central"
                   fontSize={30}
                   fontWeight={900}
-                  fill={selected ? "#241339" : "#ffffff"}
+                  fill={
+                    selected
+                      ? "#241339"
+                      : owner === "blocked"
+                        ? "rgba(255,255,255,0.18)"
+                        : "#ffffff"
+                  }
                 >
                   {letter}
                 </text>
