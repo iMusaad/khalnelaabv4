@@ -4,6 +4,7 @@ export type YouTubePlayer = {
   mute: () => void;
   unMute: () => void;
   getPlayerState: () => number;
+  getCurrentTime: () => number;
 };
 
 type YouTubePlayerEvent = { target: YouTubePlayer; data: number };
@@ -34,6 +35,8 @@ type YouTubeWindow = Window & {
 export const YOUTUBE_ENDED = 0;
 
 export const YOUTUBE_PLAYING = 1;
+
+export const YOUTUBE_PAUSED = 2;
 
 let loading: Promise<YouTubeNamespace> | null = null;
 
