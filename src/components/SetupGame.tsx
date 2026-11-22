@@ -28,6 +28,7 @@ type SetupGameId =
   | "car"
   | "zoom"
   | "focus"
+  | "letters"
   | "geo";
 
 type SetupGameProps = {
@@ -119,6 +120,11 @@ const GAMES: {
     name: "ركز يانايم",
     image: "/images/posters/Focusgame.png",
   },
+  {
+    id: "letters",
+    name: "خلية الحروف",
+    image: "/images/posters/Lettersgame.png",
+  },
 ];
 
 const MAX_SESSION_GAMES = 5;
@@ -158,6 +164,7 @@ const MINUTES_PER_ROUND: Record<SetupGameId, number> = {
   car: 4,
   zoom: 4,
   focus: 4,
+  letters: 8,
   geo: 5,
 };
 
@@ -335,7 +342,13 @@ export default function SetupGame({
     (card) => !card.category && ZOOM_GROUP.includes(card.game),
   );
 
-  const GUESS_GROUP: SetupGameId[] = ["scramble", "club", "country", "focus"];
+  const GUESS_GROUP: SetupGameId[] = [
+    "scramble",
+    "club",
+    "country",
+    "focus",
+    "letters",
+  ];
 
   const guessCards = visibleCards.filter(
     (card) => !card.category && GUESS_GROUP.includes(card.game),

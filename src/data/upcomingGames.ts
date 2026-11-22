@@ -1,4 +1,5 @@
 import { FOCUS_CLIPS } from "@/data/focus";
+import { LETTERS, LETTER_QUESTIONS } from "@/data/letters";
 import { ZOOM_CATEGORIES, ZOOM_ITEMS } from "@/data/zoom";
 
 export type UpcomingGame = {
@@ -9,6 +10,15 @@ export type UpcomingGame = {
 };
 
 export const UPCOMING_GAMES: UpcomingGame[] = [
+  {
+    id: "letters",
+    name: "خلية الحروف",
+    image: "/images/posters/Lettersgame.png",
+    content: [
+      `${LETTERS.reduce((sum, letter) => sum + LETTER_QUESTIONS[letter].length, 0)} سؤال على ${LETTERS.length} حرف`,
+      "مخفية حالياً",
+    ],
+  },
   {
     id: "focus",
     name: "ركز يانايم",
