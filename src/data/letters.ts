@@ -143,7 +143,10 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
     { question: "من هو الشخص الذي يعالج المرضى؟", answer: "طبيب" },
   ],
   ظ: [
-    { question: "ما هي الصلاة التي تأتي بعد الفجر؟", answer: "الظهر" },
+    {
+      question: "ما هي الصلاة المفروضة التي تأتي بعد صلاة الفجر؟",
+      answer: "الظهر",
+    },
     {
       question: "ما الشيء الذي يتبعك تحت الشمس ولا تستطيع أن تمسكه؟",
       answer: "ظل",
@@ -175,7 +178,10 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
   ف: [
     { question: "ما هو الحيوان الأضخم على اليابسة وله خرطوم؟", answer: "فيل" },
     { question: "ما هي الدولة التي عاصمتها باريس؟", answer: "فرنسا" },
-    { question: "ما هي أول صلاة في اليوم؟", answer: "الفجر" },
+    {
+      question: "ما هي الصلاة المفروضة التي ركعتاها قبل شروق الشمس؟",
+      answer: "الفجر",
+    },
   ],
   ق: [
     { question: "ما هو الحيوان الأليف الذي يقول مياو؟", answer: "قطة" },
