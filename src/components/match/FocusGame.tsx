@@ -231,7 +231,7 @@ export default function FocusGame({
   return (
     <GameLayout
       reportItem={`${current.question} | الجواب: ${current.answer}`}
-      title="ركّز"
+      title="ركز يانايم"
       side1={side1Name || "فريق 1"}
       side2={side2Name || "فريق 2"}
       side1Score={side1Score}

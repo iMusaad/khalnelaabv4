@@ -11,7 +11,7 @@ export type UpcomingGame = {
 export const UPCOMING_GAMES: UpcomingGame[] = [
   {
     id: "focus",
-    name: "ركّز",
+    name: "ركز يانايم",
     image: "/images/posters/Focusgame.png",
     content: [`${FOCUS_CLIPS.length} مقطع`, "مخفية حالياً"],
   },

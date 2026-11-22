@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   YOUTUBE_ENDED,
+  YOUTUBE_PAUSED,
   YOUTUBE_PLAYING,
   isValidYouTubeId,
   loadYouTubeApi,
@@ -52,6 +53,16 @@ export default function YouTubeClip({
       }
     }
 
+    const watcher = endedRef.current
+      ? setInterval(() => {
+          try {
+            if (player && player.getCurrentTime() >= end - 0.4) {
+              finish();
+            }
+          } catch {}
+        }, 250)
+      : null;
+
     const fallback = endedRef.current
       ? setTimeout(finish, (end - start + EXTRA_WAIT_SECONDS) * 1000)
       : null;
@@ -97,7 +108,11 @@ export default function YouTubeClip({
               }, 1500);
             },
             onStateChange: (event) => {
-              if (event.data === YOUTUBE_ENDED) {
+              if (
+                event.data === YOUTUBE_ENDED ||
+                (event.data === YOUTUBE_PAUSED &&
+                  event.target.getCurrentTime() >= end - 1)
+              ) {
                 finish();
               }
             },
@@ -120,6 +135,10 @@ export default function YouTubeClip({
 
       if (fallback) {
         clearTimeout(fallback);
+      }
+
+      if (watcher) {
+        clearInterval(watcher);
       }
 
       player?.destroy();

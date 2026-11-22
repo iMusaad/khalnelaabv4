@@ -116,7 +116,7 @@ const GAMES: {
   },
   {
     id: "focus",
-    name: "ركّز",
+    name: "ركز يانايم",
     image: "/images/posters/Focusgame.png",
   },
 ];
