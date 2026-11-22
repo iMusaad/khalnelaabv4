@@ -5,8 +5,9 @@ import { ZOOM_CATEGORIES, ZOOM_ITEMS } from "@/data/zoom";
 export type UpcomingGame = {
   id: string;
   name: string;
-  image: string;
+  image?: string;
   content: string[];
+  planned?: boolean;
 };
 
 export const UPCOMING_GAMES: UpcomingGame[] = [
@@ -40,6 +41,17 @@ export const UPCOMING_GAMES: UpcomingGame[] = [
         `${category.title}: ${ZOOM_ITEMS.filter((item) => item.category === key).length} صورة`,
     ),
   },
+  {
+    id: "charades",
+    name: "ولا كلمة",
+    content: [
+      "مخططة، ما بديناها",
+      "واحد يمسح كود ويشوف كلمة ويمثلها بدون ما يتكلم، وفريقه يخمن",
+    ],
+    planned: true,
+  },
 ];
 
-export const UPCOMING_GAME_IDS = UPCOMING_GAMES.map((game) => game.id);
+export const UPCOMING_GAME_IDS = UPCOMING_GAMES.filter(
+  (game) => !game.planned,
+).map((game) => game.id);

@@ -19,14 +19,20 @@ export default function AdminUpcoming() {
           key={game.id}
           className="flex gap-4 rounded-2xl bg-[#221a3f] p-3 shadow-[0_5px_0_#140f29]"
         >
-          <div className="relative aspect-[4/5] w-24 shrink-0 overflow-hidden rounded-xl">
-            <Image
-              src={posterThumb(game.image)}
-              alt=""
-              fill
-              unoptimized
-              className="object-cover"
-            />
+          <div className="relative flex aspect-[4/5] w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[#15102b]">
+            {game.image ? (
+              <Image
+                src={posterThumb(game.image)}
+                alt=""
+                fill
+                unoptimized
+                className="object-cover"
+              />
+            ) : (
+              <span className="px-2 text-center text-xs font-black text-white/40">
+                بدون بوستر
+              </span>
+            )}
           </div>
 
           <div className="flex min-w-0 flex-col">
@@ -38,12 +44,18 @@ export default function AdminUpcoming() {
               ))}
             </ul>
 
-            <Link
-              href={`/match?game=${game.id}`}
-              className="btn-primary mt-auto w-fit px-5 py-2 text-sm"
-            >
-              جرّبها
-            </Link>
+            {game.planned ? (
+              <span className="mt-auto w-fit rounded-full bg-white/10 px-3 py-1 text-xs font-black text-white/60">
+                في الخطة
+              </span>
+            ) : (
+              <Link
+                href={`/match?game=${game.id}`}
+                className="btn-primary mt-auto w-fit px-5 py-2 text-sm"
+              >
+                جرّبها
+              </Link>
+            )}
           </div>
         </article>
       ))}

@@ -11,7 +11,7 @@ import type { RoundPoints, WinnerType } from "@/types/game";
 
 const CARS_PER_ROUND = 4;
 
-const ZOOM_LEVELS = [4, 2.2, 1];
+const ZOOM_LEVELS = [6, 3.2, 1.6];
 
 const STAGE_POINTS = [3, 2, 1];
 
