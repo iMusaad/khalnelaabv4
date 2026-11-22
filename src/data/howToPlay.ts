@@ -127,7 +127,7 @@ export const HOW_TO_PLAY: HowToPlay[] = [
   {
     id: "focus",
     image: "/images/posters/Focusgame.png",
-    title: "ركّز",
+    title: "ركز يانايم",
     how: [
       "يطلع مقطع قصير مرة وحدة بس، ركّزوا في كل شي فيه",
       "بعد المقطع يطلع سؤال عن شي صار فيه",

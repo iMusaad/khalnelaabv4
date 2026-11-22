@@ -12,7 +12,7 @@ export const GAME_NAMES: Record<GameType, string> = {
   club: "وش ناديك؟",
   car: "عينك عالموتر",
   zoom: "عينك عالبوستر",
-  focus: "ركّز",
+  focus: "ركز يانايم",
   geo: "ثبّت الموقع",
 };
 
