@@ -62,6 +62,7 @@ const GAME_LOADERS = {
   car: () => import("@/components/match/CarGame"),
   zoom: () => import("@/components/match/ZoomGame"),
   focus: () => import("@/components/match/FocusGame"),
+  letters: () => import("@/components/match/LettersGame"),
   geo: () => import("@/components/match/GeoGame"),
 };
 
@@ -129,6 +130,11 @@ const ZoomGame = dynamic(GAME_LOADERS.zoom, {
 });
 
 const FocusGame = dynamic(GAME_LOADERS.focus, {
+  ssr: false,
+  loading: GameLoading,
+});
+
+const LettersGame = dynamic(GAME_LOADERS.letters, {
   ssr: false,
   loading: GameLoading,
 });
@@ -821,6 +827,9 @@ export default function MatchPage() {
 
       case "focus":
         return <FocusGame key={index} {...commonGameProps} />;
+
+      case "letters":
+        return <LettersGame key={index} {...commonGameProps} />;
 
       case "geo":
         return <GeoGame key={index} {...commonGameProps} trial={trial} />;
