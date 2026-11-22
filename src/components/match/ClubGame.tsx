@@ -225,7 +225,7 @@ export default function ClubGame({
                 onClick={() => setScanStep(1)}
                 className={actionButtonClass}
               >
-                شفنا النادي، كود الفريق الثاني
+                الكود الثاني
               </button>
             ) : (
               <button
@@ -237,7 +237,7 @@ export default function ClubGame({
                 }}
                 className={actionButtonClass}
               >
-                الكل شاف النادي؟ ابدأوا
+                ابدأوا
               </button>
             )}
           </>

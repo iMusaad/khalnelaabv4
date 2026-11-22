@@ -227,7 +227,7 @@ export default function CountryGame({
                 onClick={() => setScanStep(1)}
                 className={actionButtonClass}
               >
-                شفنا العلم، كود الفريق الثاني
+                الكود الثاني
               </button>
             ) : (
               <button
@@ -239,7 +239,7 @@ export default function CountryGame({
                 }}
                 className={actionButtonClass}
               >
-                الكل شاف العلم؟ ابدأوا
+                ابدأوا
               </button>
             )}
           </>
