@@ -53,32 +53,15 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       answer: "البرانس",
     },
     { question: "ما هي عاصمة المجر؟", answer: "بودابست" },
+    { question: "ما هي عاصمة الدولة العباسية؟", answer: "بغداد" },
     {
-      question: "من هو الشاعر العباسي صاحب القصيدة المشهورة في وصف إيوان كسرى؟",
-      answer: "البحتري",
-    },
-    {
-      question: "من هو الحكيم الهندي الذي تنسب إليه حكايات كليلة ودمنة؟",
-      answer: "بيدبا",
+      question: "ما هو المضيق الذي يفصل بين اليمن وجيبوتي؟",
+      answer: "باب المندب",
     },
   ],
   ت: [
-    {
-      question:
-        "من هو الصحابي الذي حدث النبي صلى الله عليه وسلم عنه بقصة الجساسة؟",
-      answer: "تميم الداري",
-    },
     { question: "ما هي عاصمة جورجيا؟", answer: "تبليسي" },
     { question: "ما هي الدولة التي عاصمتها عشق آباد؟", answer: "تركمانستان" },
-    {
-      question:
-        "ما هي البحيرة الواقعة بين بيرو وبوليفيا وتعد من أعلى البحيرات الصالحة للملاحة؟",
-      answer: "تيتيكاكا",
-    },
-    {
-      question: "من هو الشاعر الصعلوك الذي اسمه ثابت بن جابر؟",
-      answer: "تأبط شرا",
-    },
     {
       question: "ما هو الضريح الشهير في الهند الذي بناه شاه جهان لزوجته؟",
       answer: "تاج محل",
@@ -88,9 +71,10 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       answer: "التابوت",
     },
     {
-      question: "ما هو المعجم اللغوي الذي ألفه مرتضى الزبيدي؟",
-      answer: "تاج العروس",
+      question: "ما هي المدينة السعودية التي يقع فيها جبل اللوز؟",
+      answer: "تبوك",
     },
+    { question: "ما هي الدولة التي عاصمتها أنقرة؟", answer: "تركيا" },
   ],
   ث: [
     { question: "كم عدد أيام التشريق؟", answer: "ثلاثة" },
@@ -109,10 +93,6 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       answer: "ثابت بن قيس",
     },
     {
-      question: "من هي أول من أرضعت النبي صلى الله عليه وسلم بعد أمه؟",
-      answer: "ثويبة",
-    },
-    {
       question: "ما هو العنقود النجمي الذي كانت العرب تسميه النجم؟",
       answer: "الثريا",
     },
@@ -120,7 +100,10 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       question: "أكمل الحديث: فضل عائشة على النساء كفضل ... على سائر الطعام",
       answer: "الثريد",
     },
-    { question: "من هو مؤلف كتاب فقه اللغة وسر العربية؟", answer: "الثعالبي" },
+    {
+      question: "كم سنة مكث النبي صلى الله عليه وسلم يدعو في مكة قبل الهجرة؟",
+      answer: "ثلاث عشرة",
+    },
   ],
   ج: [
     { question: "ما هي أكبر جزيرة في العالم؟", answer: "جرينلاند" },
@@ -132,10 +115,6 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
     {
       question: "من هو الصحابي الملقب بذي الجناحين؟",
       answer: "جعفر بن أبي طالب",
-    },
-    {
-      question: "ما هو الاسم الحقيقي للصحابي أبي ذر الغفاري؟",
-      answer: "جندب بن جنادة",
     },
     {
       question: "من هو العالم المسلم الملقب بأبي الكيمياء؟",
@@ -151,6 +130,7 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       question: "أكمل بيت امرئ القيس: مكر مفر مقبل مدبر معا ... كـ",
       answer: "جلمود صخر",
     },
+    { question: "ما هي عاصمة إندونيسيا؟", answer: "جاكرتا" },
   ],
   ح: [
     {
@@ -164,16 +144,6 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
     },
     { question: "ما هي السورة التي فيها سجدتان؟", answer: "الحج" },
     {
-      question:
-        "ما هي الغزوة التي خرج فيها المسلمون في اليوم التالي لغزوة أحد؟",
-      answer: "حمراء الأسد",
-    },
-    {
-      question:
-        "من هو الصحابي البدري الذي كتب إلى قريش يخبرهم بمسير النبي صلى الله عليه وسلم إلى مكة؟",
-      answer: "حاطب بن أبي بلتعة",
-    },
-    {
       question: "من هي أم المؤمنين التي حفظت عندها صحف القرآن بعد وفاة أبيها؟",
       answer: "حفصة بنت عمر",
     },
@@ -186,15 +156,20 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       answer: "حمص",
     },
     { question: "أكمل المثل: إذا قالت ... فصدقوها", answer: "حذام" },
+    {
+      question: "من هو عم النبي صلى الله عليه وسلم الملقب بسيد الشهداء؟",
+      answer: "حمزة بن عبدالمطلب",
+    },
+    {
+      question:
+        "ما هي المدينة السورية المشهورة بقلعتها التي كانت عاصمة سيف الدولة؟",
+      answer: "حلب",
+    },
   ],
   خ: [
     {
       question: "من هي الشاعرة التي اشتهرت برثاء أخيها صخر؟",
       answer: "الخنساء",
-    },
-    {
-      question: "من هي زوجة الخليفة المهدي وأم هارون الرشيد؟",
-      answer: "الخيزران",
     },
     {
       question:
@@ -205,16 +180,20 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       question: "ما هو اسم الخليج الواقع بين اليمن والصومال؟",
       answer: "خليج عدن",
     },
-    { question: "ماذا تسمي العرب المشرق والمغرب معا؟", answer: "الخافقان" },
     {
       question: "ماذا يسمى الحلي الذي تلبسه المرأة في ساقها؟",
       answer: "الخلخال",
     },
-    { question: "ما هو الاسم العربي لعنصر الزنك؟", answer: "الخارصين" },
     {
-      question: "من هو العالم المسلم الذي اشتقت من اسمه كلمة الخوارزمية؟",
+      question:
+        "ما هو الحصن اليهودي الذي فتحه المسلمون في السنة السابعة للهجرة؟",
+      answer: "خيبر",
+    },
+    {
+      question: "من هو العالم المسلم الذي يعد مؤسس علم الجبر؟",
       answer: "الخوارزمي",
     },
+    { question: "ما هي الغزوة التي تسمى غزوة الأحزاب؟", answer: "الخندق" },
   ],
   د: [
     {
@@ -274,7 +253,6 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
     { question: "ما هو المقياس الذي تقاس به قوة الزلازل؟", answer: "ريختر" },
     { question: "ما هو باب الجنة الذي يدخل منه الصائمون؟", answer: "الريان" },
     { question: "ما هي عملة ماليزيا؟", answer: "الرينجت" },
-    { question: "ما هي عاصمة لاتفيا؟", answer: "ريغا" },
     {
       question: "ما هي المدينة التي كانت عاصمة البرازيل حتى عام 1960؟",
       answer: "ريو دي جانيرو",
@@ -283,6 +261,7 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       question: "ما هي السورة التي تكررت فيها آية: فبأي آلاء ربكما تكذبان؟",
       answer: "الرحمن",
     },
+    { question: "ما هي الدولة التي عاصمتها بوخارست؟", answer: "رومانيا" },
   ],
   ز: [
     {
@@ -311,10 +290,6 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
     },
     { question: "ما هي أكبر مدينة في سويسرا؟", answer: "زيورخ" },
     {
-      question: "من هي أم المؤمنين الملقبة بأم المساكين؟",
-      answer: "زينب بنت خزيمة",
-    },
-    {
       question: "ما هو الحجر الكريم الأخضر الذي تشتهر كولومبيا بإنتاجه؟",
       answer: "الزمرد",
     },
@@ -339,10 +314,7 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       answer: "سقراط",
     },
     { question: "ما هي الشجرة التي عندها جنة المأوى؟", answer: "سدرة المنتهى" },
-    {
-      question: "من هو العالم الذي أكمل تفسير الجلالين بعد وفاة المحلي؟",
-      answer: "السيوطي",
-    },
+    { question: "ما هي الدولة التي عاصمتها ستوكهولم؟", answer: "السويد" },
   ],
   ش: [
     {
@@ -365,20 +337,19 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       question: "ما هي المدينة الأمريكية الملقبة بمدينة الرياح؟",
       answer: "شيكاغو",
     },
-    {
-      question: "من هو الصحابي كاتب الوحي الذي ينسب إلى أمه؟",
-      answer: "شرحبيل بن حسنة",
-    },
     { question: "في أي شهر فرض صيام رمضان؟", answer: "شعبان" },
     {
       question: "من هو الشاعر التونسي صاحب بيت: إذا الشعب يوما أراد الحياة؟",
       answer: "الشابي",
     },
+    {
+      question: "ما هو الطائر الجارح الذي يشبه الصقر ويستخدم في الصيد؟",
+      answer: "الشاهين",
+    },
   ],
   ص: [
     { question: "ما هي عاصمة بلغاريا؟", answer: "صوفيا" },
     { question: "ما هي أكبر جزيرة في البحر المتوسط؟", answer: "صقلية" },
-    { question: "ما هي ثاني أكبر مدينة في تونس؟", answer: "صفاقس" },
     {
       question: "ما هو اسم يوم القيامة المذكور في سورة عبس؟",
       answer: "الصاخة",
@@ -390,8 +361,8 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
     },
     { question: "بماذا أهلك الله قوم صالح عليه السلام؟", answer: "الصيحة" },
     {
-      question: "ما هو الحجر الصلب الذي كان يقدح لإشعال النار؟",
-      answer: "الصوان",
+      question: "ما هي الدولة العربية التي عاصمتها مقديشو؟",
+      answer: "الصومال",
     },
   ],
   ض: [
@@ -428,11 +399,6 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
         "ما هي المدينة الأندلسية التي كانت عاصمة القوط وسقطت عام 478 هـ؟",
       answer: "طليطلة",
     },
-    { question: "من هو مؤسس الدولة السلجوقية؟", answer: "طغرل بك" },
-    {
-      question: "من هو سيد قبيلة دوس الملقب بذي النور؟",
-      answer: "الطفيل بن عمرو الدوسي",
-    },
     {
       question: "ما هي البحيرة التي يشرب ماءها يأجوج ومأجوج؟",
       answer: "طبرية",
@@ -444,6 +410,8 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
         "من هم القوم الذين يغطي رجالهم وجوههم باللثام في الصحراء الكبرى؟",
       answer: "الطوارق",
     },
+    { question: "ما هي عاصمة ليبيا؟", answer: "طرابلس" },
+    { question: "ما هي عاصمة إيران؟", answer: "طهران" },
   ],
   ظ: [
     {
@@ -454,24 +422,18 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       question: "من هو السلطان المملوكي الذي قضى على إمارة أنطاكية الصليبية؟",
       answer: "الظاهر بيبرس",
     },
-    {
-      question: "ماذا كانت العرب تسمي المرأة المسافرة في الهودج؟",
-      answer: "الظعينة",
-    },
-    {
-      question: "ما هو العذاب الذي أصاب أصحاب الأيكة؟",
-      answer: "عذاب يوم الظلة",
-    },
     { question: "ماذا يسمى ما للبقرة والشاة بدل الحافر؟", answer: "الظلف" },
-    {
-      question:
-        "ما هو المذهب الفقهي الذي أسسه داود الأصفهاني واشتهر به ابن حزم؟",
-      answer: "الظاهري",
-    },
-    { question: "ماذا تسمى المرأة التي ترضع غير ولدها؟", answer: "الظئر" },
     {
       question: "أكمل قول يونس عليه السلام: سبحانك إني كنت من ...",
       answer: "الظالمين",
+    },
+    {
+      question: "ما هي المدينة السعودية التي فيها المقر الرئيسي لشركة أرامكو؟",
+      answer: "الظهران",
+    },
+    {
+      question: "ما هو عكس النور في قوله تعالى: يخرجهم من النور إلى ...؟",
+      answer: "الظلمات",
     },
   ],
   ع: [
@@ -520,7 +482,6 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       answer: "غاليليو",
     },
     { question: "ماذا يسمى بيت السيف؟", answer: "الغمد" },
-    { question: "ما هي الدولة التي عاصمتها ليبرفيل؟", answer: "الغابون" },
     {
       question: "من هو العالم الملقب بحجة الإسلام مؤلف إحياء علوم الدين؟",
       answer: "الغزالي",
@@ -542,10 +503,7 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       question: "من هو عالم الرياضيات اليوناني صاحب نظرية المثلث القائم؟",
       answer: "فيثاغورس",
     },
-    {
-      question: "ما هي الحضارة القديمة التي اشتقت من أبجديتها أغلب الأبجديات؟",
-      answer: "الفينيقية",
-    },
+    { question: "ما هي الدولة التي عاصمتها مانيلا؟", answer: "الفلبين" },
   ],
   ق: [
     {
@@ -561,10 +519,6 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
     {
       question: "ما هو المعلم ذو القبة الذهبية في المسجد الأقصى؟",
       answer: "قبة الصخرة",
-    },
-    {
-      question: "من هو راوي قراءة نافع المشهورة في ليبيا وتونس؟",
-      answer: "قالون",
     },
     { question: "ما هي الدولة التي عاصمتها نيقوسيا؟", answer: "قبرص" },
   ],
@@ -608,7 +562,7 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       question: "ما هو الكتاب الذي كتب الله فيه مقادير كل شيء؟",
       answer: "اللوح المحفوظ",
     },
-    { question: "ما هي عاصمة سلوفينيا؟", answer: "ليوبليانا" },
+    { question: "ما هي الدولة العربية التي عاصمتها بيروت؟", answer: "لبنان" },
   ],
   م: [
     {
@@ -624,7 +578,6 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
     { question: "من هو مؤسس الدولة الأموية؟", answer: "معاوية بن أبي سفيان" },
     { question: "من هو فاتح بلاد السند؟", answer: "محمد بن القاسم" },
     { question: "ما هي السورة التي تسمى سورة الدين؟", answer: "الماعون" },
-    { question: "ماذا تسمى الساعة الشمسية القديمة؟", answer: "المزولة" },
     {
       question: "ما هي الآلة الحربية القديمة التي تقذف الحجارة؟",
       answer: "المنجنيق",
@@ -633,6 +586,7 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       question: "ما هو السباق الذي مسافته 42.195 كيلومتر؟",
       answer: "الماراثون",
     },
+    { question: "ما هي الدولة التي عاصمتها كوالالمبور؟", answer: "ماليزيا" },
   ],
   ن: [
     { question: "ما هي الدولة التي عاصمتها كاتماندو؟", answer: "نيبال" },
@@ -646,11 +600,8 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       answer: "نيكسون",
     },
     { question: "أكمل الآية: فإذا نقر في ...", answer: "الناقور" },
-    {
-      question: "ماذا يسمى الطعام الذي يصنع للقادم من سفره؟",
-      answer: "النقيعة",
-    },
     { question: "ما هي الدولة التي عاصمتها أوسلو؟", answer: "النرويج" },
+    { question: "ما هي عاصمة كينيا؟", answer: "نيروبي" },
   ],
   ه: [
     { question: "من هي أول من سعى بين الصفا والمروة؟", answer: "هاجر" },
@@ -679,11 +630,7 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       answer: "الوزغ",
     },
     { question: "ما هي ثاني أكبر مدينة في الجزائر؟", answer: "وهران" },
-    {
-      question: "ما هو المطر في قوله تعالى: فترى ... يخرج من خلاله؟",
-      answer: "الودق",
-    },
-    { question: "أكمل بيت الشافعي: شكوت إلى ... سوء حفظي", answer: "وكيع" },
+    { question: "ما هي وكالة الأنباء السعودية الرسمية؟", answer: "واس" },
   ],
   ي: [
     {
