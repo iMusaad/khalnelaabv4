@@ -254,7 +254,7 @@ export const LETTER_QUESTIONS: Record<string, LetterQuestion[]> = {
       question: "من هو النبي الذي لبث في قومه ألف سنة إلا خمسين عاماً؟",
       answer: "نوح عليه السلام",
     },
-    { question: "ما هو أطول نهر في العالم؟", answer: "النيل" },
+    { question: "ما هو النهر الذي يمر بمدينة القاهرة؟", answer: "النيل" },
     { question: "ما هي الدولة التي عاصمتها كاتماندو؟", answer: "نيبال" },
   ],
   ه: [
