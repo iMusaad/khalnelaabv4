@@ -275,7 +275,15 @@ export default function ScrambleGame({
                   </p>
 
                   <p className="mt-1 text-sm font-bold text-white/50">
-                    اوصفها بدون ما تقول الاسم
+                    واحد منكم يمسح الكود بجواله ويوصف الشخصية بالكلام لفريقه
+                  </p>
+
+                  <p className="mt-1 text-sm font-bold text-[#ffc23d]">
+                    ممنوع تقول الاسم أو أي جزء منه
+                  </p>
+
+                  <p className="mt-1 text-xs font-bold text-white/40">
+                    الشخصيات: مشاهير ولاعبين وشخصيات مسلسلات
                   </p>
                 </div>
               </div>
