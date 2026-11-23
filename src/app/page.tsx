@@ -6,17 +6,18 @@ import { useEffect, useState } from "react";
 import PixelHero from "@/components/PixelHero";
 import RiyalSign from "@/components/RiyalSign";
 import { GAME_COUNT } from "@/data/quizCards";
-import SaudiMadeSticker from "@/components/SaudiMadeSticker";
 import SiteFooter from "@/components/SiteFooter";
 import { HOME_GAMES } from "@/data/homeGames";
 import { posterThumb } from "@/lib/poster";
-import { PRICING, getCurrentPrice } from "@/lib/pricing";
+import { PRICING, getCurrentPrice, isOnSale } from "@/lib/pricing";
 import {
   ACTIVE_SEASON,
   isSeason,
   SEASON_THEMES,
   type Season,
 } from "@/lib/season";
+
+export const dynamic = "force-dynamic";
 
 const STEPS = [
   {
@@ -121,7 +122,7 @@ export default function Home() {
           >
             <span>{GAME_COUNT} لعبة بـ</span>
 
-            {PRICING.onSale && (
+            {isOnSale() && (
               <span className="text-white/40 line-through">
                 {PRICING.basePrice}
               </span>
@@ -171,8 +172,6 @@ export default function Home() {
         </section>
 
         <div className="relative mt-auto pt-2">
-          <SaudiMadeSticker className="mb-4 flex justify-center sm:[@media(max-height:920px)]:absolute sm:[@media(max-height:920px)]:bottom-4 sm:[@media(max-height:920px)]:left-0 sm:[@media(max-height:920px)]:mb-0 sm:[@media(max-height:920px)]:scale-90" />
-
           <SiteFooter />
         </div>
       </div>

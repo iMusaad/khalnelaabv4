@@ -19,7 +19,7 @@ import {
 import { isEmailEnabled } from "@/lib/email";
 import { safeNextPath } from "@/lib/licenseCookie";
 import { posterThumb } from "@/lib/poster";
-import { PRICING, getCurrentPrice, toHalalas } from "@/lib/pricing";
+import { PRICING, getCurrentPrice, isOnSale, toHalalas } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "اشترِ خل نلعب",
@@ -106,7 +106,7 @@ export default async function BuyPage({
 
           <RiyalSign className="text-4xl sm:text-5xl" />
 
-          {PRICING.onSale && (
+          {isOnSale() && (
             <span className="relative text-2xl font-black opacity-50 sm:text-3xl">
               {PRICING.basePrice}
               <span className="absolute inset-x-[-4px] top-1/2 h-[3px] -rotate-12 rounded bg-current" />
@@ -114,9 +114,9 @@ export default async function BuyPage({
           )}
         </p>
 
-        {PRICING.onSale && (
+        {isOnSale() && (
           <p className="mx-auto mt-3 w-fit rounded-lg bg-[#241339] px-3 py-1 text-sm font-black text-[#ffc23d]">
-            سعر الإطلاق لفترة محدودة
+            سعر الإطلاق لين 1 يناير
           </p>
         )}
       </PixelHero>

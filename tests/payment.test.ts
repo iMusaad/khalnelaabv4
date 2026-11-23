@@ -45,3 +45,14 @@ describe("safeNextPath", () => {
     expect(safeNextPath("https://evil.com")).toBe("/");
   });
 });
+
+describe("launch sale", () => {
+  it("ends on 1 January Riyadh time", () => {
+    expect(getCurrentPrice(Date.parse("2026-12-31T23:59:00+03:00"))).toBe(
+      PRICING.salePrice,
+    );
+    expect(getCurrentPrice(Date.parse("2027-01-01T00:00:00+03:00"))).toBe(
+      PRICING.basePrice,
+    );
+  });
+});

@@ -2,11 +2,15 @@ export const PRICING = {
   currency: "SAR",
   basePrice: 59,
   salePrice: 49,
-  onSale: true,
+  saleEndsAt: Date.parse("2027-01-01T00:00:00+03:00"),
 };
 
-export function getCurrentPrice() {
-  return PRICING.onSale ? PRICING.salePrice : PRICING.basePrice;
+export function isOnSale(now = Date.now()) {
+  return now < PRICING.saleEndsAt;
+}
+
+export function getCurrentPrice(now = Date.now()) {
+  return isOnSale(now) ? PRICING.salePrice : PRICING.basePrice;
 }
 
 export function toHalalas(riyals: number) {
