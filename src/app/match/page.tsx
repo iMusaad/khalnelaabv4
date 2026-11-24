@@ -35,8 +35,10 @@ import {
 import { clearRoundState } from "@/lib/roundState";
 import {
   clearSavedMatch,
+  getEntrySearch,
   readSavedMatch,
   saveMatch,
+  takeEntrySearch,
   type SavedMatch,
 } from "@/lib/savedMatch";
 import { createResultShareImage } from "@/lib/shareImage";
@@ -262,7 +264,7 @@ export default function MatchPage() {
 
   function snapshot(overrides: Partial<SavedMatch>): SavedMatch {
     return {
-      search: window.location.search,
+      search: getEntrySearch(),
       mode,
       side1,
       side2,
@@ -585,13 +587,14 @@ export default function MatchPage() {
   }, [phase, countdown, queue]);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    const entrySearch = takeEntrySearch();
+    const params = new URLSearchParams(entrySearch);
 
     const urlMode = params.get("mode");
     const gameParam = params.get("game");
     const categoryParam = params.get("category");
 
-    const saved = readSavedMatch(window.location.search);
+    const saved = readSavedMatch(entrySearch);
 
     if (saved) {
       setMode(saved.mode);

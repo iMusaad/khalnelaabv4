@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { posterThumb } from "@/lib/poster";
 import PosterFlip from "@/components/PosterFlip";
 import TeamSplitter from "@/components/TeamSplitter";
@@ -201,10 +201,29 @@ export default function SetupGame({
   const router = useRouter();
 
   const isQuickMode = mode === "quick";
+  const pathname = usePathname();
 
   useEffect(() => {
-    document.title = `${isQuickMode ? "لعبة سريعة" : "تحدي الجلسة"} | خل نلعب`;
-  }, [isQuickMode]);
+    const title = `${isQuickMode ? "لعبة سريعة" : "تحدي الجلسة"} | خل نلعب`;
+
+    function apply() {
+      if (document.title !== title) {
+        document.title = title;
+      }
+    }
+
+    apply();
+
+    const observer = new MutationObserver(apply);
+
+    observer.observe(document.head, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+
+    return () => observer.disconnect();
+  }, [isQuickMode, pathname]);
 
   const needsQuizCategory =
     selectedGames.includes("quiz") && quizCategories.length === 0;

@@ -10,6 +10,7 @@ export default function robots(): MetadataRoute.Robots {
         "/admin",
         "/api/",
         "/match",
+        "/play",
         "/unlock",
         "/buy/",
         "/club/",
