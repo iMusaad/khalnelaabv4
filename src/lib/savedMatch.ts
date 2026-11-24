@@ -10,6 +10,34 @@ import type { ModeType, RoundStat } from "@/types/match";
 
 export const SAVED_MATCH_KEY = "khal-nelab-match";
 
+const ENTRY_KEY = "khal-nelab-entry";
+
+export const PLAY_PATH = "/play";
+
+export function getEntrySearch() {
+  try {
+    return sessionStorage.getItem(ENTRY_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+export function takeEntrySearch() {
+  const incoming = window.location.search;
+
+  if (!incoming) {
+    return getEntrySearch();
+  }
+
+  try {
+    sessionStorage.setItem(ENTRY_KEY, incoming);
+  } catch {}
+
+  window.history.replaceState(window.history.state, "", PLAY_PATH);
+
+  return incoming;
+}
+
 export type SavedMatch = {
   search: string;
   mode: ModeType;
