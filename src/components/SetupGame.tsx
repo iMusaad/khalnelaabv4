@@ -159,7 +159,7 @@ const MINUTES_PER_ROUND: Record<SetupGameId, number> = {
   wheel: 6,
   categories: 4,
   draw: 4,
-  logo: 3,
+  logo: 2,
   country: 5,
   club: 5,
   car: 4,
