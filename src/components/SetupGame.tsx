@@ -43,10 +43,6 @@ type SetupGameProps = {
   setSelectedGames: Dispatch<SetStateAction<SetupGameId[]>>;
   quizCategories: QuizCategoryKey[];
   setQuizCategories: Dispatch<SetStateAction<QuizCategoryKey[]>>;
-  timerEnabled: boolean;
-  setTimerEnabled: (value: boolean) => void;
-  timerSeconds: number;
-  setTimerSeconds: (value: number) => void;
   onStart: () => void;
   trial?: boolean;
 };
@@ -191,10 +187,6 @@ export default function SetupGame({
   setSelectedGames,
   quizCategories,
   setQuizCategories,
-  timerEnabled,
-  setTimerEnabled,
-  timerSeconds,
-  setTimerSeconds,
   onStart,
   trial = false,
 }: SetupGameProps) {
@@ -502,45 +494,6 @@ export default function SetupGame({
           </div>
 
           <div className="mx-auto mt-3 flex max-w-2xl items-center justify-center gap-3 text-sm font-black">
-            <button
-              type="button"
-              role="switch"
-              aria-checked={timerEnabled}
-              onClick={() => setTimerEnabled(!timerEnabled)}
-              className="flex items-center gap-2"
-            >
-              <span
-                className={`relative h-6 w-10 shrink-0 rounded-full transition-colors duration-200 ${
-                  timerEnabled ? "bg-[#241339]" : "bg-black/20"
-                }`}
-              >
-                <span
-                  className={`absolute top-[3px] h-[18px] w-[18px] rounded-full bg-white transition-all duration-200 ${
-                    timerEnabled ? "left-[3px]" : "left-[19px]"
-                  }`}
-                />
-              </span>
-              مؤقت
-            </button>
-
-            {timerEnabled && (
-              <span className="flex items-center gap-2">
-                <input
-                  type="range"
-                  min={10}
-                  max={120}
-                  step={5}
-                  value={timerSeconds}
-                  aria-label="مدة المؤقت بالثواني"
-                  onChange={(event) =>
-                    setTimerSeconds(Number(event.target.value))
-                  }
-                  className="h-1 w-28 accent-[#241339]"
-                />
-                <span className="w-12 tabular-nums">{timerSeconds} ث</span>
-              </span>
-            )}
-
             <TeamSplitter team1={side1} team2={side2} />
           </div>
         </PixelHero>

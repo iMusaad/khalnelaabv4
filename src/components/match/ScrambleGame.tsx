@@ -1,5 +1,6 @@
 "use client";
 
+import ElapsedTimer from "@/components/match/ElapsedTimer";
 import { useEffect, useMemo, useState } from "react";
 import QrCode from "@/components/QrCode";
 import GameLayout from "@/components/match/GameLayout";
@@ -30,8 +31,6 @@ export default function ScrambleGame({
   onRoundEnd,
   roundKey,
   currentRound = 1,
-  timerEnabled = false,
-  timerSeconds = 30,
   gameRoundIndex = 0,
 }: {
   side1Name: string;
@@ -39,8 +38,6 @@ export default function ScrambleGame({
   onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
-  timerEnabled?: boolean;
-  timerSeconds?: number;
   gameRoundIndex?: number;
 }) {
   const [index, setIndex] = useState(0);
@@ -52,8 +49,6 @@ export default function ScrambleGame({
   const [started, setStarted] = useState(false);
 
   const [revealed, setRevealed] = useState(false);
-
-  const [timeLeft, setTimeLeft] = useState(timerSeconds);
 
   const [origin, setOrigin] = useState("");
 
@@ -67,8 +62,6 @@ export default function ScrambleGame({
 
   useEffect(() => {
     setLoaded(true);
-
-    setTimeLeft(timerSeconds);
 
     const saved = readRoundState<ScrambleRoundState>("scramble", roundKey);
 
@@ -91,7 +84,7 @@ export default function ScrambleGame({
 
     setSide1Score(0);
     setSide2Score(0);
-  }, [roundKey, timerSeconds]);
+  }, [roundKey]);
 
   useEffect(() => {
     if (!loaded || rounds.length === 0) {
@@ -129,26 +122,8 @@ export default function ScrambleGame({
 
   const personUrl = current && origin ? `${origin}/person/${current.id}` : "";
 
-  useEffect(() => {
-    if (!timerEnabled || !started || revealed || !current) {
-      return;
-    }
-
-    if (timeLeft <= 0) {
-      setRevealed(true);
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setTimeLeft((previous) => previous - 1);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [timerEnabled, started, revealed, timeLeft, current]);
-
   function startGuessing() {
     setStarted(true);
-    setTimeLeft(timerSeconds);
   }
 
   function finishGame(final1: number, final2: number) {
@@ -169,8 +144,6 @@ export default function ScrambleGame({
 
     setStarted(false);
     setRevealed(false);
-
-    setTimeLeft(timerSeconds);
   }
 
   function givePoint(winner: "side1" | "side2" | "none") {
@@ -210,13 +183,6 @@ export default function ScrambleGame({
     );
   }
 
-  const timerClass =
-    timeLeft <= 5
-      ? "animate-pulse text-red-300"
-      : timeLeft <= 10
-        ? "text-yellow-300"
-        : "text-white/70";
-
   return (
     <>
       <GameLayout
@@ -241,11 +207,7 @@ export default function ScrambleGame({
               </div>
             )}
 
-            {started && !revealed && timerEnabled && (
-              <div className={`text-sm font-black ${timerClass}`}>
-                {timeLeft} ثانية
-              </div>
-            )}
+            {started && !revealed && <ElapsedTimer key={index} />}
 
             {!started && !revealed && (
               <div className="text-sm font-black text-white/80">

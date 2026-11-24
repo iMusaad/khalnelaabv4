@@ -1,5 +1,6 @@
 "use client";
 
+import ElapsedTimer from "@/components/match/ElapsedTimer";
 import { useEffect, useMemo, useState } from "react";
 
 import GameLayout from "@/components/match/GameLayout";
@@ -53,29 +54,19 @@ function pointsLabel(points: number) {
   return `${points} نقاط`;
 }
 
-function getStageSeconds(timerSeconds: number) {
-  return Math.max(5, Math.round(timerSeconds / ZOOM_LEVELS.length));
-}
-
 export default function LogoGame({
   side1Name,
   side2Name,
   onRoundEnd,
   roundKey,
   currentRound = 1,
-  timerEnabled = false,
-  timerSeconds = 30,
 }: {
   side1Name: string;
   side2Name: string;
   onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
-  timerEnabled?: boolean;
-  timerSeconds?: number;
 }) {
-  const stageSeconds = getStageSeconds(timerSeconds);
-
   const [index, setIndex] = useState(0);
 
   const [rounds, setRounds] = useState<LogoRound[]>([]);
@@ -83,8 +74,6 @@ export default function LogoGame({
   const [stage, setStage] = useState(0);
 
   const [revealed, setRevealed] = useState(false);
-
-  const [timeLeft, setTimeLeft] = useState(stageSeconds);
 
   const [side1Score, setSide1Score] = useState(0);
 
@@ -94,8 +83,6 @@ export default function LogoGame({
 
   useEffect(() => {
     setLoaded(true);
-
-    setTimeLeft(stageSeconds);
 
     const saved = readRoundState<LogoRoundState>("logo", roundKey);
 
@@ -119,7 +106,7 @@ export default function LogoGame({
     setRevealed(false);
     setSide1Score(0);
     setSide2Score(0);
-  }, [roundKey, stageSeconds]);
+  }, [roundKey]);
 
   useEffect(() => {
     if (!loaded || rounds.length === 0) {
@@ -159,36 +146,12 @@ export default function LogoGame({
 
   const stagePoints = STAGE_POINTS[stage];
 
-  useEffect(() => {
-    if (!timerEnabled || revealed || !current) {
-      return;
-    }
-
-    if (timeLeft <= 0) {
-      if (isLastStage) {
-        setRevealed(true);
-      } else {
-        setStage((previous) => previous + 1);
-        setTimeLeft(stageSeconds);
-      }
-
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setTimeLeft((previous) => previous - 1);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [timerEnabled, revealed, timeLeft, current, isLastStage, stageSeconds]);
-
   function zoomOut() {
     if (isLastStage) {
       return;
     }
 
     setStage((previous) => previous + 1);
-    setTimeLeft(stageSeconds);
   }
 
   function finishGame(final1: number, final2: number) {
@@ -207,7 +170,6 @@ export default function LogoGame({
     setIndex((currentIndex) => currentIndex + 1);
     setStage(0);
     setRevealed(false);
-    setTimeLeft(stageSeconds);
   }
 
   function award(points: number) {
@@ -239,13 +201,6 @@ export default function LogoGame({
     );
   }
 
-  const timerClass =
-    timeLeft <= 3
-      ? "animate-pulse text-red-300"
-      : timeLeft <= 6
-        ? "text-yellow-300"
-        : "text-white/70";
-
   const zoom = revealed
     ? 1
     : zoomLevels(current.startZoom ?? DEFAULT_START_ZOOM)[stage];
@@ -274,10 +229,8 @@ export default function LogoGame({
               </span>
             </>
           )}
-          {!revealed && timerEnabled && (
-            <span className={`ms-3 font-black ${timerClass}`}>
-              {timeLeft} ثانية
-            </span>
+          {!revealed && (
+            <ElapsedTimer key={`${index}-${stage}`} className="ms-3" />
           )}
         </p>
 

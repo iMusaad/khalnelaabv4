@@ -1,5 +1,6 @@
 "use client";
 
+import ElapsedTimer from "@/components/match/ElapsedTimer";
 import { useEffect, useRef, useState } from "react";
 import GameLayout from "@/components/match/GameLayout";
 import { InlineTeamPick } from "@/components/match/Overlays";
@@ -10,7 +11,6 @@ import { readRoundState, writeRoundState } from "@/lib/roundState";
 import type { RoundPoints, WinnerType } from "@/types/game";
 
 const CLIPS_PER_GAME = 4;
-const SECOND_TIME = 10;
 
 type TeamSide = "side1" | "side2";
 
@@ -33,23 +33,18 @@ export default function FocusGame({
   onRoundEnd,
   roundKey,
   currentRound = 1,
-  timerEnabled = false,
-  timerSeconds = 30,
 }: {
   side1Name: string;
   side2Name: string;
   onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
-  timerEnabled?: boolean;
-  timerSeconds?: number;
 }) {
   const [rounds, setRounds] = useState<FocusClip[]>([]);
   const [index, setIndex] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [stage, setStage] = useState<Stage>("ready");
   const [secondTurn, setSecondTurn] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(timerSeconds);
   const [side1Score, setSide1Score] = useState(0);
   const [side2Score, setSide2Score] = useState(0);
   const [replaying, setReplaying] = useState(false);
@@ -58,7 +53,6 @@ export default function FocusGame({
 
   useEffect(() => {
     setLoaded(true);
-    setTimeLeft(timerSeconds);
 
     const saved = readRoundState<FocusRoundState>("focus", roundKey);
 
@@ -78,7 +72,7 @@ export default function FocusGame({
     setSecondTurn(false);
     setSide1Score(0);
     setSide2Score(0);
-  }, [roundKey, timerSeconds]);
+  }, [roundKey]);
 
   useEffect(() => {
     if (!loaded || rounds.length === 0) {
@@ -117,29 +111,6 @@ export default function FocusGame({
   const activeTeamName =
     activeTurn === "side1" ? side1Name || "فريق 1" : side2Name || "فريق 2";
 
-  useEffect(() => {
-    if (!timerEnabled || stage !== "question" || !current) {
-      return;
-    }
-
-    if (timeLeft <= 0) {
-      if (!secondTurn) {
-        setSecondTurn(true);
-        setTimeLeft(SECOND_TIME);
-      } else {
-        setStage("revealed");
-      }
-
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setTimeLeft((previous) => previous - 1);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [timeLeft, stage, secondTurn, current, timerEnabled]);
-
   function startClip() {
     setStage("watching");
     setReplaying(false);
@@ -149,7 +120,6 @@ export default function FocusGame({
     setBig(false);
 
     if (stage === "watching") {
-      setTimeLeft(timerSeconds);
       setStage("question");
     }
   }
@@ -172,7 +142,6 @@ export default function FocusGame({
     setStage("ready");
     setSecondTurn(false);
     setReplaying(false);
-    setTimeLeft(timerSeconds);
   }
 
   function finishGame(final1: number, final2: number) {
@@ -198,7 +167,6 @@ export default function FocusGame({
     setStage("ready");
     setSecondTurn(false);
     setReplaying(false);
-    setTimeLeft(timerSeconds);
   }
 
   if (!current) {
@@ -220,13 +188,6 @@ export default function FocusGame({
   }
 
   const isLast = index + 1 >= rounds.length;
-
-  const timerTextClass =
-    timeLeft <= 5
-      ? "animate-pulse text-red-300"
-      : timeLeft <= 10
-        ? "text-yellow-200"
-        : "text-white/70";
 
   return (
     <GameLayout
@@ -253,11 +214,7 @@ export default function FocusGame({
             <div className="text-sm font-black text-[#ffb21e]">فرصة ثانية</div>
           )}
 
-          {timerEnabled && stage === "question" && (
-            <div className={`text-sm font-black ${timerTextClass}`}>
-              {timeLeft} ثانية
-            </div>
-          )}
+          {stage === "question" && <ElapsedTimer key={index} />}
         </div>
 
         {stage === "ready" && (

@@ -1,5 +1,6 @@
 "use client";
 
+import ElapsedTimer from "@/components/match/ElapsedTimer";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import GameLayout from "@/components/match/GameLayout";
 import { WORDS } from "@/data/words";
@@ -70,8 +71,6 @@ export default function WordGame({
   side1Score = 0,
   side2Score = 0,
   currentRound = 1,
-  timerEnabled = false,
-  timerSeconds = 30,
   trial = false,
 }: {
   trial?: boolean;
@@ -82,8 +81,6 @@ export default function WordGame({
   side1Score?: number;
   side2Score?: number;
   currentRound?: number;
-  timerEnabled?: boolean;
-  timerSeconds?: number;
 }) {
   const [answer, setAnswer] = useState("");
 
@@ -104,8 +101,6 @@ export default function WordGame({
   const [activeSide, setActiveSide] = useState<TeamSide>("side1");
 
   const [feedback, setFeedback] = useState("ابدأ التخمين");
-
-  const [timeLeft, setTimeLeft] = useState(timerSeconds);
 
   const [side1HintUsed, setSide1HintUsed] = useState(false);
 
@@ -128,13 +123,10 @@ export default function WordGame({
   const resetRoundRef = useRef(resetRound);
   resetRoundRef.current = resetRound;
 
-  const switchTurnRef = useRef(switchTurn);
-  switchTurnRef.current = switchTurn;
-
   useEffect(() => {
     setLoaded(true);
     resetRoundRef.current();
-  }, [roundKey, currentRound, timerSeconds]);
+  }, [roundKey, currentRound]);
 
   useEffect(() => {
     return () => {
@@ -143,23 +135,6 @@ export default function WordGame({
       }
     };
   }, []);
-
-  useEffect(() => {
-    if (!timerEnabled || status !== "playing" || revealing) {
-      return;
-    }
-
-    if (timeLeft <= 0) {
-      switchTurnRef.current();
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setTimeLeft((previous) => previous - 1);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [timerEnabled, timeLeft, status, activeSide, revealing]);
 
   function resetRound() {
     const startingSide: TeamSide = currentRound % 2 === 1 ? "side1" : "side2";
@@ -184,7 +159,6 @@ export default function WordGame({
       setKeyStatus(saved.keyStatus);
       setRemovedLetters(saved.removedLetters);
       setActiveSide(saved.activeSide);
-      setTimeLeft(timerSeconds);
       setSide1HintUsed(saved.side1HintUsed);
       setSide2HintUsed(saved.side2HintUsed);
       setRevealedLetters(saved.revealedLetters ?? []);
@@ -222,8 +196,6 @@ export default function WordGame({
 
     setActiveSide(startingSide);
 
-    setTimeLeft(timerSeconds);
-
     setSide1HintUsed(false);
     setSide2HintUsed(false);
     setRevealedLetters([]);
@@ -237,20 +209,6 @@ export default function WordGame({
 
   function getCurrentTurnName() {
     return activeSide === "side1" ? side1Name : side2Name;
-  }
-
-  function switchTurn() {
-    const nextSide: TeamSide = activeSide === "side1" ? "side2" : "side1";
-
-    setActiveSide(nextSide);
-
-    setCurrent("");
-
-    setTimeLeft(timerSeconds);
-
-    setFeedback(
-      `انتهى الوقت — الدور على ${nextSide === "side1" ? side1Name : side2Name}`,
-    );
   }
 
   function submitGuess() {
@@ -359,8 +317,6 @@ export default function WordGame({
       const nextSide: TeamSide = guessingSide === "side1" ? "side2" : "side1";
 
       setActiveSide(nextSide);
-
-      setTimeLeft(timerSeconds);
 
       setFeedback(`الدور على ${nextSide === "side1" ? side1Name : side2Name}`);
     }, REVEAL_MS);
@@ -667,13 +623,6 @@ export default function WordGame({
 
   const remainingRows = MAX_TRIES - guesses.length;
 
-  const timerColor =
-    timeLeft <= 5
-      ? "text-red-300 animate-pulse"
-      : timeLeft <= 10
-        ? "text-yellow-300"
-        : "text-white/70";
-
   const routineFeedback =
     feedback === "ابدأ التخمين" || feedback.startsWith("الدور على ");
 
@@ -713,10 +662,8 @@ export default function WordGame({
       >
         <div className="flex flex-col gap-2">
           <div className="flex flex-wrap items-center justify-center gap-3">
-            {timerEnabled && status === "playing" && (
-              <span className={`text-sm font-black ${timerColor}`}>
-                {timeLeft} ثانية
-              </span>
+            {status === "playing" && (
+              <ElapsedTimer key={`${activeSide}-${guesses.length}`} />
             )}
           </div>
 

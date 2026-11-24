@@ -87,8 +87,6 @@ export default function LettersGame({
   onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
-  timerEnabled?: boolean;
-  timerSeconds?: number;
 }) {
   const [state, setState] = useState<LettersState | null>(null);
 

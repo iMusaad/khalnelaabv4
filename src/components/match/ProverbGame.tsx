@@ -1,5 +1,6 @@
 "use client";
 
+import ElapsedTimer from "@/components/match/ElapsedTimer";
 import { useEffect, useMemo, useState } from "react";
 import GameLayout from "@/components/match/GameLayout";
 import { InlineTeamPick } from "@/components/match/Overlays";
@@ -9,7 +10,6 @@ import { readRoundState, writeRoundState } from "@/lib/roundState";
 import type { RoundPoints, WinnerType } from "@/types/game";
 
 const TOTAL_ROUNDS = 4;
-const SECOND_TIME = 10;
 
 type TeamSide = "side1" | "side2";
 
@@ -30,24 +30,18 @@ export default function ProverbGame({
   onRoundEnd,
   roundKey,
   currentRound = 1,
-  timerEnabled = false,
-  timerSeconds = 30,
 }: {
   side1Name: string;
   side2Name: string;
   onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
-  timerEnabled?: boolean;
-  timerSeconds?: number;
 }) {
   const [rounds, setRounds] = useState<typeof puzzles>([]);
 
   const [index, setIndex] = useState(0);
 
   const [loaded, setLoaded] = useState(false);
-
-  const [timeLeft, setTimeLeft] = useState(timerSeconds);
 
   const [revealed, setRevealed] = useState(false);
 
@@ -59,8 +53,6 @@ export default function ProverbGame({
 
   useEffect(() => {
     setLoaded(true);
-
-    setTimeLeft(timerSeconds);
 
     const saved = readRoundState<ProverbRoundState>("draw", roundKey);
 
@@ -83,7 +75,7 @@ export default function ProverbGame({
 
     setSide1Score(0);
     setSide2Score(0);
-  }, [roundKey, timerSeconds]);
+  }, [roundKey]);
 
   useEffect(() => {
     if (!loaded || rounds.length === 0) {
@@ -125,29 +117,6 @@ export default function ProverbGame({
   const activeTeamName =
     activeTurn === "side1" ? side1Name || "فريق 1" : side2Name || "فريق 2";
 
-  useEffect(() => {
-    if (!timerEnabled || revealed || !current) {
-      return;
-    }
-
-    if (timeLeft <= 0) {
-      if (!secondTurn) {
-        setSecondTurn(true);
-        setTimeLeft(SECOND_TIME);
-      } else {
-        setRevealed(true);
-      }
-
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setTimeLeft((previous) => previous - 1);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [timeLeft, revealed, secondTurn, current, timerEnabled]);
-
   function finishGame(final1: number, final2: number) {
     onRoundEnd(final1 > final2 ? "side1" : final2 > final1 ? "side2" : "none", {
       side1: final1,
@@ -163,8 +132,6 @@ export default function ProverbGame({
     }
 
     setIndex((currentIndex) => currentIndex + 1);
-
-    setTimeLeft(timerSeconds);
 
     setRevealed(false);
     setSecondTurn(false);
@@ -199,13 +166,6 @@ export default function ProverbGame({
     );
   }
 
-  const timerTextClass =
-    timeLeft <= 5
-      ? "animate-pulse text-red-300"
-      : timeLeft <= 10
-        ? "text-yellow-200"
-        : "text-white/70";
-
   const isLastProverb = index + 1 >= rounds.length;
 
   return (
@@ -236,18 +196,14 @@ export default function ProverbGame({
               </div>
             )}
 
-            {timerEnabled && !revealed && (
-              <div className={`text-sm font-black ${timerTextClass}`}>
-                {timeLeft} ثانية
-              </div>
-            )}
+            {!revealed && <ElapsedTimer key={index} />}
           </div>
 
           <img
             key={current.image}
             src={current.image}
             alt="لغز المثل"
-            className="mx-auto max-h-[300px] w-full max-w-[520px] rounded-3xl object-contain sm:max-h-[360px]"
+            className="mx-auto block h-auto max-h-[300px] w-auto max-w-full rounded-3xl sm:max-h-[360px] sm:max-w-[520px]"
           />
 
           {revealed && (
