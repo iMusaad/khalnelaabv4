@@ -5,7 +5,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SITE } from "@/data/site";
 import { ensureGtag, gaEnabled, syncPageLocation } from "@/lib/analytics";
-import { CONSENT_EVENT, getConsent } from "@/lib/consent";
+import { CONSENT_EVENT, analyticsAllowed } from "@/lib/consent";
 
 export default function GoogleAnalytics() {
   const [granted, setGranted] = useState(false);
@@ -20,7 +20,7 @@ export default function GoogleAnalytics() {
 
   useEffect(() => {
     function sync() {
-      const ok = getConsent() === "granted";
+      const ok = analyticsAllowed();
 
       if (ok) {
         ensureGtag();

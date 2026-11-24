@@ -14,6 +14,10 @@ export function getConsent(): Consent | null {
   }
 }
 
+export function analyticsAllowed() {
+  return getConsent() !== "denied";
+}
+
 export function setConsent(value: Consent) {
   try {
     window.localStorage.setItem(KEY, value);

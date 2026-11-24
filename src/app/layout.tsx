@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import localFont from "next/font/local";
 import { SITE } from "@/data/site";
 import "./globals.css";
-import CookieConsent from "@/components/CookieConsent";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import RefCapture from "@/components/RefCapture";
 import SourceCapture from "@/components/SourceCapture";
@@ -94,7 +93,6 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <GoogleAnalytics />
         </Suspense>
-        <CookieConsent />
       </body>
     </html>
   );

@@ -1,7 +1,7 @@
 import type { Round } from "@/lib/matchQueue";
 
 import { SITE } from "@/data/site";
-import { getConsent } from "@/lib/consent";
+import { analyticsAllowed } from "@/lib/consent";
 
 type GtagWindow = Window & {
   dataLayer?: unknown[];
@@ -40,7 +40,7 @@ export function ensureGtag() {
     return null;
   }
 
-  if (getConsent() !== "granted") {
+  if (!analyticsAllowed()) {
     return null;
   }
 
@@ -59,10 +59,23 @@ export function ensureGtag() {
     target.gtag("set", {
       page_location: safePageLocation(window.location.href),
     });
-    target.gtag("config", SITE.gaMeasurementId);
+    target.gtag("config", SITE.gaMeasurementId, {
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false,
+    });
   }
 
   return target.gtag;
+}
+
+export function setAnalyticsDisabled(disabled: boolean) {
+  if (typeof window === "undefined" || !gaEnabled()) {
+    return;
+  }
+
+  (window as unknown as Record<string, boolean>)[
+    `ga-disable-${SITE.gaMeasurementId}`
+  ] = disabled;
 }
 
 export function trackEvent(name: string, params: Record<string, unknown> = {}) {

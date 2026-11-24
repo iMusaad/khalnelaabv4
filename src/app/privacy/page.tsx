@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageShell from "@/components/PageShell";
 import PolicySection from "@/components/PolicySection";
+import AnalyticsOptOut from "@/components/AnalyticsOptOut";
 import { SITE } from "@/data/site";
 
 export const metadata: Metadata = {
@@ -73,11 +74,12 @@ export default function PrivacyPage() {
             <p>
               ونستخدم Google Analytics عشان نعرف عدد الزوار ومن وين جوا. هذي
               الخدمة تحط ملفات تعريف ارتباط (كوكيز) على جهازك، وتجمع معلومات
-              عامة مثل نوع الجهاز والمدينة، وتخضع لسياسة خصوصية Google. ما تشتغل
-              إلا إذا ضغطت «موافق» في شريط الكوكيز، ولو ضغطت «لا» ما ينرسل لها
-              شي.
+              عامة مثل نوع الجهاز والمدينة، وتخضع لسياسة خصوصية Google. نستخدمها
+              للتحليل بس، وموقفين فيها ميزات الإعلانات وربط البيانات بحسابات
+              Google، وما نرسل لها كود التفعيل ولا أي معلومة عن الدفع.
             </p>
           )}
+          {SITE.gaMeasurementId && <AnalyticsOptOut />}
         </PolicySection>
       </div>
     </PageShell>
