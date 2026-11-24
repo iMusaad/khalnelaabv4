@@ -25,7 +25,7 @@ import { PRICING, getCurrentPrice, isOnSale, toHalalas } from "@/lib/pricing";
 export const metadata: Metadata = {
   title: "اشترِ الألعاب",
   description:
-    "كل ألعاب خل نلعب بدفعة وحدة بدون اشتراك، وأي لعبة جديدة نضيفها توصلك مجاناً.",
+    "كل ألعاب خل نلعب تصير لكم، وأي لعبة جديدة نضيفها توصلكم مجاناً.",
   alternates: { canonical: "/buy" },
 };
 
@@ -98,7 +98,7 @@ export default async function BuyPage({
             "@context": "https://schema.org",
             "@type": "Product",
             name: SITE.name,
-            description: `${GAME_COUNT} لعبة جماعية للجلسات بدفعة وحدة بدون اشتراك`,
+            description: `قسّموا أنفسكم فريقين وتحدّوا بعض في ${GAME_COUNT} لعبة جماعية للجمعات والسهرات`,
             image: `${SITE.url}/opengraph-image.jpg`,
             brand: { "@type": "Brand", name: SITE.name },
             offers: {
