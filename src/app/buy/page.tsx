@@ -19,10 +19,14 @@ import {
 import { isEmailEnabled } from "@/lib/email";
 import { safeNextPath } from "@/lib/licenseCookie";
 import { posterThumb } from "@/lib/poster";
+import { SITE } from "@/data/site";
 import { PRICING, getCurrentPrice, isOnSale, toHalalas } from "@/lib/pricing";
 
 export const metadata: Metadata = {
-  title: "اشترِ خل نلعب",
+  title: "اشترِ الألعاب",
+  description:
+    "كل ألعاب خل نلعب بدفعة وحدة بدون اشتراك، وأي لعبة جديدة نضيفها توصلك مجاناً.",
+  alternates: { canonical: "/buy" },
 };
 
 export const dynamic = "force-dynamic";
@@ -87,6 +91,26 @@ export default async function BuyPage({
 
   return (
     <main className="relative min-h-[100dvh] overflow-x-clip text-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            name: SITE.name,
+            description: `${GAME_COUNT} لعبة جماعية للجلسات بدفعة وحدة بدون اشتراك`,
+            image: `${SITE.url}/opengraph-image.jpg`,
+            brand: { "@type": "Brand", name: SITE.name },
+            offers: {
+              "@type": "Offer",
+              price: price,
+              priceCurrency: PRICING.currency,
+              availability: "https://schema.org/InStock",
+              url: `${SITE.url}/buy`,
+            },
+          }),
+        }}
+      />
       <Link
         href="/"
         className="absolute right-4 top-4 z-20 flex items-center gap-1.5 rounded-xl bg-[#241339] px-3 py-2 text-sm font-black text-white shadow-[0_4px_0_#130e28] transition-transform hover:-translate-y-0.5"
