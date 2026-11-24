@@ -13,6 +13,28 @@ export function gaEnabled() {
   return /^G-[A-Z0-9]+$/.test(SITE.gaMeasurementId);
 }
 
+const PRIVATE_PARAMS = ["code", "id", "email", "token", "status", "message"];
+
+export function safePageLocation(href: string) {
+  try {
+    const url = new URL(href);
+
+    for (const key of PRIVATE_PARAMS) {
+      url.searchParams.delete(key);
+    }
+
+    return url.toString();
+  } catch {
+    return href.split("?")[0];
+  }
+}
+
+export function syncPageLocation() {
+  const gtag = ensureGtag();
+
+  gtag?.("set", { page_location: safePageLocation(window.location.href) });
+}
+
 export function ensureGtag() {
   if (typeof window === "undefined" || !gaEnabled()) {
     return null;
@@ -34,6 +56,9 @@ export function ensureGtag() {
   if (!target.knGaReady) {
     target.knGaReady = true;
     target.gtag("js", new Date());
+    target.gtag("set", {
+      page_location: safePageLocation(window.location.href),
+    });
     target.gtag("config", SITE.gaMeasurementId);
   }
 

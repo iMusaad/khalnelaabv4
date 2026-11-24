@@ -56,3 +56,19 @@ describe("launch sale", () => {
     );
   });
 });
+
+describe("analytics page location", () => {
+  it("drops private params from tracked URLs", async () => {
+    const { safePageLocation } = await import("@/lib/analytics");
+
+    expect(
+      safePageLocation("https://khalnelab.com/unlock?code=ABC123&next=/match"),
+    ).toBe("https://khalnelab.com/unlock?next=%2Fmatch");
+    expect(
+      safePageLocation("https://khalnelab.com/buy/pending?id=pay_1&from=buy"),
+    ).toBe("https://khalnelab.com/buy/pending?from=buy");
+    expect(
+      safePageLocation("https://khalnelab.com/buy?utm_source=tiktok"),
+    ).toBe("https://khalnelab.com/buy?utm_source=tiktok");
+  });
+});

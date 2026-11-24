@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import localFont from "next/font/local";
 import { SITE } from "@/data/site";
 import "./globals.css";
@@ -90,7 +91,9 @@ export default function RootLayout({
         <RefCapture />
         <SourceCapture />
         {children}
-        <GoogleAnalytics />
+        <Suspense fallback={null}>
+          <GoogleAnalytics />
+        </Suspense>
         <CookieConsent />
       </body>
     </html>
