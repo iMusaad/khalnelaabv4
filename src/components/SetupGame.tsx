@@ -8,6 +8,7 @@ import TeamSplitter from "@/components/TeamSplitter";
 import LockIcon from "@/components/LockIcon";
 import { FREE_QUIZ_CATEGORIES, isFreeGame } from "@/lib/trial";
 import { UPCOMING_GAME_IDS } from "@/data/upcomingGames";
+import { useEffect } from "react";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import PixelHero from "@/components/PixelHero";
 import { quizCategoryList, type QuizCategoryKey } from "@/data/quiz/meta";
@@ -200,6 +201,10 @@ export default function SetupGame({
   const router = useRouter();
 
   const isQuickMode = mode === "quick";
+
+  useEffect(() => {
+    document.title = `${isQuickMode ? "لعبة سريعة" : "تحدي الجلسة"} | خل نلعب`;
+  }, [isQuickMode]);
 
   const needsQuizCategory =
     selectedGames.includes("quiz") && quizCategories.length === 0;
