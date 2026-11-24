@@ -29,7 +29,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || SITE.url;
 
 const title = "خل نلعب | ألعاب جماعية للجلسات والسهرات";
 
-const description = `${GAME_COUNT} لعبة جماعية للجمعات والسهرات: فريقين على جوال واحد، أسئلة وأجوبة وتحديات سعودية، وتدفع مرة وحدة بدون اشتراك.`;
+const description = `قسّموا أنفسكم فريقين وتحدّوا بعض في ${GAME_COUNT} لعبة: أعلام، سيارات، شعارات، أمثال، أسئلة وأكثر.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
