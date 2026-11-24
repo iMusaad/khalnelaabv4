@@ -1,5 +1,6 @@
 "use client";
 
+import ElapsedTimer from "@/components/match/ElapsedTimer";
 import { useEffect, useState } from "react";
 
 import QrCode from "@/components/QrCode";
@@ -15,8 +16,6 @@ type Props = {
   onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
-  timerEnabled?: boolean;
-  timerSeconds?: number;
 };
 
 const clubDeck = createDeck(CLUBS, "club");
@@ -35,8 +34,6 @@ export default function ClubGame({
   onRoundEnd,
   roundKey,
   currentRound = 1,
-  timerEnabled = false,
-  timerSeconds = 60,
 }: Props) {
   const [clubs, setClubs] = useState<[ClubItem, ClubItem] | null>(null);
 
@@ -48,16 +45,12 @@ export default function ClubGame({
 
   const [revealed, setRevealed] = useState(false);
 
-  const [timeLeft, setTimeLeft] = useState(timerSeconds);
-
   const side1 = side1Name || "فريق 1";
 
   const side2 = side2Name || "فريق 2";
 
   useEffect(() => {
     setOrigin(window.location.origin);
-
-    setTimeLeft(timerSeconds);
 
     const saved = readRoundState<ClubRoundState>("club", roundKey);
 
@@ -78,7 +71,7 @@ export default function ClubGame({
 
     setStarted(false);
     setRevealed(false);
-  }, [roundKey, timerSeconds]);
+  }, [roundKey]);
 
   useEffect(() => {
     if (!clubs) {
@@ -91,20 +84,6 @@ export default function ClubGame({
       revealed,
     });
   }, [roundKey, clubs, started, revealed]);
-
-  useEffect(() => {
-    if (!timerEnabled || !started || revealed || timeLeft <= 0) {
-      return;
-    }
-
-    const timer = window.setTimeout(() => {
-      setTimeLeft((current) => Math.max(0, current - 1));
-    }, 1000);
-
-    return () => {
-      window.clearTimeout(timer);
-    };
-  }, [timerEnabled, started, revealed, timeLeft]);
 
   if (!clubs) {
     return (
@@ -230,11 +209,7 @@ export default function ClubGame({
             ) : (
               <button
                 type="button"
-                onClick={() => {
-                  setStarted(true);
-
-                  setTimeLeft(timerSeconds);
-                }}
+                onClick={() => setStarted(true)}
                 className={actionButtonClass}
               >
                 ابدأوا
@@ -252,14 +227,10 @@ export default function ClubGame({
                 اسألوا الفريق الثاني أسئلة جوابها نعم أو لا لين تعرفون ناديكم
               </p>
 
-              {timerEnabled && (
-                <div
-                  className={`mt-4 text-center text-lg font-black ${
-                    timeLeft <= 10 ? "text-red-300" : "text-white/70"
-                  }`}
-                >
-                  {timeLeft} ثانية
-                </div>
+              {!revealed && (
+                <p className="mt-4 text-center">
+                  <ElapsedTimer key={roundKey} className="text-lg" />
+                </p>
               )}
             </div>
 

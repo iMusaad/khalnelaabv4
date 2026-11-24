@@ -1,5 +1,6 @@
 "use client";
 
+import ElapsedTimer from "@/components/match/ElapsedTimer";
 import { useEffect, useState } from "react";
 import { GameTitle, TeamPanel } from "@/components/match/GameLayout";
 import HowToPlayButton from "@/components/match/HowToPlayButton";
@@ -26,20 +27,15 @@ export default function CategoriesGame({
   onRoundEnd,
   roundKey,
   currentRound = 1,
-  timerEnabled = false,
-  timerSeconds = 40,
 }: {
   side1Name: string;
   side2Name: string;
   onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
-  timerEnabled?: boolean;
-  timerSeconds?: number;
 }) {
   const [letter, setLetter] = useState("");
 
-  const [timeLeft, setTimeLeft] = useState(timerSeconds);
   const [revealed, setRevealed] = useState(false);
 
   const [side1Ready, setSide1Ready] = useState(false);
@@ -51,8 +47,6 @@ export default function CategoriesGame({
   const [roundStartedAt, setRoundStartedAt] = useState(() => Date.now());
 
   useEffect(() => {
-    setTimeLeft(timerSeconds);
-
     const saved = readRoundState<CategoriesRoundState>("categories", roundKey);
 
     if (saved && saved.letter) {
@@ -78,7 +72,7 @@ export default function CategoriesGame({
     setSide2Time(null);
 
     setRoundStartedAt(Date.now());
-  }, [roundKey, timerSeconds]);
+  }, [roundKey]);
 
   useEffect(() => {
     if (!letter) {
@@ -106,26 +100,10 @@ export default function CategoriesGame({
   ]);
 
   useEffect(() => {
-    if (revealed) return;
-
-    if (side1Ready && side2Ready) {
+    if (!revealed && side1Ready && side2Ready) {
       setRevealed(true);
-      return;
     }
-
-    if (timerEnabled && timeLeft <= 0) {
-      setRevealed(true);
-      return;
-    }
-
-    if (!timerEnabled) return;
-
-    const timer = setTimeout(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [timeLeft, revealed, side1Ready, side2Ready, timerEnabled]);
+  }, [revealed, side1Ready, side2Ready]);
 
   function markReady(side: "side1" | "side2") {
     if (revealed) return;
@@ -147,18 +125,6 @@ export default function CategoriesGame({
       setSide2Time(elapsedTime);
     }
   }
-
-  const timerTextClass =
-    timeLeft <= 5
-      ? "animate-pulse text-red-300"
-      : timeLeft <= 10
-        ? "text-yellow-200"
-        : "text-white/70";
-
-  const progressScale =
-    timerEnabled && timerSeconds > 0
-      ? Math.max(0, Math.min(1, timeLeft / timerSeconds))
-      : 1;
 
   const side1Label = side1Name || "فريق 1";
   const side2Label = side2Name || "فريق 2";
@@ -198,19 +164,10 @@ export default function CategoriesGame({
       </div>
 
       <div className="mt-4">
-        {timerEnabled && !revealed && (
-          <div className="mx-auto mb-4 max-w-md">
-            <p className={`mb-2 text-lg font-black ${timerTextClass}`}>
-              {timeLeft} ثانية
-            </p>
-
-            <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
-              <div
-                className="h-full w-full origin-right bg-[#ffb21e] transition-transform duration-1000 ease-linear"
-                style={{ transform: `scaleX(${progressScale})` }}
-              />
-            </div>
-          </div>
+        {!revealed && (
+          <p className="mb-4 text-lg">
+            <ElapsedTimer key={roundKey} className="text-lg" />
+          </p>
         )}
 
         <div className="flex justify-center">

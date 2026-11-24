@@ -1,5 +1,6 @@
 "use client";
 
+import ElapsedTimer from "@/components/match/ElapsedTimer";
 import { useEffect, useMemo, useState } from "react";
 import GameLayout from "@/components/match/GameLayout";
 import { InlineTeamPick } from "@/components/match/Overlays";
@@ -23,7 +24,6 @@ type QuizRoundState = {
   side1HintUsed: boolean;
   side2HintUsed: boolean;
 };
-const SECOND_TIME = 10;
 
 type TeamSide = "side1" | "side2";
 
@@ -56,8 +56,6 @@ export default function QuizGame({
   roundKey,
   category,
   currentRound = 1,
-  timerEnabled = false,
-  timerSeconds = 30,
   trial = false,
 }: {
   trial?: boolean;
@@ -71,9 +69,6 @@ export default function QuizGame({
   category?: QuizCategoryKey | null;
 
   currentRound?: number;
-
-  timerEnabled?: boolean;
-  timerSeconds?: number;
 }) {
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
 
@@ -87,8 +82,6 @@ export default function QuizGame({
 
   const [secondTurn, setSecondTurn] = useState(false);
 
-  const [timeLeft, setTimeLeft] = useState(timerSeconds);
-
   const [side1Score, setSide1Score] = useState(0);
 
   const [side2Score, setSide2Score] = useState(0);
@@ -101,8 +94,6 @@ export default function QuizGame({
     setLoaded(true);
 
     if (!category) return;
-
-    setTimeLeft(timerSeconds);
 
     const saved = readRoundState<QuizRoundState>("quiz", roundKey);
 
@@ -132,7 +123,7 @@ export default function QuizGame({
 
     setSide1HintUsed(false);
     setSide2HintUsed(false);
-  }, [category, roundKey, timerSeconds, trial]);
+  }, [category, roundKey, trial]);
 
   useEffect(() => {
     if (!loaded || questions.length === 0) {
@@ -190,32 +181,6 @@ export default function QuizGame({
   const canUseHint =
     currentOptions.length > 0 && !showOptions && !activeTeamUsedHint;
 
-  useEffect(() => {
-    if (!timerEnabled || showAnswer || !current) {
-      return;
-    }
-
-    if (timeLeft <= 0) {
-      if (!secondTurn) {
-        setSecondTurn(true);
-
-        setTimeLeft(SECOND_TIME);
-
-        setShowOptions(false);
-      } else {
-        setShowAnswer(true);
-      }
-
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setTimeLeft((time) => time - 1);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [timeLeft, showAnswer, secondTurn, current, timerEnabled]);
-
   function useHint() {
     if (!canUseHint) return;
 
@@ -248,8 +213,6 @@ export default function QuizGame({
     setShowOptions(false);
 
     setSecondTurn(false);
-
-    setTimeLeft(timerSeconds);
   }
 
   function givePoint(winner: "side1" | "side2" | "none") {
@@ -297,13 +260,6 @@ export default function QuizGame({
     );
   }
 
-  const timerColor =
-    timeLeft <= 5
-      ? "animate-pulse text-red-300"
-      : timeLeft <= 10
-        ? "text-yellow-300"
-        : "text-white/70";
-
   const isLastQuestion = index + 1 >= questions.length;
 
   return (
@@ -340,11 +296,7 @@ export default function QuizGame({
               </div>
             )}
 
-            {timerEnabled && !showAnswer && (
-              <div className={`text-sm font-black ${timerColor}`}>
-                {timeLeft} ثانية
-              </div>
-            )}
+            {!showAnswer && <ElapsedTimer key={index} />}
           </div>
 
           <div className="rounded-3xl bg-[#221a3f] p-5 sm:p-6 shadow-[0_6px_0_#140f29]">

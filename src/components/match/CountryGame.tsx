@@ -1,5 +1,6 @@
 "use client";
 
+import ElapsedTimer from "@/components/match/ElapsedTimer";
 import { useEffect, useState } from "react";
 
 import QrCode from "@/components/QrCode";
@@ -15,8 +16,6 @@ type Props = {
   onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
-  timerEnabled?: boolean;
-  timerSeconds?: number;
 };
 
 const countryDeck = createDeck(COUNTRIES, "country");
@@ -35,8 +34,6 @@ export default function CountryGame({
   onRoundEnd,
   roundKey,
   currentRound = 1,
-  timerEnabled = false,
-  timerSeconds = 60,
 }: Props) {
   const [countries, setCountries] = useState<[CountryItem, CountryItem] | null>(
     null,
@@ -50,16 +47,12 @@ export default function CountryGame({
 
   const [revealed, setRevealed] = useState(false);
 
-  const [timeLeft, setTimeLeft] = useState(timerSeconds);
-
   const side1 = side1Name || "فريق 1";
 
   const side2 = side2Name || "فريق 2";
 
   useEffect(() => {
     setOrigin(window.location.origin);
-
-    setTimeLeft(timerSeconds);
 
     const saved = readRoundState<CountryRoundState>("country", roundKey);
 
@@ -80,7 +73,7 @@ export default function CountryGame({
 
     setStarted(false);
     setRevealed(false);
-  }, [roundKey, timerSeconds]);
+  }, [roundKey]);
 
   useEffect(() => {
     if (!countries) {
@@ -93,20 +86,6 @@ export default function CountryGame({
       revealed,
     });
   }, [roundKey, countries, started, revealed]);
-
-  useEffect(() => {
-    if (!timerEnabled || !started || revealed || timeLeft <= 0) {
-      return;
-    }
-
-    const timer = window.setTimeout(() => {
-      setTimeLeft((current) => Math.max(0, current - 1));
-    }, 1000);
-
-    return () => {
-      window.clearTimeout(timer);
-    };
-  }, [timerEnabled, started, revealed, timeLeft]);
 
   if (!countries) {
     return (
@@ -232,11 +211,7 @@ export default function CountryGame({
             ) : (
               <button
                 type="button"
-                onClick={() => {
-                  setStarted(true);
-
-                  setTimeLeft(timerSeconds);
-                }}
+                onClick={() => setStarted(true)}
                 className={actionButtonClass}
               >
                 ابدأوا
@@ -254,14 +229,10 @@ export default function CountryGame({
                 اسألوا الفريق الثاني أسئلة جوابها نعم أو لا لين تعرفون علمكم
               </p>
 
-              {timerEnabled && (
-                <div
-                  className={`mt-4 text-center text-lg font-black ${
-                    timeLeft <= 10 ? "text-red-300" : "text-white/70"
-                  }`}
-                >
-                  {timeLeft} ثانية
-                </div>
+              {!revealed && (
+                <p className="mt-4 text-center">
+                  <ElapsedTimer key={roundKey} className="text-lg" />
+                </p>
               )}
             </div>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import ElapsedTimer from "@/components/match/ElapsedTimer";
 import { useEffect, useMemo, useRef, useState } from "react";
 import GameLayout from "@/components/match/GameLayout";
 
@@ -53,14 +54,16 @@ function splitAnswerWords(answer: string) {
   return answer.trim().split(/\s+/);
 }
 
+function randomBetween(min: number, max: number) {
+  return min + Math.random() * (max - min);
+}
+
 export default function WheelGame({
   side1Name,
   side2Name,
   onRoundEnd,
   roundKey,
   currentRound = 1,
-  timerEnabled = false,
-  timerSeconds = 30,
   gameRoundIndex = 0,
 }: {
   side1Name: string;
@@ -68,8 +71,6 @@ export default function WheelGame({
   onRoundEnd: (winner?: WinnerType, points?: RoundPoints) => void;
   roundKey: number;
   currentRound?: number;
-  timerEnabled?: boolean;
-  timerSeconds?: number;
   gameRoundIndex?: number;
 }) {
   const startingTurn: Turn = gameRoundIndex % 2 === 0 ? "side1" : "side2";
@@ -98,8 +99,6 @@ export default function WheelGame({
   const [shieldActive, setShieldActive] = useState(false);
 
   const [shieldNote, setShieldNote] = useState("");
-
-  const [timeLeft, setTimeLeft] = useState(timerSeconds);
 
   const [wheelGlow, setWheelGlow] = useState(false);
 
@@ -166,7 +165,6 @@ export default function WheelGame({
     setRotation(0);
     setSpinning(false);
     setWinnerName("");
-    setTimeLeft(timerSeconds);
     setWheelGlow(false);
     setActiveSegmentIndex(null);
 
@@ -212,7 +210,7 @@ export default function WheelGame({
     setScore2(0);
 
     return cleanup;
-  }, [roundKey, timerSeconds, startingTurn]);
+  }, [roundKey, startingTurn]);
 
   useEffect(() => {
     if (
@@ -272,37 +270,19 @@ export default function WheelGame({
     };
   }, []);
 
-  useEffect(() => {
-    if (!timerEnabled || phase !== "guess") return;
-
-    if (timeLeft <= 0) {
-      setCurrentValue(null);
-      nextTurn();
-      setPhase("spin");
-      setTimeLeft(timerSeconds);
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [timerEnabled, phase, timeLeft, timerSeconds]);
-
   const answerWords = useMemo(() => splitAnswerWords(answer), [answer]);
 
-  const revealedWordGroups = useMemo(() => {
-    let cursor = 0;
+  const revealedWordGroups = useMemo(
+    () =>
+      answerWords.map((word, wordIndex) => {
+        const start = answerWords
+          .slice(0, wordIndex)
+          .reduce((sum, previous) => sum + previous.length + 1, 0);
 
-    return answerWords.map((word) => {
-      const letters = revealed.slice(cursor, cursor + word.length);
-
-      cursor += word.length + 1;
-
-      return letters;
-    });
-  }, [answerWords, revealed]);
+        return revealed.slice(start, start + word.length);
+      }),
+    [answerWords, revealed],
+  );
 
   function ensureAudio() {
     if (typeof window === "undefined") return;
@@ -503,9 +483,8 @@ export default function WheelGame({
     await unlockAudio();
 
     setSpinning(true);
-    setTimeLeft(timerSeconds);
 
-    const pick = Math.random() * 360;
+    const pick = randomBetween(0, 360);
 
     const found = segmentArcs.findIndex(
       (arc) => pick >= arc.start && pick < arc.end,
@@ -522,7 +501,7 @@ export default function WheelGame({
     const margin = Math.min(4, (arc.end - arc.start) / 4);
 
     const targetCenter =
-      arc.start + margin + Math.random() * (arc.end - arc.start - margin * 2);
+      arc.start + margin + randomBetween(0, arc.end - arc.start - margin * 2);
 
     const extraSpins = 8 * 360;
 
@@ -562,7 +541,6 @@ export default function WheelGame({
           return;
         }
 
-        setTimeLeft(timerSeconds);
         setPhase("guess");
       }, 850);
     }, 3000);
@@ -623,7 +601,6 @@ export default function WheelGame({
 
     if (shielded) {
       setShieldNote("الدرع حماكم، جربوا حرف ثاني");
-      setTimeLeft(timerSeconds);
       return;
     }
 
@@ -632,8 +609,6 @@ export default function WheelGame({
     nextTurn();
 
     setPhase("spin");
-
-    setTimeLeft(timerSeconds);
   }
 
   if (!answer) {
@@ -653,13 +628,6 @@ export default function WheelGame({
       </div>
     );
   }
-
-  const timerTextClass =
-    timeLeft <= 5
-      ? "animate-pulse text-red-300"
-      : timeLeft <= 10
-        ? "text-yellow-200"
-        : "text-white/70";
 
   return (
     <>
@@ -694,11 +662,7 @@ export default function WheelGame({
                   ? "انتهت اللعبة"
                   : "لف العجلة"}
 
-            {phase === "guess" && timerEnabled && (
-              <span className={`mr-3 font-black ${timerTextClass}`}>
-                {timeLeft} ثانية
-              </span>
-            )}
+            {phase === "guess" && <ElapsedTimer key={turn} className="mr-3" />}
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">

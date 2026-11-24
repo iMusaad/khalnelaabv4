@@ -26,7 +26,6 @@ import {
 import {
   buildRoundQueue,
   getDefaultRounds,
-  getTimerSeconds,
   isGameType,
   isQuizCategory,
   type GameType,
@@ -193,10 +192,6 @@ export default function MatchPage() {
 
   const [quizCategories, setQuizCategories] = useState<QuizCategoryKey[]>([]);
 
-  const [timerEnabled, setTimerEnabled] = useState(false);
-
-  const [timerSeconds, setTimerSeconds] = useState(30);
-
   const [queue, setQueue] = useState<Round[]>([]);
 
   const [started, setStarted] = useState(false);
@@ -271,8 +266,6 @@ export default function MatchPage() {
       selectedGames,
       gameRounds,
       quizCategories,
-      timerEnabled,
-      timerSeconds,
       queue,
       index,
       side1Score,
@@ -603,8 +596,6 @@ export default function MatchPage() {
       setSelectedGames(saved.selectedGames);
       setGameRounds(saved.gameRounds);
       setQuizCategories(saved.quizCategories);
-      setTimerEnabled(saved.timerEnabled);
-      setTimerSeconds(saved.timerSeconds);
       setQueue(saved.queue);
       setIndex(saved.index);
       setSide1Score(saved.side1Score);
@@ -750,10 +741,6 @@ export default function MatchPage() {
     side1Name: side1,
     side2Name: side2,
     currentRound: mode === "session" ? gameNumber : 0,
-    timerEnabled,
-    timerSeconds: current
-      ? getTimerSeconds(current.game, timerSeconds)
-      : timerSeconds,
   };
 
   function renderCurrentGame() {
@@ -908,10 +895,6 @@ export default function MatchPage() {
           setSelectedGames={setSelectedGames}
           quizCategories={quizCategories}
           setQuizCategories={setQuizCategories}
-          timerEnabled={timerEnabled}
-          setTimerEnabled={setTimerEnabled}
-          timerSeconds={timerSeconds}
-          setTimerSeconds={setTimerSeconds}
           trial={trial}
           onStart={start}
         />

@@ -46,8 +46,6 @@ export type SavedMatch = {
   selectedGames: GameType[];
   gameRounds: Record<string, number>;
   quizCategories: QuizCategoryKey[];
-  timerEnabled: boolean;
-  timerSeconds: number;
   queue: Round[];
   index: number;
   side1Score: number;
