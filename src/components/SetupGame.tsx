@@ -8,6 +8,7 @@ import TeamSplitter from "@/components/TeamSplitter";
 import LockIcon from "@/components/LockIcon";
 import { FREE_QUIZ_CATEGORIES, isFreeGame } from "@/lib/trial";
 import { UPCOMING_GAME_IDS } from "@/data/upcomingGames";
+import { useEffect } from "react";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import PixelHero from "@/components/PixelHero";
 import { quizCategoryList, type QuizCategoryKey } from "@/data/quiz/meta";
@@ -200,6 +201,10 @@ export default function SetupGame({
   const router = useRouter();
 
   const isQuickMode = mode === "quick";
+
+  useEffect(() => {
+    document.title = `${isQuickMode ? "لعبة سريعة" : "تحدي الجلسة"} | خل نلعب`;
+  }, [isQuickMode]);
 
   const needsQuizCategory =
     selectedGames.includes("quiz") && quizCategories.length === 0;
@@ -447,7 +452,7 @@ export default function SetupGame({
       <div className="-mx-3 -mt-16 sm:-mx-6 sm:-mt-6">
         <PixelHero logo={false} overlap={false} compact>
           <h1 className="pt-16 text-2xl font-black sm:pt-0 sm:text-3xl lg:text-4xl">
-            {isQuickMode ? "جهزوا الفرق" : "اختاروا ألعابكم"}
+            {isQuickMode ? "جهزوا الفرق" : "تحدي الجلسة"}
           </h1>
 
           <div className="mx-auto mt-3 grid max-w-2xl grid-cols-2 gap-2 sm:gap-3">
