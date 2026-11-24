@@ -4,7 +4,7 @@ import PolicySection from "@/components/PolicySection";
 import { SITE } from "@/data/site";
 
 export const metadata: Metadata = {
-  title: "سياسة الخصوصية | خل نلعب",
+  title: "سياسة الخصوصية",
 };
 
 export default function PrivacyPage() {

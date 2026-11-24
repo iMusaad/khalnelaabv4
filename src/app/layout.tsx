@@ -27,15 +27,17 @@ const somar = localFont({
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || SITE.url;
 
-const description = `${GAME_COUNT} لعبة جماعية للجلسات: فريقين على جهاز واحد، وفريق واحد يفوز.`;
+const title = "خل نلعب | ألعاب جماعية للجلسات والسهرات";
+
+const description = `${GAME_COUNT} لعبة جماعية للجمعات والسهرات: فريقين على جوال واحد، أسئلة وأجوبة وتحديات سعودية، وتدفع مرة وحدة بدون اشتراك.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "خل نلعب",
+  title: { default: title, template: "%s | خل نلعب" },
   description,
   applicationName: "خل نلعب",
   openGraph: {
-    title: "خل نلعب",
+    title,
     description,
     siteName: "خل نلعب",
     locale: "ar_SA",
@@ -43,9 +45,27 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "خل نلعب",
+    title,
     description,
   },
+};
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      name: SITE.name,
+      url: siteUrl,
+      inLanguage: "ar",
+    },
+    {
+      "@type": "Organization",
+      name: SITE.name,
+      url: siteUrl,
+      logo: `${siteUrl}/logo.png`,
+    },
+  ],
 };
 
 export const viewport: Viewport = {
@@ -63,6 +83,10 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" className={somar.variable}>
       <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
         <RefCapture />
         <SourceCapture />
         {children}

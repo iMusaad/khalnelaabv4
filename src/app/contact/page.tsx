@@ -5,7 +5,7 @@ import PixelHero from "@/components/PixelHero";
 import SiteFooter from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
-  title: "تواصل معنا | خل نلعب",
+  title: "تواصل معنا",
 };
 
 export default function ContactPage() {

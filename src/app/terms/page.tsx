@@ -5,7 +5,7 @@ import { SITE } from "@/data/site";
 import { PRICING } from "@/lib/pricing";
 
 export const metadata: Metadata = {
-  title: "الشروط وسياسة الاسترجاع | خل نلعب",
+  title: "الشروط وسياسة الاسترجاع",
 };
 
 export default function TermsPage() {

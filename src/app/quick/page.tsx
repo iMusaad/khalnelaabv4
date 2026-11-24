@@ -16,7 +16,7 @@ import { PLAYABLE_CARDS } from "@/data/quizCards";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "لعبة سريعة | خل نلعب",
+  title: "لعبة سريعة",
 };
 
 async function isPaid() {

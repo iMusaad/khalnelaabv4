@@ -5,7 +5,7 @@ import { isEmailEnabled } from "@/lib/email";
 import { safeNextPath } from "@/lib/licenseCookie";
 
 export const metadata: Metadata = {
-  title: "فعّل خل نلعب",
+  title: "التفعيل",
   robots: { index: false },
 };
 
