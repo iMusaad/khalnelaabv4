@@ -247,7 +247,7 @@ export default function ProverbGame({
             key={current.image}
             src={current.image}
             alt="لغز المثل"
-            className="mx-auto max-h-[300px] w-full max-w-[520px] rounded-3xl object-contain sm:max-h-[360px]"
+            className="mx-auto block h-auto max-h-[300px] w-auto max-w-full rounded-3xl sm:max-h-[360px] sm:max-w-[520px]"
           />
 
           {revealed && (

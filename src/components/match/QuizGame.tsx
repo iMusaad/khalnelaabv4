@@ -352,7 +352,7 @@ export default function QuizGame({
               <img
                 src={current.image}
                 alt=""
-                className="mx-auto mb-5 max-h-[220px] w-full rounded-2xl object-contain sm:max-h-[260px]"
+                className="mx-auto mb-5 block h-auto max-h-[220px] w-auto max-w-full rounded-2xl sm:max-h-[260px]"
               />
             )}
 
