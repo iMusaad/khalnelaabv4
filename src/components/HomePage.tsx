@@ -9,6 +9,7 @@ import { GAME_COUNT } from "@/data/quizCards";
 import SiteFooter from "@/components/SiteFooter";
 import { HOME_GAMES } from "@/data/homeGames";
 import { posterThumb } from "@/lib/poster";
+import TikTokLink from "@/components/TikTokLink";
 import { PRICING, getCurrentPrice, isOnSale } from "@/lib/pricing";
 import {
   ACTIVE_SEASON,
@@ -167,6 +168,10 @@ export default function HomePage() {
               </li>
             ))}
           </ol>
+
+          <div className="mt-8 flex justify-center">
+            <TikTokLink />
+          </div>
         </section>
 
         <div className="relative mt-auto pt-2">
