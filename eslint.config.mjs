@@ -9,6 +9,7 @@ const eslintConfig = [
       ".wrangler/**",
       "node_modules/**",
       "next-env.d.ts",
+      "public/vendor/**",
     ],
   },
   ...nextCoreWebVitals,
