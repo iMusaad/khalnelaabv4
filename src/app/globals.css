@@ -421,3 +421,14 @@ textarea::placeholder {
 .mysr-form input::placeholder {
   color: #9ca3af;
 }
+
+.mysr-form div#mysr .bg-primary {
+  background-color: #ffc23d !important;
+  color: #1b1236 !important;
+  box-shadow: 0 4px 0 #c27a00 !important;
+  font-weight: 900 !important;
+}
+
+.mysr-form div#mysr input {
+  border-radius: 0.875rem;
+}
