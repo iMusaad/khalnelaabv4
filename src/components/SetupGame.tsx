@@ -8,7 +8,6 @@ import TeamSplitter from "@/components/TeamSplitter";
 import LockIcon from "@/components/LockIcon";
 import { FREE_QUIZ_CATEGORIES, isFreeGame } from "@/lib/trial";
 import { UPCOMING_GAME_IDS } from "@/data/upcomingGames";
-import { newCardKeys } from "@/data/newGames";
 import { useEffect } from "react";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import PixelHero from "@/components/PixelHero";
@@ -134,8 +133,6 @@ type SetupCard = {
   name: string;
   image: string;
 };
-
-const NEW_CARD_KEYS = newCardKeys();
 
 function toCards(games: typeof GAMES): SetupCard[] {
   return games.flatMap<SetupCard>((game) =>
@@ -355,15 +352,9 @@ export default function SetupGame({
 
   const ZOOM_GROUP: SetupGameId[] = ["car", "logo", "geo", "zoom"];
 
-  const newCards = visibleCards.filter((card) => NEW_CARD_KEYS.has(card.key));
+  const quizCards = visibleCards.filter((card) => card.category);
 
-  const regularCards = visibleCards.filter(
-    (card) => !NEW_CARD_KEYS.has(card.key),
-  );
-
-  const quizCards = regularCards.filter((card) => card.category);
-
-  const zoomCards = regularCards.filter(
+  const zoomCards = visibleCards.filter(
     (card) => !card.category && ZOOM_GROUP.includes(card.game),
   );
 
@@ -375,11 +366,11 @@ export default function SetupGame({
     "letters",
   ];
 
-  const guessCards = regularCards.filter(
+  const guessCards = visibleCards.filter(
     (card) => !card.category && GUESS_GROUP.includes(card.game),
   );
 
-  const otherCards = regularCards.filter(
+  const otherCards = visibleCards.filter(
     (card) =>
       !card.category &&
       !ZOOM_GROUP.includes(card.game) &&
@@ -522,18 +513,6 @@ export default function SetupGame({
             <p className="mb-3 text-center text-sm font-black text-[#ffc23d]">
               اخترتوا {selectedCount} من {requiredGames}
             </p>
-
-            {newCards.length > 0 && (
-              <div className="mb-4">
-                {section(
-                  "جديد",
-                  "#c084fc",
-                  <div className="grid grid-cols-3 items-start gap-2.5 sm:grid-cols-4 lg:grid-cols-6">
-                    {newCards.map(renderCard)}
-                  </div>,
-                )}
-              </div>
-            )}
 
             <div className="grid gap-4 lg:grid-cols-[4fr_3fr]">
               {quizCards.length > 0 &&
