@@ -64,6 +64,14 @@ export default function BuyForm({
     });
   }
 
+  function removeRef() {
+    document.cookie = "kn_ref=; path=/; max-age=0; samesite=lax";
+    setReferral(null);
+    setRefInput("");
+    setRefOpen(false);
+    setRefStatus("idle");
+  }
+
   async function applyRef() {
     if (!refInput.trim() || refStatus === "checking") {
       return;
@@ -99,12 +107,6 @@ export default function BuyForm({
   useEffect(() => {
     if (!scriptReady || !window.Moyasar) {
       return;
-    }
-
-    const container = document.querySelector(".mysr-form");
-
-    if (container) {
-      container.innerHTML = "";
     }
 
     const origin = window.location.origin;
@@ -152,22 +154,32 @@ export default function BuyForm({
     <section className="rounded-3xl bg-[#221a3f] p-4 shadow-[0_6px_0_#140f29] sm:p-5">
       <div className="mb-4 text-center">
         {referral ? (
-          <p className="rounded-xl bg-black/25 px-3 py-2 text-sm font-bold text-white/80">
-            كود{" "}
-            <span dir="ltr" className="font-black text-[#ffc23d]">
-              {referral.code}
-            </span>
-            {referral.discount > 0 && (
-              <>
-                {" "}
-                · السعر بعد الخصم{" "}
-                <span className="font-black text-white">
-                  {finalAmount / 100}
-                </span>{" "}
-                <RiyalSign />
-              </>
-            )}
-          </p>
+          <div className="flex items-center justify-between gap-3 rounded-xl bg-black/25 px-3 py-2 text-sm font-bold text-white/80">
+            <p className="min-w-0">
+              كود{" "}
+              <span dir="ltr" className="font-black text-[#ffc23d]">
+                {referral.code}
+              </span>
+              {referral.discount > 0 && (
+                <>
+                  {" "}
+                  · السعر بعد الخصم{" "}
+                  <span className="font-black text-white">
+                    {finalAmount / 100}
+                  </span>{" "}
+                  <RiyalSign />
+                </>
+              )}
+            </p>
+
+            <button
+              type="button"
+              onClick={removeRef}
+              className="shrink-0 text-sm font-black text-cyan-200 underline"
+            >
+              إزالة
+            </button>
+          </div>
         ) : refOpen ? (
           <div className="flex gap-2">
             <input
@@ -234,7 +246,11 @@ export default function BuyForm({
               onFocusCapture={trackCheckout}
               className="rounded-3xl bg-white px-4 pb-3 pt-4 shadow-[0_6px_0_#130e28] sm:px-6"
             >
-              <div className="mysr-form" dir="ltr" />
+              <div
+                key={referral?.code ?? "none"}
+                className="mysr-form"
+                dir="ltr"
+              />
             </div>
           </>
         )}
