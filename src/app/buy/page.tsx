@@ -10,12 +10,7 @@ import PixelHero from "@/components/PixelHero";
 import RiyalSign from "@/components/RiyalSign";
 import SiteFooter from "@/components/SiteFooter";
 import { quizCategoryList } from "@/data/quiz/meta";
-import {
-  GAME_COUNT,
-  PLAYABLE_CARDS,
-  QUIZ_COLORS,
-  QUIZ_LABELS,
-} from "@/data/quizCards";
+import { GAME_COUNT, PLAYABLE_CARDS } from "@/data/quizCards";
 import { safeNextPath } from "@/lib/licenseCookie";
 import { posterThumb } from "@/lib/poster";
 import { SITE } from "@/data/site";
@@ -35,46 +30,17 @@ const ERRORS: Record<string, string> = {
   config: "الشراء متوقف الحين، جرّب بعد شوي.",
 };
 
-const FEATURES = [
-  {
-    title: "مرة وحدة",
-    text: "بدون اشتراك شهري",
-    className: "bg-[#2f9bff] text-white shadow-[0_6px_0_#1662b8]",
-    order: 1,
-  },
-  {
-    title: "الجديد مجانًا",
-    text: "أي لعبة نضيفها توصلك",
-    className: "bg-[#ffc23d] text-[#241339] shadow-[0_6px_0_#c27700]",
-    order: 10,
-  },
-];
-
-type Tile =
-  | { kind: "feature"; feature: (typeof FEATURES)[number] }
-  | { kind: "poster"; game: (typeof PLAYABLE_CARDS)[number] };
-
 const QUIZ_FIRST = quizCategoryList[0].key;
 
-function bentoTiles(): Tile[] {
-  const tiles: Tile[] = PLAYABLE_CARDS.filter(
-    (game) => !game.category || game.category === QUIZ_FIRST,
-  ).map((game) => ({
-    kind: "poster",
-    game,
-  }));
+const PERKS = [
+  "تدفعون مرة وحدة، بدون اشتراك شهري",
+  "أي لعبة جديدة نضيفها توصلكم مجاناً",
+  "بدون تحميل تطبيق، تلعبونها على جوال واحد",
+];
 
-  [...FEATURES]
-    .sort((x, y) => y.order - x.order)
-    .forEach((feature) => {
-      tiles.splice(Math.min(feature.order, tiles.length), 0, {
-        kind: "feature",
-        feature,
-      });
-    });
-
-  return tiles;
-}
+const GAME_POSTERS = PLAYABLE_CARDS.filter(
+  (game) => !game.category || game.category === QUIZ_FIRST,
+);
 
 export default async function BuyPage({
   searchParams,
@@ -144,87 +110,63 @@ export default async function BuyPage({
         )}
       </PixelHero>
 
-      <div className="mx-auto mt-6 grid max-w-5xl gap-5 px-4 pb-6 md:grid-cols-[1.5fr_1fr] md:items-start">
-        <ul className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3">
-          {bentoTiles().map((tile) =>
-            tile.kind === "feature" ? (
-              <li
-                key={tile.feature.title}
-                className={`flex aspect-[4/5] flex-col justify-center overflow-hidden rounded-2xl p-2 text-center sm:p-2.5 ${tile.feature.className}`}
-              >
-                <span className="block text-base font-black leading-tight sm:text-lg">
-                  {tile.feature.title}
-                </span>
+      <div className="mx-auto mt-6 max-w-md px-4 pb-8">
+        {error && ERRORS[error] && (
+          <p
+            role="alert"
+            className="mb-4 rounded-2xl bg-[#3a1730] px-4 py-3 text-center text-sm font-bold text-red-100"
+          >
+            {ERRORS[error]}
+          </p>
+        )}
 
-                <span className="mt-1 block text-[11px] font-bold leading-snug opacity-85 sm:text-xs">
-                  {tile.feature.text}
-                </span>
-              </li>
-            ) : tile.game.category ? (
-              <li
-                key="quiz"
-                className="flex aspect-[4/5] flex-col justify-center gap-2 overflow-hidden rounded-2xl bg-[#221a3f] p-2 text-center shadow-[0_5px_0_#0b0818] sm:p-2.5"
-              >
-                <span className="text-sm font-black leading-tight text-white sm:text-base">
-                  أسئلة وأجوبة
-                </span>
+        <BuyForm
+          initialRef={
+            referral
+              ? { code: referral.code, discount: referral.discount }
+              : null
+          }
+          publishableKey={process.env.MOYASAR_PUBLISHABLE_KEY ?? ""}
+          amount={toHalalas(price)}
+          applePay={process.env.APPLE_PAY_ENABLED === "true"}
+          next={safeNextPath(next)}
+        />
 
-                <span className="text-xs font-bold text-[#ffc23d]">
-                  {quizCategoryList.length} فئات
-                </span>
+        <ul className="mt-5 grid gap-2 text-sm font-bold text-white/75">
+          {PERKS.map((perk) => (
+            <li key={perk} className="flex items-center gap-2">
+              <span
+                aria-hidden="true"
+                className="h-2 w-2 shrink-0 rounded-full bg-[#ffc23d]"
+              />
+              {perk}
+            </li>
+          ))}
+        </ul>
 
-                <span className="grid grid-cols-2 gap-1">
-                  {quizCategoryList.map((category) => (
-                    <span
-                      key={category.key}
-                      className="rounded-lg px-0.5 py-1.5 text-[10px] font-black text-white sm:text-xs"
-                      style={{ background: QUIZ_COLORS[category.key] }}
-                    >
-                      {QUIZ_LABELS[category.key]}
-                    </span>
-                  ))}
-                </span>
-              </li>
-            ) : (
+        <section className="mt-8">
+          <h2 className="text-center text-base font-black text-white/80">
+            الألعاب اللي تاخذونها
+          </h2>
+
+          <ul className="mt-3 grid grid-cols-4 gap-2">
+            {GAME_POSTERS.map((game) => (
               <li
-                key={tile.game.key}
-                className="relative aspect-[4/5] overflow-hidden rounded-2xl bg-[#221a3f] shadow-[0_5px_0_#0b0818]"
+                key={game.key}
+                className="relative aspect-[4/5] overflow-hidden rounded-xl bg-[#221a3f]"
               >
                 <Image
-                  src={posterThumb(tile.game.image)}
-                  alt={tile.game.title}
+                  src={posterThumb(game.image)}
+                  alt={game.title}
                   fill
                   unoptimized
-                  sizes="(min-width: 768px) 160px, 33vw"
+                  sizes="100px"
                   className="object-cover"
                 />
               </li>
-            ),
-          )}
-        </ul>
-
-        <div className="order-first md:order-none md:sticky md:top-4">
-          {error && ERRORS[error] && (
-            <p
-              role="alert"
-              className="mb-4 rounded-2xl bg-[#3a1730] px-4 py-3 text-center text-sm font-bold text-red-100"
-            >
-              {ERRORS[error]}
-            </p>
-          )}
-
-          <BuyForm
-            initialRef={
-              referral
-                ? { code: referral.code, discount: referral.discount }
-                : null
-            }
-            publishableKey={process.env.MOYASAR_PUBLISHABLE_KEY ?? ""}
-            amount={toHalalas(price)}
-            applePay={process.env.APPLE_PAY_ENABLED === "true"}
-            next={safeNextPath(next)}
-          />
-        </div>
+            ))}
+          </ul>
+        </section>
       </div>
 
       <div className="mx-auto max-w-5xl px-4">
