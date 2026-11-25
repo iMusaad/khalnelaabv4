@@ -232,7 +232,7 @@ export default function BuyForm({
             <div
               onPointerDown={trackCheckout}
               onFocusCapture={trackCheckout}
-              className="rounded-2xl border-[3px] border-[#130e28] bg-[#fff8e8] px-3 py-4 shadow-[0_5px_0_#130e28] sm:px-5"
+              className="rounded-3xl bg-white px-4 pb-3 pt-4 shadow-[0_6px_0_#130e28] sm:px-6"
             >
               <div className="mysr-form" dir="ltr" />
             </div>

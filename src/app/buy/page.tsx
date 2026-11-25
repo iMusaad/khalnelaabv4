@@ -203,7 +203,7 @@ export default async function BuyPage({
           )}
         </ul>
 
-        <div className="md:sticky md:top-4">
+        <div className="order-first md:order-none md:sticky md:top-4">
           {error && ERRORS[error] && (
             <p
               role="alert"
