@@ -12,6 +12,8 @@ import { readCookie, trackFunnel } from "@/lib/track";
 
 const MOYASAR_VERSION = "1.14.0";
 const MOYASAR_CDN = `https://cdn.moyasar.com/mpf/${MOYASAR_VERSION}`;
+const APPLE_PAY_SDK =
+  "https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js";
 
 type MoyasarGlobal = {
   init: (options: Record<string, unknown>) => void;
@@ -42,6 +44,7 @@ export default function BuyForm({
   const [emailError, setEmailError] = useState("");
   const [step, setStep] = useState<"details" | "pay">("details");
   const [scriptReady, setScriptReady] = useState(false);
+  const [appleSdkSettled, setAppleSdkSettled] = useState(!applePay);
   const [scriptFailed, setScriptFailed] = useState(false);
   const [referral, setReferral] = useState(initialRef);
   const [refInput, setRefInput] = useState("");
@@ -100,7 +103,7 @@ export default function BuyForm({
   }
 
   useEffect(() => {
-    if (step !== "pay" || !scriptReady || !window.Moyasar) {
+    if (step !== "pay" || !scriptReady || !appleSdkSettled || !window.Moyasar) {
       return;
     }
 
@@ -136,6 +139,7 @@ export default function BuyForm({
   }, [
     step,
     scriptReady,
+    appleSdkSettled,
     finalAmount,
     publishableKey,
     email,
@@ -311,6 +315,16 @@ export default function BuyForm({
           )}
 
           <link rel="stylesheet" href={`${MOYASAR_CDN}/moyasar.css`} />
+
+          {applePay && (
+            <Script
+              src={APPLE_PAY_SDK}
+              strategy="afterInteractive"
+              crossOrigin="anonymous"
+              onReady={() => setAppleSdkSettled(true)}
+              onError={() => setAppleSdkSettled(true)}
+            />
+          )}
 
           <Script
             src={`${MOYASAR_CDN}/moyasar.js`}
