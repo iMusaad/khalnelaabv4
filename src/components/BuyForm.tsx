@@ -101,12 +101,6 @@ export default function BuyForm({
       return;
     }
 
-    const container = document.querySelector(".mysr-form");
-
-    if (container) {
-      container.innerHTML = "";
-    }
-
     const origin = window.location.origin;
     const source = readCookie(SOURCE_COOKIE);
 
@@ -234,7 +228,11 @@ export default function BuyForm({
               onFocusCapture={trackCheckout}
               className="rounded-3xl bg-white px-4 pb-3 pt-4 shadow-[0_6px_0_#130e28] sm:px-6"
             >
-              <div className="mysr-form" dir="ltr" />
+              <div
+                key={referral?.code ?? "none"}
+                className="mysr-form"
+                dir="ltr"
+              />
             </div>
           </>
         )}
