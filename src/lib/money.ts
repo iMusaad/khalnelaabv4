@@ -7,6 +7,7 @@ import { STAT_PREFIX, riyadhDate } from "@/lib/sessionStats";
 const SALE_PREFIX = "sale:";
 const EVENT_PREFIX = "ev:";
 const SPEND_PREFIX = "spend:";
+const EXPENSE_PREFIX = "cost:";
 const EVENT_TTL_SECONDS = 400 * 24 * 60 * 60;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -34,6 +35,23 @@ export type Spend = {
   amount: number;
 };
 
+export const EXPENSE_CATEGORIES = {
+  ai: "اشتراكات الذكاء الاصطناعي",
+  hosting: "استضافة ودومين",
+  design: "تصميم ومحتوى",
+  other: "أخرى",
+} as const;
+
+export type ExpenseCategory = keyof typeof EXPENSE_CATEGORIES;
+
+export type Expense = {
+  id: string;
+  date: string;
+  category: ExpenseCategory;
+  note: string;
+  amount: number;
+};
+
 export type SourceRow = {
   source: string;
   sessions: number;
@@ -52,6 +70,7 @@ export type MoneySummary = {
   commissions: number;
   net: number;
   spend: number;
+  expenses: number;
   profit: number;
   today: { sales: number; net: number };
   week: { sales: number; net: number };
@@ -60,6 +79,7 @@ export type MoneySummary = {
   sources: SourceRow[];
   recent: Sale[];
   spends: Spend[];
+  expenseList: Expense[];
 };
 
 export function estimateFee(amountHalalas: number) {
@@ -159,6 +179,46 @@ export async function deleteSpend(store: KvStore, id: unknown) {
   }
 }
 
+export function parseExpense(input: unknown): Omit<Expense, "id"> | null {
+  if (!input || typeof input !== "object") {
+    return null;
+  }
+
+  const body = input as Record<string, unknown>;
+  const date = typeof body.date === "string" ? body.date : "";
+  const amount = Number(body.amount);
+  const category =
+    typeof body.category === "string" && body.category in EXPENSE_CATEGORIES
+      ? (body.category as ExpenseCategory)
+      : null;
+  const note =
+    typeof body.note === "string" ? body.note.trim().slice(0, 60) : "";
+
+  if (
+    !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+    !category ||
+    !Number.isFinite(amount) ||
+    amount <= 0 ||
+    amount > 1_000_000
+  ) {
+    return null;
+  }
+
+  return { date, category, note, amount: Math.round(amount * 100) / 100 };
+}
+
+export async function addExpense(store: KvStore, expense: Omit<Expense, "id">) {
+  const id = `${expense.date}:${randomId()}`;
+
+  await store.put(`${EXPENSE_PREFIX}${id}`, JSON.stringify({ ...expense, id }));
+}
+
+export async function deleteExpense(store: KvStore, id: unknown) {
+  if (typeof id === "string" && /^\d{4}-\d{2}-\d{2}:[a-z0-9]+$/.test(id)) {
+    await store.delete(`${EXPENSE_PREFIX}${id}`);
+  }
+}
+
 async function listKeys(store: KvStore, prefix: string) {
   const keys: string[] = [];
   let cursor: string | undefined;
@@ -196,6 +256,7 @@ export function summarizeMoney(
   input: {
     sales: Sale[];
     spends: Spend[];
+    expenses?: Expense[];
     eventKeys: string[];
     statKeys: string[];
   },
@@ -235,6 +296,7 @@ export function summarizeMoney(
     commissions: 0,
     net: 0,
     spend: 0,
+    expenses: 0,
     profit: 0,
     today: { sales: 0, net: 0 },
     week: { sales: 0, net: 0 },
@@ -243,6 +305,9 @@ export function summarizeMoney(
     sources: [],
     recent: sales.slice(0, 20),
     spends: [...input.spends].sort((a, b) => b.date.localeCompare(a.date)),
+    expenseList: [...(input.expenses ?? [])].sort((a, b) =>
+      b.date.localeCompare(a.date),
+    ),
   };
 
   for (const sale of sales) {
@@ -281,6 +346,10 @@ export function summarizeMoney(
     row(spend.platform).spend += spend.amount;
   }
 
+  for (const expense of input.expenses ?? []) {
+    summary.expenses += expense.amount;
+  }
+
   for (const key of input.eventKeys) {
     const [, , event, source] = key.split(":");
 
@@ -304,7 +373,9 @@ export function summarizeMoney(
   summary.commissions = toRiyals(summary.commissions);
   summary.net = Math.round(summary.net * 100) / 100;
   summary.spend = Math.round(summary.spend * 100) / 100;
-  summary.profit = Math.round((summary.net - summary.spend) * 100) / 100;
+  summary.expenses = Math.round(summary.expenses * 100) / 100;
+  summary.profit =
+    Math.round((summary.net - summary.spend - summary.expenses) * 100) / 100;
 
   summary.days = Array.from({ length: 30 }, (_, offset) => {
     const date = riyadhDate(now - (29 - offset) * DAY_MS);
@@ -330,17 +401,20 @@ export function summarizeMoney(
 }
 
 export async function loadMoneySummary(store: KvStore) {
-  const [saleKeys, spendKeys, eventKeys, statKeys] = await Promise.all([
-    listKeys(store, SALE_PREFIX),
-    listKeys(store, SPEND_PREFIX),
-    listKeys(store, EVENT_PREFIX),
-    listKeys(store, STAT_PREFIX),
-  ]);
+  const [saleKeys, spendKeys, expenseKeys, eventKeys, statKeys] =
+    await Promise.all([
+      listKeys(store, SALE_PREFIX),
+      listKeys(store, SPEND_PREFIX),
+      listKeys(store, EXPENSE_PREFIX),
+      listKeys(store, EVENT_PREFIX),
+      listKeys(store, STAT_PREFIX),
+    ]);
 
-  const [sales, spends] = await Promise.all([
+  const [sales, spends, expenses] = await Promise.all([
     readAll<Sale>(store, saleKeys),
     readAll<Spend>(store, spendKeys),
+    readAll<Expense>(store, expenseKeys),
   ]);
 
-  return summarizeMoney({ sales, spends, eventKeys, statKeys });
+  return summarizeMoney({ sales, spends, expenses, eventKeys, statKeys });
 }
