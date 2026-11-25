@@ -2,9 +2,12 @@ import { NextResponse, type NextRequest } from "next/server";
 import { adminConfigured, adminPasswordMatches } from "@/lib/adminAuth";
 import { getMessageStore } from "@/lib/messageStore";
 import {
+  addExpense,
   addSpend,
+  deleteExpense,
   deleteSpend,
   loadMoneySummary,
+  parseExpense,
   parseSpend,
 } from "@/lib/money";
 
@@ -21,6 +24,7 @@ export async function POST(request: NextRequest) {
     password?: unknown;
     action?: unknown;
     spend?: unknown;
+    expense?: unknown;
     id?: unknown;
   } | null;
 
@@ -44,6 +48,20 @@ export async function POST(request: NextRequest) {
 
   if (body?.action === "deleteSpend") {
     await deleteSpend(store, body.id);
+  }
+
+  if (body?.action === "addExpense") {
+    const expense = parseExpense(body.expense);
+
+    if (expense) {
+      await addExpense(store, expense);
+    } else {
+      error = "تأكد من التاريخ والمبلغ والنوع";
+    }
+  }
+
+  if (body?.action === "deleteExpense") {
+    await deleteExpense(store, body.id);
   }
 
   return NextResponse.json({

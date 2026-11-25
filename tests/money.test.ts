@@ -130,3 +130,35 @@ describe("money", () => {
     expect(summary.days).toHaveLength(30);
   });
 });
+
+describe("expenses", () => {
+  it("parses valid expenses and rejects bad ones", async () => {
+    const { parseExpense } = await import("@/lib/money");
+
+    expect(
+      parseExpense({ date: "2026-11-25", category: "ai", amount: "765" }),
+    ).toEqual({ date: "2026-11-25", category: "ai", note: "", amount: 765 });
+    expect(
+      parseExpense({ date: "2026-11-25", category: "food", amount: 10 }),
+    ).toBeNull();
+    expect(
+      parseExpense({ date: "bad", category: "ai", amount: 10 }),
+    ).toBeNull();
+  });
+
+  it("subtracts expenses from profit", async () => {
+    const { summarizeMoney } = await import("@/lib/money");
+    const summary = summarizeMoney({
+      sales: [],
+      spends: [],
+      expenses: [
+        { id: "a", date: "2026-11-25", category: "ai", note: "", amount: 765 },
+      ],
+      eventKeys: [],
+      statKeys: [],
+    });
+
+    expect(summary.expenses).toBe(765);
+    expect(summary.profit).toBe(-765);
+  });
+});

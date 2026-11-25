@@ -3,7 +3,11 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { SOURCE_LABELS, sourceLabel } from "@/lib/attribution";
 import { riyadhDate } from "@/lib/sessionStats";
-import type { MoneySummary } from "@/lib/money";
+import {
+  EXPENSE_CATEGORIES,
+  type ExpenseCategory,
+  type MoneySummary,
+} from "@/lib/money";
 
 const inputClass =
   "h-11 w-full rounded-xl bg-[#15102b] px-3 text-base font-bold text-white outline-none ring-1 ring-white/10 placeholder:text-white/30 focus:ring-2 focus:ring-[#ffc23d]";
@@ -54,6 +58,10 @@ export default function AdminMoney({ password }: { password: string }) {
   const [platform, setPlatform] = useState("tiktok");
   const [campaign, setCampaign] = useState("");
   const [amount, setAmount] = useState("");
+  const [expenseDate, setExpenseDate] = useState(() => riyadhDate());
+  const [category, setCategory] = useState<ExpenseCategory>("ai");
+  const [note, setNote] = useState("");
+  const [expenseAmount, setExpenseAmount] = useState("");
 
   const send = useCallback(
     async (payload: Record<string, unknown>) => {
@@ -108,6 +116,25 @@ export default function AdminMoney({ password }: { password: string }) {
     }
   }
 
+  async function handleExpense(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const ok = await send({
+      action: "addExpense",
+      expense: {
+        date: expenseDate,
+        category,
+        note,
+        amount: Number(expenseAmount),
+      },
+    });
+
+    if (ok) {
+      setExpenseAmount("");
+      setNote("");
+    }
+  }
+
   if (!money) {
     return (
       <p className="py-8 text-center text-sm font-bold text-white/60">
@@ -146,6 +173,7 @@ export default function AdminMoney({ password }: { password: string }) {
           <Card label="رسوم الدفع" value={cost(money.fees)} />
           <Card label="عمولات المسوّقين" value={cost(money.commissions)} />
           <Card label="صرف الإعلانات" value={cost(money.spend)} />
+          <Card label="المصاريف" value={cost(money.expenses)} />
           <Card
             label="الربح بعد كل شي"
             value={riyal(money.profit)}
@@ -154,6 +182,7 @@ export default function AdminMoney({ password }: { password: string }) {
         </div>
         <p className="mt-3 text-xs font-bold text-white/40">
           المبالغ بالريال. الصافي = الإجمالي ناقص رسوم الدفع وعمولات المسوّقين.
+          والربح = الصافي ناقص صرف الإعلانات والمصاريف.
         </p>
       </section>
 
@@ -315,6 +344,86 @@ export default function AdminMoney({ password }: { password: string }) {
                   onClick={() => {
                     if (window.confirm("تحذف هذا الصرف؟")) {
                       void send({ action: "deleteSpend", id: spend.id });
+                    }
+                  }}
+                  className="text-xs text-white/40 hover:text-[#ff7a7f]"
+                >
+                  حذف
+                </button>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="rounded-3xl bg-[#221a3f] p-5 shadow-[0_6px_0_#140f29]">
+        <h2 className="text-lg font-black text-white">المصاريف</h2>
+        <p className="mt-1 text-xs font-bold text-white/40">
+          كل شي صرفته على المشروع غير الإعلانات، مثل الاشتراكات والاستضافة.
+        </p>
+        <form
+          onSubmit={handleExpense}
+          className="mt-4 grid gap-3 sm:grid-cols-4"
+        >
+          <input
+            type="date"
+            value={expenseDate}
+            onChange={(event) => setExpenseDate(event.target.value)}
+            className={inputClass}
+          />
+          <select
+            value={category}
+            onChange={(event) =>
+              setCategory(event.target.value as ExpenseCategory)
+            }
+            className={inputClass}
+          >
+            {Object.entries(EXPENSE_CATEGORIES).map(([key, label]) => (
+              <option key={key} value={key}>
+                {label}
+              </option>
+            ))}
+          </select>
+          <input
+            value={note}
+            onChange={(event) => setNote(event.target.value)}
+            placeholder="ملاحظة (اختياري)"
+            className={inputClass}
+          />
+          <input
+            value={expenseAmount}
+            onChange={(event) => setExpenseAmount(event.target.value)}
+            inputMode="decimal"
+            placeholder="المبلغ بالريال"
+            className={inputClass}
+          />
+          <button
+            type="submit"
+            disabled={loading || !expenseAmount}
+            className="btn-primary py-3 sm:col-span-4"
+          >
+            أضف المصروف
+          </button>
+        </form>
+        <ul className="mt-4 space-y-2">
+          {money.expenseList.map((expense) => (
+            <li
+              key={expense.id}
+              className="flex items-center justify-between gap-3 rounded-xl bg-[#15102b] px-3 py-2 text-sm font-bold text-white/80"
+            >
+              <span>
+                {expense.date} · {EXPENSE_CATEGORIES[expense.category]}
+                {expense.note ? ` · ${expense.note}` : ""}
+              </span>
+              <span className="flex items-center gap-3">
+                <span className="font-black text-white">
+                  {riyal(expense.amount)}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (window.confirm("تحذف هذا المصروف؟")) {
+                      void send({ action: "deleteExpense", id: expense.id });
                     }
                   }}
                   className="text-xs text-white/40 hover:text-[#ff7a7f]"
