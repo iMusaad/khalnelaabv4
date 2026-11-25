@@ -4,4 +4,5 @@ export const SITE = {
   contactEmail: "khalnelab@outlook.com",
   freelanceNumber: "FL-242298205",
   gaMeasurementId: "G-59DDQJFMJ9",
+  tiktok: "https://www.tiktok.com/@khalnelab",
 };

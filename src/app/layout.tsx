@@ -64,6 +64,7 @@ const structuredData = {
       name: SITE.name,
       url: siteUrl,
       logo: `${siteUrl}/logo.png`,
+      sameAs: [SITE.tiktok],
     },
   ],
 };
