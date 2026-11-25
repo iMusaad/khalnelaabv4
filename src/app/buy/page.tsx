@@ -106,8 +106,8 @@ export default async function BuyPage({
         )}
       </PixelHero>
 
-      <div className="mx-auto mt-6 max-w-md px-4 pb-8 md:grid md:max-w-3xl md:grid-cols-[14rem_minmax(0,28rem)] md:items-start md:justify-center md:gap-6">
-        <ul className="mb-4 grid gap-3 md:sticky md:top-6 md:mb-0 md:mt-2">
+      <div className="mx-auto mt-6 max-w-md px-4 pb-8 md:grid md:max-w-3xl md:grid-cols-[14rem_minmax(0,28rem)] md:justify-center md:gap-6">
+        <ul className="mb-4 grid gap-3 md:mb-0 md:self-center">
           {PERKS.map((perk) => (
             <li
               key={perk}
@@ -143,31 +143,31 @@ export default async function BuyPage({
             applePay={process.env.APPLE_PAY_ENABLED === "true"}
             next={safeNextPath(next)}
           />
-
-          <section className="mt-8">
-            <h2 className="text-center text-base font-black text-white/80">
-              الألعاب اللي تاخذونها
-            </h2>
-
-            <ul className="mt-3 grid grid-cols-4 gap-2">
-              {GAME_POSTERS.map((game) => (
-                <li
-                  key={game.key}
-                  className="relative aspect-[4/5] overflow-hidden rounded-xl bg-[#221a3f]"
-                >
-                  <Image
-                    src={posterThumb(game.image)}
-                    alt={game.title}
-                    fill
-                    unoptimized
-                    sizes="100px"
-                    className="object-cover"
-                  />
-                </li>
-              ))}
-            </ul>
-          </section>
         </div>
+
+        <section className="mt-8 md:col-start-2">
+          <h2 className="text-center text-base font-black text-white/80">
+            الألعاب اللي تاخذونها
+          </h2>
+
+          <ul className="mt-3 grid grid-cols-4 gap-2">
+            {GAME_POSTERS.map((game) => (
+              <li
+                key={game.key}
+                className="relative aspect-[4/5] overflow-hidden rounded-xl bg-[#221a3f]"
+              >
+                <Image
+                  src={posterThumb(game.image)}
+                  alt={game.title}
+                  fill
+                  unoptimized
+                  sizes="100px"
+                  className="object-cover"
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
 
       <div className="mx-auto max-w-5xl px-4">
