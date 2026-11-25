@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import RiyalSign from "@/components/RiyalSign";
 import { trackEvent } from "@/lib/analytics";
 import { SOURCE_COOKIE } from "@/lib/attribution";
-import { emailProblem, suggestion } from "@/lib/emailCheck";
 import { readCookie, trackFunnel } from "@/lib/track";
 
 const MOYASAR_VERSION = "1.14.0";
@@ -28,7 +27,6 @@ declare global {
 export default function BuyForm({
   publishableKey,
   amount,
-  emailEnabled,
   applePay = false,
   next,
   initialRef = null,
@@ -36,12 +34,9 @@ export default function BuyForm({
   publishableKey: string;
   amount: number;
   initialRef?: { code: string; discount: number } | null;
-  emailEnabled: boolean;
   applePay?: boolean;
   next: string;
 }) {
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
   const [step, setStep] = useState<"details" | "pay">("details");
   const [scriptReady, setScriptReady] = useState(false);
   const [appleSdkSettled, setAppleSdkSettled] = useState(!applePay);
@@ -108,7 +103,6 @@ export default function BuyForm({
     }
 
     const origin = window.location.origin;
-    const trimmedEmail = email.trim();
     const source = readCookie(SOURCE_COOKIE);
 
     window.Moyasar.init({
@@ -131,7 +125,6 @@ export default function BuyForm({
         : {}),
       language: "ar",
       metadata: {
-        ...(trimmedEmail ? { email: trimmedEmail } : {}),
         ...(referral ? { ref: referral.code } : {}),
         ...(source ? { src: source } : {}),
       },
@@ -142,7 +135,6 @@ export default function BuyForm({
     appleSdkSettled,
     finalAmount,
     publishableKey,
-    email,
     applePay,
     referral,
   ]);
@@ -165,68 +157,10 @@ export default function BuyForm({
         <form
           onSubmit={(event) => {
             event.preventDefault();
-
-            if (emailEnabled) {
-              const problem = emailProblem(email);
-
-              if (problem) {
-                setEmailError(problem);
-                return;
-              }
-            }
-
-            setEmailError("");
             setStep("pay");
           }}
         >
-          {emailEnabled && (
-            <div className="space-y-3 text-right">
-              <label className="block">
-                <span className="text-sm font-black text-white/80">إيميلك</span>
-
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(event) => {
-                    setEmail(event.target.value);
-                    setEmailError("");
-                  }}
-                  placeholder="name@example.com"
-                  dir="ltr"
-                  autoComplete="email"
-                  maxLength={200}
-                  className={inputClass}
-                />
-              </label>
-
-              {suggestion(email) && !emailError && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    const fixed = suggestion(email) as string;
-                    setEmail(fixed);
-                  }}
-                  className="block w-full text-center text-sm font-bold text-[#ffc23d]"
-                >
-                  تقصد <span dir="ltr">{suggestion(email)}</span>؟
-                </button>
-              )}
-
-              {emailError && (
-                <p className="text-center text-sm font-bold text-red-200">
-                  {emailError}
-                </p>
-              )}
-
-              <span className="block text-xs font-bold text-white/45">
-                نرسل لك الكود عليه، ولو ضاع منك ترجعه بإيميلك من صفحة «عندي
-                كود».
-              </span>
-            </div>
-          )}
-
-          <div className="mt-4 text-center">
+          <div className="text-center">
             {referral ? (
               <p className="rounded-xl bg-black/25 px-3 py-2 text-sm font-bold text-white/80">
                 كود{" "}
@@ -295,25 +229,6 @@ export default function BuyForm({
         </form>
       ) : (
         <>
-          {emailEnabled && (
-            <div className="mb-4 flex items-center justify-between gap-3 rounded-xl bg-black/25 px-4 py-3">
-              <p className="min-w-0 text-sm font-bold text-white/70">
-                بنرسل الكود على{" "}
-                <span dir="ltr" className="break-all font-black text-white">
-                  {email.trim()}
-                </span>
-              </p>
-
-              <button
-                type="button"
-                onClick={() => setStep("details")}
-                className="shrink-0 text-sm font-black text-cyan-200 underline"
-              >
-                تعديل
-              </button>
-            </div>
-          )}
-
           <link rel="stylesheet" href={`${MOYASAR_CDN}/moyasar.css`} />
 
           {applePay && (
@@ -364,9 +279,6 @@ export default function BuyForm({
     </section>
   );
 }
-
-const inputClass =
-  "mt-2 h-12 w-full rounded-xl border border-white/15 bg-black/25 px-4 text-center text-base font-bold text-white outline-none placeholder:text-white/30 focus:border-cyan-300/60";
 
 function UnlockLinks({ next }: { next?: string }) {
   const query = next && next !== "/" ? `?next=${encodeURIComponent(next)}` : "";
