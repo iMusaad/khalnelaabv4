@@ -432,3 +432,6 @@ textarea::placeholder {
 .mysr-form div#mysr input {
   border-radius: 0.875rem;
 }
+.mysr-form div#mysr .bg-primary .currency-amount img {
+  filter: brightness(0) saturate(100%);
+}
