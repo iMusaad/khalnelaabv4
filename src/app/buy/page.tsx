@@ -32,12 +32,6 @@ const ERRORS: Record<string, string> = {
 
 const QUIZ_FIRST = quizCategoryList[0].key;
 
-const PERKS = [
-  "تدفعون مرة وحدة، بدون اشتراك شهري",
-  "أي لعبة جديدة نضيفها توصلكم مجاناً",
-  "بدون تحميل تطبيق، تلعبونها على جوال واحد",
-];
-
 const GAME_POSTERS = PLAYABLE_CARDS.filter(
   (game) => !game.category || game.category === QUIZ_FIRST,
 );
@@ -131,18 +125,6 @@ export default async function BuyPage({
           applePay={process.env.APPLE_PAY_ENABLED === "true"}
           next={safeNextPath(next)}
         />
-
-        <ul className="mt-5 grid gap-2 text-sm font-bold text-white/75">
-          {PERKS.map((perk) => (
-            <li key={perk} className="flex items-center gap-2">
-              <span
-                aria-hidden="true"
-                className="h-2 w-2 shrink-0 rounded-full bg-[#ffc23d]"
-              />
-              {perk}
-            </li>
-          ))}
-        </ul>
 
         <section className="mt-8">
           <h2 className="text-center text-base font-black text-white/80">
