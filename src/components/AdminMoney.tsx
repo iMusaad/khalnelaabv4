@@ -58,7 +58,6 @@ export default function AdminMoney({ password }: { password: string }) {
   const [platform, setPlatform] = useState("tiktok");
   const [campaign, setCampaign] = useState("");
   const [amount, setAmount] = useState("");
-  const [expenseDate, setExpenseDate] = useState(() => riyadhDate());
   const [category, setCategory] = useState<ExpenseCategory>("ai");
   const [note, setNote] = useState("");
   const [expenseAmount, setExpenseAmount] = useState("");
@@ -122,7 +121,7 @@ export default function AdminMoney({ password }: { password: string }) {
     const ok = await send({
       action: "addExpense",
       expense: {
-        date: expenseDate,
+        date: riyadhDate(),
         category,
         note,
         amount: Number(expenseAmount),
@@ -363,14 +362,8 @@ export default function AdminMoney({ password }: { password: string }) {
         </p>
         <form
           onSubmit={handleExpense}
-          className="mt-4 grid gap-3 sm:grid-cols-4"
+          className="mt-4 grid gap-3 sm:grid-cols-3"
         >
-          <input
-            type="date"
-            value={expenseDate}
-            onChange={(event) => setExpenseDate(event.target.value)}
-            className={inputClass}
-          />
           <select
             value={category}
             onChange={(event) =>
@@ -400,7 +393,7 @@ export default function AdminMoney({ password }: { password: string }) {
           <button
             type="submit"
             disabled={loading || !expenseAmount}
-            className="btn-primary py-3 sm:col-span-4"
+            className="btn-primary py-3 sm:col-span-3"
           >
             أضف المصروف
           </button>
