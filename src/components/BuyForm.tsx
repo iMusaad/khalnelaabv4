@@ -9,10 +9,7 @@ import { trackEvent } from "@/lib/analytics";
 import { SOURCE_COOKIE } from "@/lib/attribution";
 import { readCookie, trackFunnel } from "@/lib/track";
 
-const MOYASAR_VERSION = "1.14.0";
-const MOYASAR_CDN = `https://cdn.moyasar.com/mpf/${MOYASAR_VERSION}`;
-const APPLE_PAY_SDK =
-  "https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js";
+const MOYASAR_BASE = "/vendor/moyasar/2.3.1";
 
 type MoyasarGlobal = {
   init: (options: Record<string, unknown>) => void;
@@ -39,7 +36,6 @@ export default function BuyForm({
 }) {
   const checkoutTracked = useRef(false);
   const [scriptReady, setScriptReady] = useState(false);
-  const [appleSdkSettled, setAppleSdkSettled] = useState(!applePay);
   const [scriptFailed, setScriptFailed] = useState(false);
   const [referral, setReferral] = useState(initialRef);
   const [refInput, setRefInput] = useState("");
@@ -101,7 +97,7 @@ export default function BuyForm({
   }
 
   useEffect(() => {
-    if (!scriptReady || !appleSdkSettled || !window.Moyasar) {
+    if (!scriptReady || !window.Moyasar) {
       return;
     }
 
@@ -138,14 +134,7 @@ export default function BuyForm({
         ...(source ? { src: source } : {}),
       },
     });
-  }, [
-    scriptReady,
-    appleSdkSettled,
-    finalAmount,
-    publishableKey,
-    applePay,
-    referral,
-  ]);
+  }, [scriptReady, finalAmount, publishableKey, applePay, referral]);
 
   if (!publishableKey) {
     return (
@@ -220,20 +209,10 @@ export default function BuyForm({
       </div>
 
       <>
-        <link rel="stylesheet" href={`${MOYASAR_CDN}/moyasar.css`} />
-
-        {applePay && (
-          <Script
-            src={APPLE_PAY_SDK}
-            strategy="afterInteractive"
-            crossOrigin="anonymous"
-            onReady={() => setAppleSdkSettled(true)}
-            onError={() => setAppleSdkSettled(true)}
-          />
-        )}
+        <link rel="stylesheet" href={`${MOYASAR_BASE}/moyasar.css`} />
 
         <Script
-          src={`${MOYASAR_CDN}/moyasar.js`}
+          src={`${MOYASAR_BASE}/moyasar.umd.js`}
           strategy="afterInteractive"
           onReady={() => setScriptReady(true)}
           onError={() => setScriptFailed(true)}

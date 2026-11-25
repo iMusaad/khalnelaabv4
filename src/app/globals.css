@@ -407,3 +407,17 @@ textarea::placeholder {
     transition-duration: 0.01ms !important;
   }
 }
+
+.mysr-form {
+  color-scheme: light;
+}
+
+.mysr-form input,
+.mysr-form select {
+  color: #1a1a1a;
+  caret-color: #1a1a1a;
+}
+
+.mysr-form input::placeholder {
+  color: #9ca3af;
+}
