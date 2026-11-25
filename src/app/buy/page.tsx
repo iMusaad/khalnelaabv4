@@ -36,6 +36,8 @@ const GAME_POSTERS = PLAYABLE_CARDS.filter(
   (game) => !game.category || game.category === QUIZ_FIRST,
 );
 
+const PERKS = ["شراء مرة وحدة بدون اشتراك", "وأي شي جديد يوصلك مجاناً"];
+
 export default async function BuyPage({
   searchParams,
 }: {
@@ -104,51 +106,68 @@ export default async function BuyPage({
         )}
       </PixelHero>
 
-      <div className="mx-auto mt-6 max-w-md px-4 pb-8">
-        {error && ERRORS[error] && (
-          <p
-            role="alert"
-            className="mb-4 rounded-2xl bg-[#3a1730] px-4 py-3 text-center text-sm font-bold text-red-100"
-          >
-            {ERRORS[error]}
-          </p>
-        )}
+      <div className="mx-auto mt-6 max-w-md px-4 pb-8 md:grid md:max-w-3xl md:grid-cols-[14rem_minmax(0,28rem)] md:items-start md:justify-center md:gap-6">
+        <ul className="mb-4 grid gap-3 md:sticky md:top-6 md:mb-0 md:mt-2">
+          {PERKS.map((perk) => (
+            <li
+              key={perk}
+              className="flex items-center gap-3 rounded-2xl bg-[#221a3f] px-4 py-3 text-sm font-black shadow-[0_4px_0_#140f29]"
+            >
+              <span
+                aria-hidden="true"
+                className="h-2.5 w-2.5 shrink-0 rounded-full bg-[#ffc23d]"
+              />
+              {perk}
+            </li>
+          ))}
+        </ul>
 
-        <BuyForm
-          initialRef={
-            referral
-              ? { code: referral.code, discount: referral.discount }
-              : null
-          }
-          publishableKey={process.env.MOYASAR_PUBLISHABLE_KEY ?? ""}
-          amount={toHalalas(price)}
-          applePay={process.env.APPLE_PAY_ENABLED === "true"}
-          next={safeNextPath(next)}
-        />
+        <div>
+          {error && ERRORS[error] && (
+            <p
+              role="alert"
+              className="mb-4 rounded-2xl bg-[#3a1730] px-4 py-3 text-center text-sm font-bold text-red-100"
+            >
+              {ERRORS[error]}
+            </p>
+          )}
 
-        <section className="mt-8">
-          <h2 className="text-center text-base font-black text-white/80">
-            الألعاب اللي تاخذونها
-          </h2>
+          <BuyForm
+            initialRef={
+              referral
+                ? { code: referral.code, discount: referral.discount }
+                : null
+            }
+            publishableKey={process.env.MOYASAR_PUBLISHABLE_KEY ?? ""}
+            amount={toHalalas(price)}
+            applePay={process.env.APPLE_PAY_ENABLED === "true"}
+            next={safeNextPath(next)}
+          />
 
-          <ul className="mt-3 grid grid-cols-4 gap-2">
-            {GAME_POSTERS.map((game) => (
-              <li
-                key={game.key}
-                className="relative aspect-[4/5] overflow-hidden rounded-xl bg-[#221a3f]"
-              >
-                <Image
-                  src={posterThumb(game.image)}
-                  alt={game.title}
-                  fill
-                  unoptimized
-                  sizes="100px"
-                  className="object-cover"
-                />
-              </li>
-            ))}
-          </ul>
-        </section>
+          <section className="mt-8">
+            <h2 className="text-center text-base font-black text-white/80">
+              الألعاب اللي تاخذونها
+            </h2>
+
+            <ul className="mt-3 grid grid-cols-4 gap-2">
+              {GAME_POSTERS.map((game) => (
+                <li
+                  key={game.key}
+                  className="relative aspect-[4/5] overflow-hidden rounded-xl bg-[#221a3f]"
+                >
+                  <Image
+                    src={posterThumb(game.image)}
+                    alt={game.title}
+                    fill
+                    unoptimized
+                    sizes="100px"
+                    className="object-cover"
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
+        </div>
       </div>
 
       <div className="mx-auto max-w-5xl px-4">

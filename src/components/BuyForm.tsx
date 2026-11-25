@@ -152,23 +152,6 @@ export default function BuyForm({
 
   return (
     <section className="rounded-3xl bg-[#221a3f] p-4 shadow-[0_6px_0_#140f29] sm:p-5">
-      <ul className="mb-4 grid gap-1.5 text-sm font-black text-white">
-        <li className="flex items-center justify-center gap-2">
-          <span
-            aria-hidden="true"
-            className="h-2 w-2 shrink-0 rounded-full bg-[#ffc23d]"
-          />
-          شراء مرة وحدة بدون اشتراك
-        </li>
-        <li className="flex items-center justify-center gap-2">
-          <span
-            aria-hidden="true"
-            className="h-2 w-2 shrink-0 rounded-full bg-[#ffc23d]"
-          />
-          وأي شي جديد يوصلك مجاناً
-        </li>
-      </ul>
-
       <div className="mb-4 text-center">
         {referral ? (
           <div className="flex items-center justify-between gap-3 rounded-xl bg-black/25 px-3 py-2 text-sm font-bold text-white/80">
