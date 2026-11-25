@@ -3,12 +3,15 @@ import { cookies, headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import CopyButton from "@/components/CopyButton";
+import EmailCapture from "@/components/EmailCapture";
 import PageShell from "@/components/PageShell";
 import PurchaseTracker from "@/components/PurchaseTracker";
 import QrCode from "@/components/QrCode";
+import { isEmailEnabled } from "@/lib/email";
 import { getLicenseSecrets, verifyLicenseCode } from "@/lib/license";
 import { LICENSE_COOKIE } from "@/lib/licenseCookie";
 import { getMessageStore } from "@/lib/messageStore";
+import { PURCHASE_COOKIE, parsePurchaseCookie } from "@/lib/purchaseEvent";
 import { shortCodeForLicense } from "@/lib/shortCode";
 import { getSiteOrigin } from "@/lib/siteUrl";
 
@@ -20,7 +23,11 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function SuccessPage() {
-  const code = (await cookies()).get(LICENSE_COOKIE)?.value ?? "";
+  const cookieStore = await cookies();
+  const code = cookieStore.get(LICENSE_COOKIE)?.value ?? "";
+  const purchase = parsePurchaseCookie(
+    cookieStore.get(PURCHASE_COOKIE)?.value ?? "",
+  );
   const check = await verifyLicenseCode(code, getLicenseSecrets());
 
   if (!check.valid) {
@@ -63,6 +70,12 @@ export default async function SuccessPage() {
         <div className="mt-4">
           <CopyButton text={shownCode} />
         </div>
+
+        {purchase && check.type === "purchase" && isEmailEnabled() && (
+          <div className="mt-5">
+            <EmailCapture paymentId={purchase.id} />
+          </div>
+        )}
 
         <div className="mt-5 flex flex-col items-center gap-2">
           <p className="text-sm font-bold text-white/60">

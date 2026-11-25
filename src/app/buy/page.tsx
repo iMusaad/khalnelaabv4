@@ -16,7 +16,6 @@ import {
   QUIZ_COLORS,
   QUIZ_LABELS,
 } from "@/data/quizCards";
-import { isEmailEnabled } from "@/lib/email";
 import { safeNextPath } from "@/lib/licenseCookie";
 import { posterThumb } from "@/lib/poster";
 import { SITE } from "@/data/site";
@@ -222,7 +221,6 @@ export default async function BuyPage({
             }
             publishableKey={process.env.MOYASAR_PUBLISHABLE_KEY ?? ""}
             amount={toHalalas(price)}
-            emailEnabled={isEmailEnabled()}
             applePay={process.env.APPLE_PAY_ENABLED === "true"}
             next={safeNextPath(next)}
           />
