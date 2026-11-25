@@ -394,12 +394,12 @@ export default function SetupGame({
             disabled={isQuickMode || (locked && !paywalled)}
             aria-pressed={isQuickMode ? undefined : active}
             aria-label={game.name}
-            className={`relative block h-full w-full overflow-hidden rounded-2xl outline outline-2 outline-offset-2 transition-[outline-color,opacity] duration-200 ${active ? "outline-[#ffc23d]" : "outline-transparent"} ${
+            className={`relative block h-full w-full overflow-hidden rounded-2xl outline outline-2 outline-offset-2 transition-[outline-color,opacity,transform,box-shadow] duration-200 ease-out ${active ? "outline-[#ffc23d]" : "outline-transparent"} ${
               isQuickMode
                 ? "cursor-default"
                 : locked
                   ? "cursor-not-allowed opacity-35"
-                  : ""
+                  : "motion-safe:[@media(hover:hover)]:hover:-translate-y-1 motion-safe:[@media(hover:hover)]:hover:scale-[1.03] [@media(hover:hover)]:hover:shadow-[0_10px_24px_rgba(0,0,0,0.45)] [@media(hover:hover)]:hover:outline-white/40"
             }`}
           >
             <Image
