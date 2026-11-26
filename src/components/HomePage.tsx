@@ -143,7 +143,7 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <section className="my-auto py-8 sm:my-0 sm:pb-0 sm:pt-5">
+        <section className="my-auto py-8 sm:mb-0 sm:mt-auto sm:pb-6 sm:pt-5">
           <h2 className="text-center text-2xl font-black sm:text-[22px]">
             كيف تلعبون؟
           </h2>
@@ -174,7 +174,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <div className="relative mt-auto pt-2">
+        <div className="relative mt-auto pt-2 sm:mt-0">
           <SiteFooter />
         </div>
       </div>
