@@ -113,11 +113,11 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <div className="mx-auto mt-5 flex flex-col items-center gap-3 sm:[@media(max-height:820px)]:mt-4 sm:[@media(max-height:820px)]:gap-2">
+        <div className="mx-auto mt-5 flex flex-col items-center gap-3 sm:mt-[30px] sm:gap-1.5">
           <Link
             href="/buy"
             prefetch={false}
-            className="flex flex-wrap items-baseline justify-center gap-x-2 text-center text-base font-black text-white/80 transition-colors hover:text-white sm:text-xl"
+            className="flex flex-wrap items-baseline justify-center gap-x-2 text-center text-base font-black text-white/80 transition-colors hover:text-white sm:text-[34px]"
           >
             <span>{GAME_COUNT} لعبة بـ</span>
 
@@ -127,7 +127,7 @@ export default function HomePage() {
               </span>
             )}
 
-            <span className="text-2xl font-black text-[#ffc23d] sm:text-3xl">
+            <span className="text-2xl font-black text-[#ffc23d] sm:text-[38px]">
               {getCurrentPrice()} <RiyalSign />
             </span>
 
@@ -137,14 +137,14 @@ export default function HomePage() {
           <Link
             href="/buy"
             prefetch={false}
-            className="btn-primary px-6 py-2.5 text-base"
+            className="btn-primary px-6 py-2.5 text-base sm:px-[60px] sm:py-5"
           >
             اشترها الحين
           </Link>
         </div>
 
-        <section className="my-auto py-8 sm:py-6 sm:[@media(max-height:820px)]:py-2">
-          <h2 className="text-center text-2xl font-black sm:[@media(max-height:820px)]:text-xl">
+        <section className="my-auto py-8 sm:my-0 sm:pb-0 sm:pt-7">
+          <h2 className="text-center text-2xl font-black sm:text-lg">
             كيف تلعبون؟
           </h2>
 
@@ -169,7 +169,7 @@ export default function HomePage() {
             ))}
           </ol>
 
-          <div className="mt-8 flex justify-center">
+          <div className="mt-8 flex justify-center sm:mt-2">
             <TikTokLink />
           </div>
         </section>
