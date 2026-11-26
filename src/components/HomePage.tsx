@@ -113,11 +113,11 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <div className="mx-auto mt-5 flex flex-col items-center gap-3 sm:mt-[30px] sm:gap-1.5">
+        <div className="mx-auto mt-5 flex flex-col items-center gap-3.5 sm:mt-[18px] sm:gap-1">
           <Link
             href="/buy"
             prefetch={false}
-            className="flex flex-wrap items-baseline justify-center gap-x-2 text-center text-base font-black text-white/80 transition-colors hover:text-white sm:text-[34px]"
+            className="flex flex-wrap items-baseline justify-center gap-x-2 text-center text-base font-black text-white/80 transition-colors hover:text-white sm:text-[36px]"
           >
             <span>{GAME_COUNT} لعبة بـ</span>
 
@@ -127,7 +127,7 @@ export default function HomePage() {
               </span>
             )}
 
-            <span className="text-2xl font-black text-[#ffc23d] sm:text-[38px]">
+            <span className="text-2xl font-black text-[#ffc23d] sm:text-[39px]">
               {getCurrentPrice()} <RiyalSign />
             </span>
 
@@ -137,14 +137,14 @@ export default function HomePage() {
           <Link
             href="/buy"
             prefetch={false}
-            className="btn-primary px-6 py-2.5 text-base sm:px-[60px] sm:py-5"
+            className="btn-primary px-6 py-2.5 text-base sm:px-[54px] sm:py-[19px] sm:text-xl"
           >
             اشترها الحين
           </Link>
         </div>
 
-        <section className="my-auto py-8 sm:my-0 sm:pb-0 sm:pt-7">
-          <h2 className="text-center text-2xl font-black sm:text-lg">
+        <section className="my-auto py-8 sm:my-0 sm:pb-0 sm:pt-5">
+          <h2 className="text-center text-2xl font-black sm:text-[22px]">
             كيف تلعبون؟
           </h2>
 
