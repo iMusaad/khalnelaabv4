@@ -117,7 +117,7 @@ export default function HomePage() {
           <Link
             href="/buy"
             prefetch={false}
-            className="flex flex-wrap items-baseline justify-center gap-x-2 text-center text-base font-black text-white/80 transition-colors hover:text-white sm:text-[36px]"
+            className="flex flex-wrap items-baseline justify-center gap-x-2 text-center text-base font-black text-white/80 transition-colors hover:text-white sm:text-[36px] sm:leading-normal"
           >
             <span>{GAME_COUNT} لعبة بـ</span>
 
@@ -127,7 +127,7 @@ export default function HomePage() {
               </span>
             )}
 
-            <span className="text-2xl font-black text-[#ffc23d] sm:text-[39px]">
+            <span className="text-2xl font-black text-[#ffc23d] sm:text-[39px] sm:leading-normal">
               {getCurrentPrice()} <RiyalSign />
             </span>
 
