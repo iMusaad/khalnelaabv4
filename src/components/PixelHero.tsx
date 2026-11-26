@@ -15,6 +15,7 @@ export default function PixelHero({
   season = "default",
   logo = true,
   compact = false,
+  tight = false,
 }: {
   children: ReactNode;
   action?: ReactNode;
@@ -22,14 +23,15 @@ export default function PixelHero({
   season?: Season;
   logo?: boolean;
   compact?: boolean;
+  tight?: boolean;
 }) {
   const theme = SEASON_THEMES[season];
 
   return (
     <section
       className={`relative overflow-hidden px-4 text-center ${
-        season === "founding" ? "pt-16" : "pt-6"
-      } ${overlap ? "pb-36" : compact ? "pb-14" : logo ? "pb-16 sm:[@media(max-height:820px)]:pb-12" : "pb-24"}`}
+        season === "founding" ? "pt-16" : tight ? "pt-3" : "pt-6"
+      } ${overlap ? "pb-36" : compact ? "pb-14" : tight ? "pb-12" : logo ? "pb-16 sm:[@media(max-height:820px)]:pb-12" : "pb-24"}`}
       style={{ background: theme.heroBg, color: theme.heroText }}
     >
       <SeasonDecor season={season} />
@@ -51,7 +53,7 @@ export default function PixelHero({
           width={280}
           height={200}
           priority
-          className="relative mx-auto h-auto w-[140px] [filter:drop-shadow(3px_0_0_#241339)_drop-shadow(-3px_0_0_#241339)_drop-shadow(0_3px_0_#241339)_drop-shadow(0_-3px_0_#241339)_drop-shadow(0_6px_0_#241339)] sm:w-[150px] sm:[@media(max-height:820px)]:w-[110px]"
+          className={`relative mx-auto h-auto [filter:drop-shadow(3px_0_0_#241339)_drop-shadow(-3px_0_0_#241339)_drop-shadow(0_3px_0_#241339)_drop-shadow(0_-3px_0_#241339)_drop-shadow(0_6px_0_#241339)] ${tight ? "w-[100px] sm:w-[110px]" : "w-[140px] sm:w-[150px] sm:[@media(max-height:820px)]:w-[110px]"}`}
         />
       )}
 

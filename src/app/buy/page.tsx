@@ -79,12 +79,12 @@ export default async function BuyPage({
         <HomeIcon />
         الرئيسية
       </Link>
-      <PixelHero overlap={false}>
-        <h1 className="mt-3 text-3xl font-black sm:text-4xl">
+      <PixelHero overlap={false} tight>
+        <h1 className="mt-2 text-3xl font-black sm:text-4xl">
           {GAME_COUNT} لعبة، تصير لكم للأبد
         </h1>
 
-        <p className="mt-2 flex items-center justify-center gap-3" dir="rtl">
+        <p className="mt-1 flex items-center justify-center gap-3" dir="rtl">
           <span className="text-6xl font-black leading-none sm:text-7xl">
             {price}
           </span>
@@ -100,7 +100,7 @@ export default async function BuyPage({
         </p>
 
         {isOnSale() && (
-          <p className="mx-auto mt-3 w-fit rounded-lg bg-[#241339] px-3 py-1 text-sm font-black text-[#ffc23d]">
+          <p className="mx-auto mt-2 w-fit rounded-lg bg-[#241339] px-3 py-1 text-sm font-black text-[#ffc23d]">
             سعر الإطلاق لين 1 يناير
           </p>
         )}

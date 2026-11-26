@@ -10,6 +10,7 @@ import { SOURCE_COOKIE } from "@/lib/attribution";
 import { readCookie, trackFunnel } from "@/lib/track";
 
 const MOYASAR_BASE = "/vendor/moyasar/2.3.1";
+const MOYASAR_VERSION = "?v=2";
 
 type MoyasarGlobal = {
   init: (options: Record<string, unknown>) => void;
@@ -221,10 +222,13 @@ export default function BuyForm({
       </div>
 
       <>
-        <link rel="stylesheet" href={`${MOYASAR_BASE}/moyasar.css`} />
+        <link
+          rel="stylesheet"
+          href={`${MOYASAR_BASE}/moyasar.css${MOYASAR_VERSION}`}
+        />
 
         <Script
-          src={`${MOYASAR_BASE}/moyasar.umd.js`}
+          src={`${MOYASAR_BASE}/moyasar.umd.js${MOYASAR_VERSION}`}
           strategy="afterInteractive"
           onReady={() => setScriptReady(true)}
           onError={() => setScriptFailed(true)}
