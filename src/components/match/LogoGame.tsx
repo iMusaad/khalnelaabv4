@@ -31,9 +31,7 @@ const logoDeck = createDeck(LOGOS, "logo");
 type LogoRound = LogoItem & { focusX: number; focusY: number };
 
 function withFocus(logo: LogoItem): LogoRound {
-  const spots = logo.spots.length > 0 ? logo.spots : [[50, 50]];
-  const [focusX, focusY] =
-    logo.fixedSpot ?? spots[Math.floor(Math.random() * spots.length)];
+  const [focusX, focusY] = logo.fixedSpot ?? logo.spots[0] ?? [50, 50];
 
   return { ...logo, focusX, focusY };
 }
