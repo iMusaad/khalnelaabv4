@@ -29,6 +29,7 @@ export const LOGOS: LogoItem[] = [
       [65, 75],
       [55, 25],
     ],
+    fixedSpot: [55, 75],
     pixelSize: 18,
   },
   {
@@ -75,6 +76,7 @@ export const LOGOS: LogoItem[] = [
       [45, 45],
       [55, 45],
     ],
+    fixedSpot: [55, 55],
     pixelSize: 14,
   },
   {
@@ -197,6 +199,7 @@ export const LOGOS: LogoItem[] = [
       [55, 55],
       [25, 65],
     ],
+    fixedSpot: [75, 55],
     pixelSize: 20,
   },
   {
@@ -240,6 +243,7 @@ export const LOGOS: LogoItem[] = [
       [35, 85],
       [55, 45],
     ],
+    fixedSpot: [65, 75],
     pixelSize: 32,
   },
   {
@@ -261,6 +265,7 @@ export const LOGOS: LogoItem[] = [
       [55, 65],
       [75, 35],
     ],
+    fixedSpot: [25, 35],
     pixelSize: 26,
   },
   {
@@ -328,6 +333,7 @@ export const LOGOS: LogoItem[] = [
       [25, 65],
       [35, 45],
     ],
+    fixedSpot: [25, 45],
     pixelSize: 25,
   },
   {
@@ -396,6 +402,7 @@ export const LOGOS: LogoItem[] = [
       [75, 75],
     ],
     startZoom: 5.5,
+    fixedSpot: [65, 75],
     pixelSize: 15,
   },
   {
@@ -602,7 +609,7 @@ export const LOGOS: LogoItem[] = [
       [35, 55],
     ],
     startZoom: 11,
-    fixedSpot: [82, 72],
+    fixedSpot: [25, 40],
     pixelSize: 34,
   },
   {
@@ -687,7 +694,7 @@ export const LOGOS: LogoItem[] = [
       [45, 35],
     ],
     startZoom: 11,
-    fixedSpot: [24, 32],
+    fixedSpot: [55, 55],
     pixelSize: 26,
   },
   {
@@ -710,7 +717,7 @@ export const LOGOS: LogoItem[] = [
       [75, 25],
     ],
     startZoom: 11,
-    fixedSpot: [72, 28],
+    fixedSpot: [20, 90],
     pixelSize: 13,
   },
   {
@@ -733,7 +740,7 @@ export const LOGOS: LogoItem[] = [
       [35, 35],
     ],
     startZoom: 11,
-    fixedSpot: [72, 80],
+    fixedSpot: [45, 90],
     pixelSize: 20,
   },
   {
@@ -868,7 +875,7 @@ export const LOGOS: LogoItem[] = [
       [65, 65],
     ],
     startZoom: 11,
-    fixedSpot: [50, 8],
+    fixedSpot: [50, 45],
     pixelSize: 32,
   },
 ];
