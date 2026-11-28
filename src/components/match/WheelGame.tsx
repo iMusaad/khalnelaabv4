@@ -662,7 +662,11 @@ export default function WheelGame({
                   ? "انتهت اللعبة"
                   : "لف العجلة"}
 
-            {phase === "guess" && <ElapsedTimer key={turn} className="mr-3" />}
+            {phase === "guess" && (
+              <div className="mt-1">
+                <ElapsedTimer key={turn} />
+              </div>
+            )}
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
